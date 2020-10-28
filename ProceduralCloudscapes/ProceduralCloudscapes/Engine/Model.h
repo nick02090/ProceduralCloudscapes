@@ -23,6 +23,7 @@
 class Model {
 public:
 	Model(std::string const& path);
+	~Model();
 
 	void draw(Shader &shader);
 private:

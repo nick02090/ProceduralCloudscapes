@@ -19,7 +19,7 @@ enum class CameraMovement
 	Down
 };
 
-// default camera values
+// default camera settings
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 5.0f;
@@ -32,8 +32,6 @@ public:
 	Camera(glm::vec3 _position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f), float _yaw = YAW, float _pitch = PITCH);
 
 	void processKeyboard(CameraMovement direction, float deltaTime);
-	void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
-	void processMouseScroll(float yoffset);
 
 	glm::mat4 getViewMatrix() const;
 	inline float getZoom() const { return zoom; }
@@ -43,8 +41,18 @@ public:
 	inline glm::vec3 getDirection() const { return glm::normalize(front); }
 	void setMovementSpeed(float value) { movementSpeed = value; };
 	void setMouseSensitivity(float value) { mouseSensitivity = value; };
+
+	void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
+	void processMouseScroll(float yoffset);
+
+	void reset();
 private:
 	void updateCameraVectors();
+
+	glm::vec3 initialPosition;
+	glm::vec3 initialiUp;
+	float initialYaw;
+	float initialPitch;
 
 	glm::vec3 position;
 	glm::vec3 front;

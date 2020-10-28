@@ -1,41 +1,27 @@
-#ifndef MESH_H
-#define MESH
+#ifndef UTIL_H
+#define UTIL_H
 
-// include glad to get all the required OpenGL headers
+// NOTE: Always include GLAD before other header files that require OpenGL
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <vector>
 #include <stb_image.h>
 
-#include "Shader.h"
+namespace util {
+	template<typename T>
+	static void eraseByValue(std::vector<T> vector, T value)
+	{
+		vector.erase(std::remove(vector.begin(), vector.end(), value), vector.end());
+	}
 
-#include <string>
-#include <vector>
-
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 texCoords;
-};
-
-struct Texture
-{
-	unsigned int ID;
-	std::string type;
-	std::string path;
-
-    static unsigned int loadTexture(char const* path, const std::string &directory)
+    static unsigned int loadTexture(char const* path)
     {
-        std::string filename = std::string(path);
-        filename = directory + '/' + filename;
-
         unsigned int textureID;
         glGenTextures(1, &textureID);
 
         int width, height, nrComponents;
-        unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+        unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
         if (data)
         {
             GLenum format;
@@ -63,22 +49,6 @@ struct Texture
         stbi_image_free(data);
         return textureID;
     }
-};
+}
 
-class Mesh {
-public:
-	Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
-
-	void draw(Shader &shader);
-private:
-	void setupMesh();
-
-	// mesh data
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<Texture> textures;
-	unsigned int VAO, VBO, EBO;
-};
-
-
-#endif
+#endif // !UTIL_H

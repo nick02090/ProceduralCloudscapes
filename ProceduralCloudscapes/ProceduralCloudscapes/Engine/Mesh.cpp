@@ -9,6 +9,18 @@ Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, st
 	setupMesh();
 }
 
+Mesh::~Mesh()
+{
+	vertices.clear();
+	vertices.shrink_to_fit();
+
+	indices.clear();
+	indices.shrink_to_fit();
+
+	textures.clear();
+	textures.shrink_to_fit();
+}
+
 void Mesh::draw(Shader& shader)
 {
 	unsigned int diffuseNumber = 1;
@@ -31,7 +43,7 @@ void Mesh::draw(Shader& shader)
 
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	glActiveTexture(GL_TEXTURE0);

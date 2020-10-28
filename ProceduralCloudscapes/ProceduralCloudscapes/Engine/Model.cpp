@@ -1,8 +1,18 @@
 #include "Model.h"
+#include "Utilities.h"
 
 Model::Model(std::string const& path)
 {
 	loadModel(path);
+}
+
+Model::~Model()
+{
+	meshes.clear();
+	meshes.shrink_to_fit();
+
+	textures_loaded.clear();
+	textures_loaded.shrink_to_fit();	
 }
 
 void Model::draw(Shader& shader)
@@ -116,7 +126,11 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* material, aiTexture
 		if (!skip)
 		{
 			Texture texture;
-			texture.ID = Texture::loadTexture(str.C_Str(), this->directory);
+
+			std::string filename = std::string(str.C_Str());
+			std::string path = directory + '/' + filename;
+
+			texture.ID = util::loadTexture(path.c_str());
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);

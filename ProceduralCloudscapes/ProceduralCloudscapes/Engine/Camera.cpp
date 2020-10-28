@@ -2,6 +2,11 @@
 
 Camera::Camera(glm::vec3 _position, glm::vec3 _up, float _yaw, float _pitch)
 {
+	initialPosition = _position;
+	initialiUp = _up;
+	initialYaw = _yaw;
+	initialPitch = _pitch;
+
 	position = _position;
 	worldUp = _up;
 	yaw = _yaw;
@@ -74,6 +79,16 @@ void Camera::processMouseScroll(float yoffset)
 		zoom = 1.0f;
 	if (zoom > 45.0f)
 		zoom = 45.0f;
+}
+
+void Camera::reset()
+{
+	position = initialPosition;
+	up = initialiUp;
+	yaw = initialYaw;
+	pitch = initialPitch;
+
+	updateCameraVectors();
 }
 
 void Camera::updateCameraVectors()

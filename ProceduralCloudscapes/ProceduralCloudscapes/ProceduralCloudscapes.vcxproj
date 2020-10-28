@@ -142,19 +142,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Compile\glad.c" />
     <ClCompile Include="Compile\stb_image.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\Mesh.cpp" />
+    <ClCompile Include="Engine\Model.cpp" />
+    <ClCompile Include="Engine\Shader.cpp" />
+    <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Scenes\ModelTestScene.cpp" />
+    <ClCompile Include="Scenes\ShaderTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Mesh.h" />
+    <ClInclude Include="Engine\Model.h" />
+    <ClInclude Include="Engine\Scene.h" />
+    <ClInclude Include="Engine\Shader.h" />
+    <ClInclude Include="Engine\Utilities.h" />
+    <ClInclude Include="Engine\Window.h" />
+    <ClInclude Include="Scenes\ModelTestScene.h" />
+    <ClInclude Include="Scenes\ShaderTestScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
