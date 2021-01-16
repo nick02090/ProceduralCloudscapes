@@ -36,9 +36,6 @@
     <ClCompile Include="Scenes\CloudsTestScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\ModelTestScene.cpp">
-      <Filter>Source Files\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\ShaderTestScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
@@ -49,12 +46,6 @@
       <Filter>Source Files\Compile</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Camera.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Mesh.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Model.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Shader.cpp">
@@ -68,19 +59,10 @@
     <ClInclude Include="Scenes\CloudsTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes\ModelTestScene.h">
-      <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\ShaderTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Camera.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Mesh.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Model.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Shader.h">

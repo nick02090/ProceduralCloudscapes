@@ -10,7 +10,6 @@
 #include "Engine/Window.h"
 #include "Engine/Scene.h"
 #include "Scenes/ShaderTestScene.h"
-#include "Scenes/ModelTestScene.h"
 #include "Scenes/CloudsTestScene.h"
 
 int main()

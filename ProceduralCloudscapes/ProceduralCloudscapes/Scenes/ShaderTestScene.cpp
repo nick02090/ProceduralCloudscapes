@@ -5,9 +5,16 @@
 
 ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window)
 {
-    // build and compile our shader program
-    shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-    lightShader = new Shader("Shaders/shader.vert", "Shaders/lightShader.frag");
+    // build and compile shader programs
+    shader = new Shader();
+    shader->attachShader("Shaders/shader.vert", ShaderInfo(ShaderType::kVertex));
+    shader->attachShader("Shaders/shader.frag", ShaderInfo(ShaderType::kFragment));
+    shader->linkProgram();
+
+    lightShader = new Shader();
+    lightShader->attachShader("Shaders/shader.vert", ShaderInfo(ShaderType::kVertex));
+    lightShader->attachShader("Shaders/lightShader.frag", ShaderInfo(ShaderType::kFragment));
+    lightShader->linkProgram();
 
     // load and create a texture
     diffuseTex = util::loadTexture("Textures/container2.png");
