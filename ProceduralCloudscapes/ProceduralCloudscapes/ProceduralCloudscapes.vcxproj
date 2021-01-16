@@ -150,6 +150,7 @@
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
+    <ClCompile Include="Scenes\CloudsTestScene.cpp" />
     <ClCompile Include="Scenes\ModelTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Engine\Window.h" />
+    <ClInclude Include="Scenes\CloudsTestScene.h" />
     <ClInclude Include="Scenes\ModelTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />
   </ItemGroup>

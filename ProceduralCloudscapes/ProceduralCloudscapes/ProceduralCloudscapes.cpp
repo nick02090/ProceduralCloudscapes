@@ -11,6 +11,7 @@
 #include "Engine/Scene.h"
 #include "Scenes/ShaderTestScene.h"
 #include "Scenes/ModelTestScene.h"
+#include "Scenes/CloudsTestScene.h"
 
 int main()
 {
@@ -21,7 +22,7 @@ int main()
     Window window("Procedural cloudscapes");
 
     // load a scene that will show up in the window
-    Scene* scene = new ShaderTestScene(&window);
+    Scene* scene = new CloudsTestScene(&window);
 
     // render loop
     while (window.isRunning())
