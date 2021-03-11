@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Utilities.h"
 
-Camera* Window::camera = new Camera(glm::vec3(0.0f, 0.0f, 5.0f));
+Camera* Window::camera = new Camera(glm::vec3(0.0f, 1.0f, 0.0f));
 
 bool Window::firstMouse = true;
 float Window::lastX = WINDOW_WIDTH / 2.0;

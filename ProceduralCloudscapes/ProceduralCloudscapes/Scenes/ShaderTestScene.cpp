@@ -7,13 +7,13 @@ ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window)
 {
     // build and compile shader programs
     shader = new Shader();
-    shader->attachShader("Shaders/shader.vert", ShaderInfo(ShaderType::kVertex));
-    shader->attachShader("Shaders/shader.frag", ShaderInfo(ShaderType::kFragment));
+    shader->attachShader("Shaders/ShaderTest/shader.vert", ShaderInfo(ShaderType::kVertex));
+    shader->attachShader("Shaders/ShaderTest/shader.frag", ShaderInfo(ShaderType::kFragment));
     shader->linkProgram();
 
     lightShader = new Shader();
-    lightShader->attachShader("Shaders/shader.vert", ShaderInfo(ShaderType::kVertex));
-    lightShader->attachShader("Shaders/lightShader.frag", ShaderInfo(ShaderType::kFragment));
+    lightShader->attachShader("Shaders/ShaderTest/shader.vert", ShaderInfo(ShaderType::kVertex));
+    lightShader->attachShader("Shaders/ShaderTest/lightShader.frag", ShaderInfo(ShaderType::kFragment));
     lightShader->linkProgram();
 
     // load and create a texture

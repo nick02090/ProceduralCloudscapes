@@ -10,7 +10,8 @@
 #include "Engine/Window.h"
 #include "Engine/Scene.h"
 #include "Scenes/ShaderTestScene.h"
-#include "Scenes/CloudsTestScene.h"
+#include "Scenes/FramebufferTestScene.h"
+#include "Scenes/RaymarchTestScene.h"
 
 int main()
 {
@@ -18,10 +19,10 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     // create a window for rendering
-    Window window("Procedural cloudscapes");
+    Window window("Raymarch test scene");
 
     // load a scene that will show up in the window
-    Scene* scene = new CloudsTestScene(&window);
+    Scene* scene = new RaymarchTestScene(&window);
 
     // render loop
     while (window.isRunning())

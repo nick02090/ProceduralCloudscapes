@@ -33,9 +33,6 @@
     <ClCompile Include="ProceduralCloudscapes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\CloudsTestScene.cpp">
-      <Filter>Source Files\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Scenes\ShaderTestScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
@@ -54,11 +51,14 @@
     <ClCompile Include="Engine\Window.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\FramebufferTestScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes\RaymarchTestScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Scenes\CloudsTestScene.h">
-      <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Scenes\ShaderTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
@@ -76,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Utilities.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\FramebufferTestScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\RaymarchTestScene.h">
+      <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
