@@ -28,6 +28,18 @@
     <Filter Include="Header Files\Engine">
       <UniqueIdentifier>{cfb439e3-e9f4-4a37-81c0-b6a181b3186f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{79ab1d7f-97a1-4013-8d0d-441d9a461e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\FramebufferTest">
+      <UniqueIdentifier>{eb8a08e3-eb1a-4810-813d-b49909a84c22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\RaymarchTest">
+      <UniqueIdentifier>{0ff1abb1-be02-4f66-8390-05d83c4c5d0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\ShaderTest">
+      <UniqueIdentifier>{2fda65ae-8564-427a-af02-34ee0effee9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -83,5 +95,40 @@
     <ClInclude Include="Scenes\RaymarchTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FramebufferTest\screenShader.frag">
+      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
+    </None>
+    <None Include="Shaders\FramebufferTest\screenShader.vert">
+      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
+    </None>
+    <None Include="Shaders\RaymarchTest\screenShader.frag">
+      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
+    </None>
+    <None Include="Shaders\RaymarchTest\screenShader.vert">
+      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
+    </None>
+    <None Include="Shaders\FramebufferTest\shader.frag">
+      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
+    </None>
+    <None Include="Shaders\RaymarchTest\shader.frag">
+      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
+    </None>
+    <None Include="Shaders\FramebufferTest\shader.vert">
+      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
+    </None>
+    <None Include="Shaders\RaymarchTest\shader.vert">
+      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
+    </None>
+    <None Include="Shaders\ShaderTest\lightShader.frag">
+      <Filter>Resource Files\Shaders\ShaderTest</Filter>
+    </None>
+    <None Include="Shaders\ShaderTest\shader.frag">
+      <Filter>Resource Files\Shaders\ShaderTest</Filter>
+    </None>
+    <None Include="Shaders\ShaderTest\shader.vert">
+      <Filter>Resource Files\Shaders\ShaderTest</Filter>
+    </None>
   </ItemGroup>
 </Project>

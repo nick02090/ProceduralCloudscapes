@@ -24,7 +24,7 @@ namespace util {
         unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
         if (data)
         {
-            GLenum format;
+            GLenum format{};
             if (nrComponents == 1)
                 format = GL_RED;
             else if (nrComponents == 3)
