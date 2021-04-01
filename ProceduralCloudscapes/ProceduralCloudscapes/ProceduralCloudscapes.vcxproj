@@ -145,15 +145,18 @@
     <ClCompile Include="Compile\glad.c" />
     <ClCompile Include="Compile\stb_image.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\FrameBufferObject.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
+    <ClCompile Include="Scenes\SkyboxTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\FrameBufferObject.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Utilities.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />
+    <ClInclude Include="Scenes\SkyboxTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag" />

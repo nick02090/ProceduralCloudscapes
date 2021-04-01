@@ -4,6 +4,7 @@
 #include "../Engine/Scene.h"
 
 class Shader;
+class FrameBufferObject;
 
 class FramebufferTestScene : public Scene
 {
@@ -22,10 +23,8 @@ private:
     unsigned int cubeVAO, cubeVBO;
     unsigned int planeVAO, planeVBO;
     unsigned int quadVAO, quadVBO;
-    unsigned int rbo;
 
-    unsigned int framebuffer;
-    unsigned int textureColorbuffer;
+    FrameBufferObject* framebuffer;
 
     unsigned int cubeTexture, floorTexture;
 

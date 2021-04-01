@@ -4,6 +4,7 @@
 #include "../Engine/Scene.h"
 
 class Shader;
+class FrameBufferObject;
 
 class RaymarchTestScene : public Scene
 {
@@ -19,11 +20,9 @@ private:
     Shader* shader;
     Shader* screenShader;
 
-    unsigned int framebuffer;
-    unsigned int textureColorbuffer;
+    FrameBufferObject* framebuffer;
 
     unsigned int quadVAO, quadVBO;
-    unsigned int rbo;
 
     float quadVertices[24] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
         // positions   // texCoords
