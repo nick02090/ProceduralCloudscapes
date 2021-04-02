@@ -12,7 +12,7 @@ public:
     RaymarchTestScene(Window* _window);
     ~RaymarchTestScene();
 
-    virtual void update();
+    void update() override;
 
 private:
     void configureData();

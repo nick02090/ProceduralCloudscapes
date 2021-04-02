@@ -12,7 +12,7 @@ public:
     FramebufferTestScene(Window* _window);
 	~FramebufferTestScene();
 
-	virtual void update();
+	void update() override;
 
 private:
     void configureData();

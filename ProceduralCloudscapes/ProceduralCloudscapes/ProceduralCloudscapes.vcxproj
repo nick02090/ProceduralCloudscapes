@@ -158,6 +158,7 @@
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\FrameBufferObject.h" />
     <ClInclude Include="Engine\Scene.h" />
+    <ClInclude Include="Engine\SceneObject.h" />
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Engine\Window.h" />

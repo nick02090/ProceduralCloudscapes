@@ -107,6 +107,9 @@
     <ClInclude Include="Engine\FrameBufferObject.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\SceneObject.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">

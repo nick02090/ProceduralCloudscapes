@@ -5,6 +5,11 @@
 
 class SkyboxTestScene : public Scene
 {
+public:
+	SkyboxTestScene(Window* _window);
+	~SkyboxTestScene();
+
+	void update() override;
 };
 
 

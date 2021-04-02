@@ -13,7 +13,7 @@ public:
 	ShaderTestScene(Window* _window);
 	~ShaderTestScene();
 
-	virtual void update();
+	void update() override;
 
 private:
 	void configureData();
