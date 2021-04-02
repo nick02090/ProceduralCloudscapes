@@ -146,9 +146,11 @@
     <ClCompile Include="Compile\stb_image.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\FrameBufferObject.cpp" />
+    <ClCompile Include="Engine\ScreenShader.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
+    <ClCompile Include="SceneObjects\Skybox.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
@@ -159,9 +161,11 @@
     <ClInclude Include="Engine\FrameBufferObject.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneObject.h" />
+    <ClInclude Include="Engine\ScreenShader.h" />
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Engine\Window.h" />
+    <ClInclude Include="SceneObjects\Skybox.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />

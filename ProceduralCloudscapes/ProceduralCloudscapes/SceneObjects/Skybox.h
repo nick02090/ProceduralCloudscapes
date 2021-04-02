@@ -5,6 +5,10 @@
 
 #include "../Engine/SceneObject.h"
 
+class Shader;
+class ScreenShader;
+class FrameBufferObject;
+
 class Skybox : public SceneObject {
 public:
 	Skybox(Window* _window);
@@ -30,6 +34,8 @@ public:
     glm::vec3 getRayleighScatteringCoeff() const { return betaR; }
     glm::vec3 getMieScatteringCoeff() const { return betaM; }
 private:
+    // PROPERTIES
+
     glm::vec3 sunDirection;
 
     float earthRadius;
@@ -44,6 +50,18 @@ private:
     glm::vec3 betaR;
     // Mie scattering coefficient
     glm::vec3 betaM;
+
+
+    // DRAWING
+
+    Shader* shader;
+    ScreenShader* skyboxShader;
+
+    FrameBufferObject* framebuffer;
+
+    unsigned int quadVAO, quadVBO;
+
+    void configureData();
 };
 
 #endif // !SKYBOX_H

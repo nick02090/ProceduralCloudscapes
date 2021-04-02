@@ -4,6 +4,7 @@
 #include "../Engine/Scene.h"
 
 class Shader;
+class ScreenShader;
 class FrameBufferObject;
 
 class FramebufferTestScene : public Scene
@@ -18,11 +19,10 @@ private:
     void configureData();
 
 	Shader* shader;
-	Shader* screenShader;
+	ScreenShader* screenShader;
 
     unsigned int cubeVAO, cubeVBO;
     unsigned int planeVAO, planeVBO;
-    unsigned int quadVAO, quadVBO;
 
     FrameBufferObject* framebuffer;
 
@@ -83,16 +83,6 @@ private:
          5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
         -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
          5.0f, -0.5f, -5.0f,  2.0f, 2.0f
-    };
-    float quadVertices[24] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-        // positions   // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-
-        -1.0f,  1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f
     };
 };
 

@@ -1,19 +1,17 @@
 #include "RaymarchTestScene.h"
 #include "../Engine/Shader.h"
+#include "../Engine/ScreenShader.h"
 #include "../Engine/FrameBufferObject.h"
 
 RaymarchTestScene::RaymarchTestScene(Window* _window) : Scene(_window)
 {
     // build and compile shader programs
     shader = new Shader();
-    shader->attachShader("Shaders/RaymarchTest/shader.vert", ShaderInfo(ShaderType::kVertex));
-    shader->attachShader("Shaders/RaymarchTest/shader.frag", ShaderInfo(ShaderType::kFragment));
+    shader->attachShader("Shaders/Default/shader.vert", ShaderInfo(ShaderType::kVertex));
+    shader->attachShader("Shaders/Default/textureShader.frag", ShaderInfo(ShaderType::kFragment));
     shader->linkProgram();
 
-    screenShader = new Shader();
-    screenShader->attachShader("Shaders/RaymarchTest/screenShader.vert", ShaderInfo(ShaderType::kVertex));
-    screenShader->attachShader("Shaders/RaymarchTest/screenShader.frag", ShaderInfo(ShaderType::kFragment));
-    screenShader->linkProgram();
+    screenShader = new ScreenShader("Shaders/RaymarchTest/screenShader.frag");
 
     configureData();
 }
@@ -52,35 +50,23 @@ void RaymarchTestScene::update()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
     glClear(GL_COLOR_BUFFER_BIT);
 
-    screenShader->use();
-    screenShader->setVec3("cameraPos", camera->getPosition());
-    screenShader->setVec3("lookAt", camera->getDirection());
-    screenShader->setFloat("zoom", camera->getZoom());
-    glBindVertexArray(quadVAO);
-    glBindTexture(GL_TEXTURE_2D, framebuffer->getColorTextureID(0));	// use the color attachment texture as the texture of the quad plane
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    Shader* ssShader = screenShader->getShader();
+    ssShader->use();
+    ssShader->setVec3("cameraPos", camera->getPosition());
+    ssShader->setVec3("lookAt", camera->getDirection());
+    ssShader->setFloat("zoom", camera->getZoom());
+    screenShader->draw(framebuffer->getColorTextureID(0));
 }
 
 void RaymarchTestScene::configureData()
 {
-    // screen quad VAO
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-    glBindVertexArray(quadVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-
     // shader configuration
     shader->use();
     shader->setInt("texture1", 0);
 
-    screenShader->use();
-    screenShader->setInt("screenTexture", 0);
+    Shader* ssShader = screenShader->getShader();
+    ssShader->use();
+    ssShader->setInt("screenTexture", 0);
 
     // framebuffer configuration
     framebuffer = new FrameBufferObject();

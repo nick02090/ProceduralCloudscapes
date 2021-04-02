@@ -40,6 +40,12 @@
     <Filter Include="Resource Files\Shaders\ShaderTest">
       <UniqueIdentifier>{2fda65ae-8564-427a-af02-34ee0effee9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SceneObjects">
+      <UniqueIdentifier>{17bae6e6-6602-4d2e-b401-f020ae81ae7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SceneObjects">
+      <UniqueIdentifier>{8a07910b-ba5b-4a0f-abc5-62126facb2aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -75,6 +81,12 @@
     <ClCompile Include="Engine\FrameBufferObject.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjects\Skybox.cpp">
+      <Filter>Source Files\SceneObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ScreenShader.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -108,6 +120,12 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\SceneObject.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjects\Skybox.h">
+      <Filter>Header Files\SceneObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ScreenShader.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
