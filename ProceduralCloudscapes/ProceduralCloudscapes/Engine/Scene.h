@@ -5,18 +5,28 @@
 
 #include "Window.h"
 #include "SceneObject.h"
+#include "FrameBufferObject.h"
+#include "Environment/Environment.h"
 
 class Scene {
 public:
-	Scene(Window* _window) : window(_window) {};
+	Scene(Window* _window, EnvironmentType environmentType) : window(_window) {
+		// create the environment
+		environment = Environment::createEnvironment(environmentType);
+	};
 	virtual ~Scene() {
+		// delete created scene objects
 		for (auto sceneObject : sceneObjects)
 		{
 			delete sceneObject;
 		}
+		// delete the environment
+		delete environment;
 	}
 
 	void draw() {
+		// render the environment
+		environment->draw();
 		// update the scene
 		update();
 		// draw every scene object
@@ -31,6 +41,7 @@ public:
 protected:
 	Window* window;
 	std::vector<SceneObject*> sceneObjects;
+	Environment* environment;
 };
 
 #endif // !SCENE_H

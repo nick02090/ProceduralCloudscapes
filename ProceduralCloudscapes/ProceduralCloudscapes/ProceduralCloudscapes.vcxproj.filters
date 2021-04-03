@@ -46,6 +46,12 @@
     <Filter Include="Header Files\SceneObjects">
       <UniqueIdentifier>{8a07910b-ba5b-4a0f-abc5-62126facb2aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine\Environment">
+      <UniqueIdentifier>{16617412-0ca8-402d-b3c6-108badf78a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Environment">
+      <UniqueIdentifier>{239239f0-9e3c-4405-9204-105361b23d05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -87,6 +93,18 @@
     <ClCompile Include="Engine\ScreenShader.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Environment\ColorEnvironment.cpp">
+      <Filter>Source Files\Engine\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Environment\Environment.cpp">
+      <Filter>Source Files\Engine\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Environment\GradientEnvironment.cpp">
+      <Filter>Source Files\Engine\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Environment\SkyboxEnvironment.cpp">
+      <Filter>Source Files\Engine\Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -127,6 +145,18 @@
     </ClInclude>
     <ClInclude Include="Engine\ScreenShader.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Environment\ColorEnvironment.h">
+      <Filter>Header Files\Engine\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Environment\Environment.h">
+      <Filter>Header Files\Engine\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Environment\GradientEnvironment.h">
+      <Filter>Header Files\Engine\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Environment\SkyboxEnvironment.h">
+      <Filter>Header Files\Engine\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@
 
 #include "../Engine/Scene.h"
 
+class Shader;
+
 class SkyboxTestScene : public Scene
 {
 public:

@@ -145,6 +145,10 @@
     <ClCompile Include="Compile\glad.c" />
     <ClCompile Include="Compile\stb_image.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
+    <ClCompile Include="Engine\Environment\ColorEnvironment.cpp" />
+    <ClCompile Include="Engine\Environment\Environment.cpp" />
+    <ClCompile Include="Engine\Environment\GradientEnvironment.cpp" />
+    <ClCompile Include="Engine\Environment\SkyboxEnvironment.cpp" />
     <ClCompile Include="Engine\FrameBufferObject.cpp" />
     <ClCompile Include="Engine\ScreenShader.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
@@ -158,6 +162,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Environment\ColorEnvironment.h" />
+    <ClInclude Include="Engine\Environment\Environment.h" />
+    <ClInclude Include="Engine\Environment\GradientEnvironment.h" />
+    <ClInclude Include="Engine\Environment\SkyboxEnvironment.h" />
     <ClInclude Include="Engine\FrameBufferObject.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneObject.h" />

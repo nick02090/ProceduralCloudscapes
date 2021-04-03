@@ -3,7 +3,7 @@
 #include "../Engine/ScreenShader.h"
 #include "../Engine/FrameBufferObject.h"
 
-RaymarchTestScene::RaymarchTestScene(Window* _window) : Scene(_window)
+RaymarchTestScene::RaymarchTestScene(Window* _window) : Scene(_window, EnvironmentType::Color)
 {
     // build and compile shader programs
     shader = new Shader();

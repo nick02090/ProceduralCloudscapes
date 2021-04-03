@@ -54,12 +54,9 @@ private:
 
     // DRAWING
 
-    Shader* shader;
     ScreenShader* skyboxShader;
 
     FrameBufferObject* framebuffer;
-
-    unsigned int quadVAO, quadVBO;
 
     void configureData();
 };

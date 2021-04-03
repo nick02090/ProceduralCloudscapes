@@ -3,7 +3,7 @@
 #include "../Engine/Shader.h"
 #include "../Engine/Utilities.h"
 
-ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window)
+ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, EnvironmentType::Color)
 {
     // build and compile shader programs
     shader = new Shader();

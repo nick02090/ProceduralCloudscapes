@@ -12,6 +12,7 @@
 #include "Scenes/ShaderTestScene.h"
 #include "Scenes/FramebufferTestScene.h"
 #include "Scenes/RaymarchTestScene.h"
+#include "Scenes/SkyboxTestScene.h"
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
     Window window("Raymarch test scene");
 
     // load a scene that will show up in the window
-    Scene* scene = new RaymarchTestScene(&window);
+    Scene* scene = new ShaderTestScene(&window);
 
     // render loop
     while (window.isRunning())
@@ -33,10 +34,7 @@ int main()
         // process input on the window
         window.processInput();
 
-        // render
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        // draw the scene
         scene->draw();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved, etc.)
