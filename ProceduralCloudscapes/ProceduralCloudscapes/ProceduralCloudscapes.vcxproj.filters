@@ -158,6 +158,9 @@
     <ClInclude Include="Engine\Environment\SkyboxEnvironment.h">
       <Filter>Header Files\Engine\Environment</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Color.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">

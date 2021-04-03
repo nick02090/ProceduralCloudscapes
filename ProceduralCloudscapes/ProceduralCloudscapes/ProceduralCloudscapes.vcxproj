@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Color.h" />
     <ClInclude Include="Engine\Environment\ColorEnvironment.h" />
     <ClInclude Include="Engine\Environment\Environment.h" />
     <ClInclude Include="Engine\Environment\GradientEnvironment.h" />
