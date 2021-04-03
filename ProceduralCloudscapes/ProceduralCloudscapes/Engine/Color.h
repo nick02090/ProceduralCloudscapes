@@ -12,7 +12,19 @@
 
 class Color {
 public:
-	Color() {}
+	Color() {
+		// initial color is black
+	}
+	Color(int _r, int _g, int _b) {
+		setR(_r);
+		setB(_g);
+		setG(_b);
+	}
+	Color(float _r, float _g, float _b) {
+		setRf(_r);
+		setGf(_g);
+		setBf(_b);
+	}
 	~Color() {}
 
 	// GETTERS
@@ -22,11 +34,11 @@ public:
 	glm::vec3 getf() const { return glm::vec3(getRf(), getGf(), getBf()); }
 
 	int getR() const { return static_cast<int>(r); }
-	float getRf() const { return static_cast<float>(r / UINT8_MAX); }
+	float getRf() const { return static_cast<float>((float)r / UINT8_MAX); }
 	int getG() const { return static_cast<int>(g); }
-	float getGf() const { return static_cast<float>(g / UINT8_MAX); }
+	float getGf() const { return static_cast<float>((float)g / UINT8_MAX); }
 	int getB() const { return static_cast<int>(b); }
-	float getBf() const { return static_cast<float>(b / UINT8_MAX); }
+	float getBf() const { return static_cast<float>((float)b / UINT8_MAX); }
 	// -------
 
 	// SETTERS

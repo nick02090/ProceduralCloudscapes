@@ -2,9 +2,10 @@
 #define COLOR_ENVIRONMENT_H
 
 #include "Environment.h"
+#include "../Color.h"
 
 struct ColorData : EnvironmentData {
-
+	Color color;
 };
 
 class ColorEnvironment : public Environment {

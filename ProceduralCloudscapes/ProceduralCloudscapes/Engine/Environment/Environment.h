@@ -31,13 +31,15 @@ public:
 	virtual void update() = 0;
 
 	// SETTERS
-	void setData(EnvironmentData _data) { data = _data; }
+
+	void setData(EnvironmentData* _data) { data = _data; }
 
 	// GETTERS
-	EnvironmentData getData() const { return data; }
+
+	EnvironmentData* getData() const { return data; }
 protected:
 	EnvironmentType type = EnvironmentType::UNINITIALIZED;
-	EnvironmentData data;
+	EnvironmentData* data = nullptr;
 };
 
 #endif // !ENVIRONMENT_H

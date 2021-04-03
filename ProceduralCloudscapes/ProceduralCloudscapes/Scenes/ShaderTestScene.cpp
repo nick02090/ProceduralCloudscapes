@@ -2,6 +2,7 @@
 
 #include "../Engine/Shader.h"
 #include "../Engine/Utilities.h"
+#include "../Engine/Environment/ColorEnvironment.h"
 
 ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, EnvironmentType::Color)
 {
@@ -26,6 +27,11 @@ ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, EnvironmentTy
     // setup light position
     lightDir = glm::vec3(-0.2f, -1.0f, -0.3f);
     pointLigthPos = glm::vec3(1.2f, 1.0f, 2.0f);
+
+    // setup environment color
+    ColorData* colorData = new ColorData();
+    colorData->color.setf(0.2f, 0.3f, 0.3f);
+    environment->setData(colorData);
 }
 
 ShaderTestScene::~ShaderTestScene()
