@@ -31,7 +31,7 @@ void SkyboxEnvironment::update()
 {
 	Camera* camera = window->getCamera();
 
-	// disable depth test while drawing the sky
+	// disable depth test while drawing the sky (so the sky is in the background of everything)
 	glDisable(GL_DEPTH_TEST);
 
 	// configure shader data
