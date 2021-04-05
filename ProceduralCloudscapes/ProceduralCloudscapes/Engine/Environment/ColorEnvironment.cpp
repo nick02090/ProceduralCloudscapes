@@ -4,7 +4,7 @@ ColorEnvironment::ColorEnvironment()
 {
 	// Initialize member variables
 	type = EnvironmentType::Color;
-	data = new ColorData();
+	data = new ColorEnvironmentData();
 }
 
 ColorEnvironment::~ColorEnvironment()
@@ -14,9 +14,9 @@ ColorEnvironment::~ColorEnvironment()
 void ColorEnvironment::update()
 {
 	// cast the color data
-	ColorData* colorData = static_cast<ColorData*>(data);
+	ColorEnvironmentData* colorEnvironmentData = static_cast<ColorEnvironmentData*>(data);
 	// get the color
-	Color color = colorData->color;
+	Color color = colorEnvironmentData->color;
 	// draw the selected background color
 	glClearColor(color.getRf(), color.getGf(), color.getBf(), 1.0f);
 }

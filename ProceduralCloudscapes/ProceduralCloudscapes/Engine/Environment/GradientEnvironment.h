@@ -3,7 +3,7 @@
 
 #include "Environment.h"
 
-struct GradientData : EnvironmentData {
+struct GradientEnvironmentData : EnvironmentData {
 
 };
 

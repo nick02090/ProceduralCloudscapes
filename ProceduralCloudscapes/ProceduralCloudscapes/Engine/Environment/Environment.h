@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <string.h>
+#include <iostream>
+
 enum class EnvironmentType
 {
 	UNINITIALIZED,
@@ -17,7 +20,9 @@ struct EnvironmentData {
 
 class Environment {
 public:
-	virtual ~Environment() {};
+	virtual ~Environment() {
+		delete data;
+	};
 
 	static Environment* createEnvironment(EnvironmentType environmentType);
 
@@ -30,13 +35,49 @@ public:
 
 	virtual void update() = 0;
 
-	// SETTERS
+	EnvironmentType getType() const { return type; }
+	const char* getType_c() const {
+		switch (type)
+		{
+		case EnvironmentType::UNINITIALIZED:
+			return "UNINITIALIZED";
+			break;
+		case EnvironmentType::Color:
+			return "Color";
+			break;
+		case EnvironmentType::Gradient:
+			return "Gradient";
+			break;
+		case EnvironmentType::Skybox:
+			return "Skybox";
+			break;
+		default:
+			return nullptr;
+			break;
+		}
+	}
 
-	void setData(EnvironmentData* _data) { data = _data; }
-
-	// GETTERS
-
-	EnvironmentData* getData() const { return data; }
+	template<class T, typename std::enable_if<!std::is_same<T, Environment>::value, int>::type = 0>
+	static bool checkType(EnvironmentType type) {
+		// Set the object type to initial value
+		EnvironmentType objType = EnvironmentType::UNINITIALIZED;
+		// Check which type is it
+		const char* objName = typeid(T).name();
+		if (strcmp(objName, "class ColorEnvironment") == 0) {
+			objType = EnvironmentType::Color;
+		}
+		else if (strcmp(objName, "class GradientEnvironment") == 0) {
+			objType = EnvironmentType::Gradient;
+		}
+		else if (strcmp(objName, "class SkyboxEnvironment") == 0) {
+			objType = EnvironmentType::Skybox;
+		}
+		// Compare calculated type with the given one
+		if (objType == type) {
+			return true;
+		}
+		return false;
+	}
 protected:
 	EnvironmentType type = EnvironmentType::UNINITIALIZED;
 	EnvironmentData* data = nullptr;

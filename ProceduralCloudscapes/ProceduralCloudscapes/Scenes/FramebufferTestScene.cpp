@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-FramebufferTestScene::FramebufferTestScene(Window* _window) : Scene(_window, EnvironmentType::Color)
+FramebufferTestScene::FramebufferTestScene(Window* _window) : Scene(_window, "Framebuffer Test Scene", EnvironmentType::Color)
 {
     // build and compile shader programs
     shader = new Shader();

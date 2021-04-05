@@ -30,7 +30,7 @@ public:
 	/// <param name="title">Title of the window that is shown in the upper left corner.</param>
 	/// <param name="_width">Width of the window.</param>
 	/// <param name="_height">Height of the window.</param>
-	Window(const char* title, size_t _width = WINDOW_WIDTH, size_t _height = WINDOW_HEIGHT);
+	Window(const char* title = "DEFAULT", size_t _width = WINDOW_WIDTH, size_t _height = WINDOW_HEIGHT);
 	~Window();
 
 	/// <summary>
@@ -42,6 +42,12 @@ public:
 	/// Process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly.
 	/// </summary>
 	void processInput();
+
+	/// <summary>
+	/// Sets the title of the created window.
+	/// </summary>
+	/// <param name="title"></param>
+	void setTitle(const char* title) { glfwSetWindowTitle(glfwWindow, title); }
 
 	/// <summary>
 	/// Returns GLFW Window object.

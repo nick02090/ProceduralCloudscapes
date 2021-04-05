@@ -4,7 +4,7 @@ GradientEnvironment::GradientEnvironment()
 {
 	// Initialize member variables
 	type = EnvironmentType::Gradient;
-	data = new GradientData();
+	data = new GradientEnvironmentData();
 }
 
 GradientEnvironment::~GradientEnvironment()

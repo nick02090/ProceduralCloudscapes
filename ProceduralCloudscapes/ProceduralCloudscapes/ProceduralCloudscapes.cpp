@@ -20,7 +20,7 @@ int main()
     stbi_set_flip_vertically_on_load(true);
 
     // create a window for rendering
-    Window window("Raymarch test scene");
+    Window window;
 
     // load a scene that will show up in the window
     Scene* scene = new ShaderTestScene(&window);

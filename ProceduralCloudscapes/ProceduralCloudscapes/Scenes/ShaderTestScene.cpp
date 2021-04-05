@@ -4,7 +4,7 @@
 #include "../Engine/Utilities.h"
 #include "../Engine/Environment/ColorEnvironment.h"
 
-ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, EnvironmentType::Color)
+ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, "Shader Test Scene", EnvironmentType::Color)
 {
     // build and compile shader programs
     shader = new Shader();
@@ -29,9 +29,7 @@ ShaderTestScene::ShaderTestScene(Window* _window) : Scene(_window, EnvironmentTy
     pointLigthPos = glm::vec3(1.2f, 1.0f, 2.0f);
 
     // setup environment color
-    ColorData* colorData = new ColorData();
-    colorData->color.setf(0.2f, 0.3f, 0.3f);
-    environment->setData(colorData);
+    getEnvironment<ColorEnvironment>()->setColor(0.2f, 0.3f, 0.3f);
 }
 
 ShaderTestScene::~ShaderTestScene()
