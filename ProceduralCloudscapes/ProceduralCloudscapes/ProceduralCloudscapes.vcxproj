@@ -154,7 +154,6 @@
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
-    <ClCompile Include="SceneObjects\Skybox.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
@@ -174,7 +173,6 @@
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Engine\Window.h" />
-    <ClInclude Include="SceneObjects\Skybox.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />

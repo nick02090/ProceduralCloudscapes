@@ -87,9 +87,6 @@
     <ClCompile Include="Engine\FrameBufferObject.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="SceneObjects\Skybox.cpp">
-      <Filter>Source Files\SceneObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ScreenShader.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
@@ -139,9 +136,6 @@
     </ClInclude>
     <ClInclude Include="Engine\SceneObject.h">
       <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneObjects\Skybox.h">
-      <Filter>Header Files\SceneObjects</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ScreenShader.h">
       <Filter>Header Files\Engine</Filter>

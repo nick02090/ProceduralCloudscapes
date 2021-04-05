@@ -10,7 +10,7 @@ struct ColorEnvironmentData : EnvironmentData {
 
 class ColorEnvironment : public Environment {
 public:
-	ColorEnvironment();
+	ColorEnvironment(Window* _window);
 	~ColorEnvironment() override;
 
 	void update() override;

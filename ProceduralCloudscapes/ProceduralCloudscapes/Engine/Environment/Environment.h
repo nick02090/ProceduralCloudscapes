@@ -7,6 +7,8 @@
 #include <string.h>
 #include <iostream>
 
+#include "../Window.h"
+
 enum class EnvironmentType
 {
 	UNINITIALIZED,
@@ -20,11 +22,12 @@ struct EnvironmentData {
 
 class Environment {
 public:
+	Environment(Window* _window) : window(_window) {}
 	virtual ~Environment() {
 		delete data;
 	};
 
-	static Environment* createEnvironment(EnvironmentType environmentType);
+	static Environment* createEnvironment(EnvironmentType environmentType, Window* _window);
 
 	void draw() {
 		// clear the buffers
@@ -81,6 +84,7 @@ public:
 protected:
 	EnvironmentType type = EnvironmentType::UNINITIALIZED;
 	EnvironmentData* data = nullptr;
+	Window* window;
 };
 
 #endif // !ENVIRONMENT_H

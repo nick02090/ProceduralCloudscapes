@@ -9,7 +9,7 @@ struct GradientEnvironmentData : EnvironmentData {
 
 class GradientEnvironment : public Environment {
 public:
-	GradientEnvironment();
+	GradientEnvironment(Window* _window);
 	~GradientEnvironment();
 
 	void update() override;

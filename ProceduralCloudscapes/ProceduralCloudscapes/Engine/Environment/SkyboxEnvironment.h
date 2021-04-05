@@ -4,6 +4,9 @@
 #include "Environment.h"
 #include <glm/glm.hpp>
 
+class ScreenShader;
+class FrameBufferObject;
+
 struct SkyboxEnvironmentData : EnvironmentData {
     glm::vec3 sunDirection;
 
@@ -23,7 +26,7 @@ struct SkyboxEnvironmentData : EnvironmentData {
 
 class SkyboxEnvironment : public Environment {
 public:
-	SkyboxEnvironment();
+	SkyboxEnvironment(Window* _window);
 	~SkyboxEnvironment();
 
 	void update() override;
@@ -47,6 +50,11 @@ public:
     float getMieScaleHeight() const { return static_cast<SkyboxEnvironmentData*>(data)->Hm; }
     glm::vec3 getRayleighScatteringCoeff() const { return static_cast<SkyboxEnvironmentData*>(data)->betaR; }
     glm::vec3 getMieScatteringCoeff() const { return static_cast<SkyboxEnvironmentData*>(data)->betaM; }
+
+
+    // DRAWING
+
+    ScreenShader* skyboxShader;
 };
 
 #endif // !SKYBOX_ENVIRONMENT_H

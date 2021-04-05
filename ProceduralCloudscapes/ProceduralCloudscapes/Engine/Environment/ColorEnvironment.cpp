@@ -1,6 +1,6 @@
 #include "ColorEnvironment.h"
 
-ColorEnvironment::ColorEnvironment()
+ColorEnvironment::ColorEnvironment(Window* _window) : Environment(_window)
 {
 	// Initialize member variables
 	type = EnvironmentType::Color;

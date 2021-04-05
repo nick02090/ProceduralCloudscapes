@@ -1,6 +1,6 @@
 #include "GradientEnvironment.h"
 
-GradientEnvironment::GradientEnvironment()
+GradientEnvironment::GradientEnvironment(Window* _window) : Environment(_window)
 {
 	// Initialize member variables
 	type = EnvironmentType::Gradient;

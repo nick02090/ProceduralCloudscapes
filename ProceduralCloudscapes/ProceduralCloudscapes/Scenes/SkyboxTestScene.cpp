@@ -3,11 +3,8 @@
 #include "../SceneObjects/Skybox.h"
 #include "../Engine/Shader.h"
 
-SkyboxTestScene::SkyboxTestScene(Window* _window) : Scene(_window, "Skybox Test Scene", EnvironmentType::Color)
+SkyboxTestScene::SkyboxTestScene(Window* _window) : Scene(_window, "Skybox Test Scene", EnvironmentType::Skybox)
 {
-	// add skybox object to the scene
-	Skybox* skybox = new Skybox(window);
-	sceneObjects.push_back(skybox);
 }
 
 SkyboxTestScene::~SkyboxTestScene()

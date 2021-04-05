@@ -13,7 +13,7 @@ class Scene {
 public:
 	Scene(Window* _window, const char* _name, EnvironmentType environmentType) : window(_window), name(_name) {
 		// create the environment
-		environment = Environment::createEnvironment(environmentType);
+		environment = Environment::createEnvironment(environmentType, window);
 		// set the window title
 		window->setTitle(name);
 	};
