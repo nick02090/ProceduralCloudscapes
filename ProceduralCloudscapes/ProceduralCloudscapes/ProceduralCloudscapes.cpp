@@ -28,7 +28,7 @@ int main()
     Window window;
 
     // load a scene that will show up in the window
-    Scene* scene = new SkyboxTestScene(&window);
+    Scene* scene = new ShaderTestScene(&window);
 
     // render loop
     while (window.isRunning())

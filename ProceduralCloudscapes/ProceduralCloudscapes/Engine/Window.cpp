@@ -51,7 +51,7 @@ void Window::processInput()
         glfwSetWindowShouldClose(glfwWindow, true);
 
     // disable movement when cursor is disabled
-    if (!mouseCursorDisabled) {
+    if (mouseCursorDisabled) {
         return;
     }
 
