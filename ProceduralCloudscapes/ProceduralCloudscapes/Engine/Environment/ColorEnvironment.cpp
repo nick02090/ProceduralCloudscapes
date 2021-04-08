@@ -1,5 +1,7 @@
 #include "ColorEnvironment.h"
 
+#include <imgui.h>
+
 ColorEnvironment::ColorEnvironment(Window* _window) : Environment(_window)
 {
 	// Initialize member variables
@@ -23,4 +25,8 @@ void ColorEnvironment::update()
 
 void ColorEnvironment::extendGUI()
 {
+	// Color
+	ImVec4 color = getColor().toIMGUI();
+	ImGui::ColorEdit3("Color", (float*)&color);
+	setColor(Color::fromIMGUI(color));
 }

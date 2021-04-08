@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <imgui.h>
 
 /// <summary>
 /// 'f' suffix in the methods consider a value from range [0.f, 1.0f]
@@ -25,7 +26,15 @@ public:
 		setGf(_g);
 		setBf(_b);
 	}
+	Color(const Color& color) {
+		r = color.r;
+		g = color.g;
+		b = color.b;
+	}
 	~Color() {}
+
+	ImVec4 toIMGUI() const { return ImVec4(getRf(), getGf(), getBf(), 1.0); }
+	static Color fromIMGUI(ImVec4 imgui) { return Color(imgui.x, imgui.y, imgui.z); }
 
 	// GETTERS
 	// -------
