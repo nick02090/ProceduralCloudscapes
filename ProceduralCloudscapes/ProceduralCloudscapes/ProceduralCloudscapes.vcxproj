@@ -143,6 +143,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Compile\glad.c" />
+    <ClCompile Include="Compile\imgui\imgui.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Compile\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Compile\stb_image.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Environment\ColorEnvironment.cpp" />
@@ -150,6 +157,7 @@
     <ClCompile Include="Engine\Environment\GradientEnvironment.cpp" />
     <ClCompile Include="Engine\Environment\SkyboxEnvironment.cpp" />
     <ClCompile Include="Engine\FrameBufferObject.cpp" />
+    <ClCompile Include="Engine\GUI.cpp" />
     <ClCompile Include="Engine\ScreenShader.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
@@ -167,6 +175,8 @@
     <ClInclude Include="Engine\Environment\GradientEnvironment.h" />
     <ClInclude Include="Engine\Environment\SkyboxEnvironment.h" />
     <ClInclude Include="Engine\FrameBufferObject.h" />
+    <ClInclude Include="Engine\GUI.h" />
+    <ClInclude Include="Engine\GUIBuilder.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneObject.h" />
     <ClInclude Include="Engine\ScreenShader.h" />

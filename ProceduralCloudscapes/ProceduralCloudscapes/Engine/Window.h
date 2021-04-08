@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "Camera.h"
+#include "GUI.h"
+#include "GUIBuilder.h"
 
 // default window settings
 const size_t WINDOW_WIDTH = 1280;
@@ -22,7 +24,7 @@ enum class Callback
 	Scroll
 };
 
-class Window {
+class Window : public GUIBuilder {
 public:
 	/// <summary>
 	/// Initializes new window as well as all necessary libs for rendering (GLFW, GLAD, OPENGL).
@@ -42,6 +44,8 @@ public:
 	/// Process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly.
 	/// </summary>
 	void processInput();
+
+	void buildGUI() override;
 
 	/// <summary>
 	/// Sets the title of the created window.
@@ -64,6 +68,7 @@ public:
 	inline glm::vec2 getSize() const { return glm::vec2(width, height); }
 	inline float getDeltaTime() const { return deltaTime; }
 	inline Camera* getCamera() const { return camera; }
+	inline GUI* getGUI() const { return gui; }
 	glm::mat4 getProjectionMatrix() const;
 
 	void setSize(size_t _width, size_t _height) {
@@ -117,6 +122,7 @@ private:
 	/// <param name="xoffset">X offest of the scroll</param>
 	/// <param name="yoffset">Y offset of the scoll</param>
 	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	/// <summary>
 	/// Calculates current delta time based on the elapsed time from the last frame.
 	/// </summary>
@@ -126,6 +132,9 @@ private:
 	GLFWwindow* glfwWindow;
 
 	static Camera* camera;
+
+	GUI* gui;
+	static bool mouseCursorDisabled;
 
 	// Used for calculating current delta frame time.
 	float deltaTime = 0.0f;

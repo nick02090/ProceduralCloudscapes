@@ -33,7 +33,7 @@ int main()
     // render loop
     while (window.isRunning())
     {
-        // update window every frame
+        // update window (and GUI) every frame
         window.update();
 
         // process input on the window
@@ -41,6 +41,9 @@ int main()
 
         // draw the scene
         scene->draw();
+
+        // draw the gui
+        window.getGUI()->draw();
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved, etc.)
         glfwSwapBuffers(window.getGLFWWindow());

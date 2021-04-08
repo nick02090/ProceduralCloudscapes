@@ -1,4 +1,5 @@
 #include <iostream>
+#include <imgui.h>
 
 #include "Window.h"
 #include "Camera.h"
@@ -7,6 +8,7 @@
 Camera* Window::camera = new Camera(glm::vec3(0.0f, 1.0f, 0.0f));
 
 bool Window::firstMouse = true;
+bool Window::mouseCursorDisabled = false;
 float Window::lastX = WINDOW_WIDTH / 2.0;
 float Window::lastY = WINDOW_HEIGHT / 2.0;
 
@@ -15,10 +17,16 @@ Window::Window(const char* title, size_t _width, size_t _height) : width(_width)
     glfwWindow = initGLFW(title);
     initGLAD();
     initOPENGL();
+    // create gui
+    gui = new GUI(*this);
+    // subscribe to gui
+    gui->subscribe(this);
 }
 
 Window::~Window()
 {
+    // delete gui
+    delete gui;
     // GLFW: terminate, clearing all previously allocated GLFW resources
     glfwTerminate();
 }
@@ -26,6 +34,7 @@ Window::~Window()
 void Window::update()
 {
     calculateDeltaTime();
+    gui->update();
 }
 
 void Window::calculateDeltaTime()
@@ -37,8 +46,16 @@ void Window::calculateDeltaTime()
 
 void Window::processInput()
 {
+    // quit application
     if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(glfwWindow, true);
+
+    // disable movement when cursor is disabled
+    if (!mouseCursorDisabled) {
+        return;
+    }
+
+    // movement
     const float cameraSpeed = 5.0f * deltaTime;
     if (glfwGetKey(glfwWindow, GLFW_KEY_W) == GLFW_PRESS)
         camera->processKeyboard(CameraMovement::Forward, deltaTime);
@@ -52,6 +69,17 @@ void Window::processInput()
         camera->processKeyboard(CameraMovement::Left, deltaTime);
     if (glfwGetKey(glfwWindow, GLFW_KEY_D) == GLFW_PRESS)
         camera->processKeyboard(CameraMovement::Right, deltaTime);
+}
+
+void Window::buildGUI()
+{
+    ImGui::Begin("Main");
+
+    ImGui::Text("NOTE: To enable/disable mouse cursor press TAB button on the keyboard.");
+
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+    ImGui::End();
 }
 
 glm::mat4 Window::getProjectionMatrix() const
@@ -80,6 +108,7 @@ GLFWwindow* Window::initGLFW(const char* title)
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    glfwSetKeyCallback(window, keyCallback);
     glfwSetWindowUserPointer(window, this);
     glfwSetWindowPos(window, 10, 40);
 
@@ -123,11 +152,23 @@ void Window::mouseCallback(GLFWwindow* window, double xpos, double ypos)
     lastX = (float)xpos;
     lastY = (float)ypos;
 
-    camera->processMouseMovement(xoffset, yoffset);
-
+    if (!mouseCursorDisabled)
+        camera->processMouseMovement(xoffset, yoffset);
 }
 
 void Window::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera->processMouseScroll((float)yoffset);
+}
+
+void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    // Switch cursor state
+    if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        glfwSetInputMode(window, GLFW_CURSOR, (mouseCursorDisabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL));
+        mouseCursorDisabled = !mouseCursorDisabled;
+        if (!mouseCursorDisabled) {
+            firstMouse = true;
+        }
+    }
 }
