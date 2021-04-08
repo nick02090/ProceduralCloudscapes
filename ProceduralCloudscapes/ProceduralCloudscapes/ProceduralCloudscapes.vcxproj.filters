@@ -64,6 +64,12 @@
     <Filter Include="Source Files\Compile\imgui">
       <UniqueIdentifier>{67569773-edd9-4446-ac9f-c49c54b5b3ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine\GUI">
+      <UniqueIdentifier>{d092fed4-c23d-4043-bdb4-235357bbe1f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\GUI">
+      <UniqueIdentifier>{adfd7469-0fb2-451c-9777-7275e5a770d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -135,8 +141,8 @@
     <ClCompile Include="Compile\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files\Compile\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GUI.cpp">
-      <Filter>Source Files\Engine</Filter>
+    <ClCompile Include="Engine\GUI\GUI.cpp">
+      <Filter>Source Files\Engine\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,11 +197,11 @@
     <ClInclude Include="Engine\Color.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GUI.h">
-      <Filter>Header Files\Engine</Filter>
+    <ClInclude Include="Engine\GUI\GUI.h">
+      <Filter>Header Files\Engine\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GUIBuilder.h">
-      <Filter>Header Files\Engine</Filter>
+    <ClInclude Include="Engine\GUI\GUIBuilder.h">
+      <Filter>Header Files\Engine\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

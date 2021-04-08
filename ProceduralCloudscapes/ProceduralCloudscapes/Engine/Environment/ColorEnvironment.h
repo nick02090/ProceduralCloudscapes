@@ -14,6 +14,7 @@ public:
 	~ColorEnvironment() override;
 
 	void update() override;
+	void extendGUI() override;
 
 	// SETTERS
 

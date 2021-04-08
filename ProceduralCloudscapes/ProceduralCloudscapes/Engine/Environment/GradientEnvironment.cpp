@@ -14,3 +14,7 @@ GradientEnvironment::~GradientEnvironment()
 void GradientEnvironment::update()
 {
 }
+
+void GradientEnvironment::extendGUI()
+{
+}

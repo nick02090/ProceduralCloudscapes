@@ -13,6 +13,7 @@ public:
 	~GradientEnvironment();
 
 	void update() override;
+	void extendGUI() override;
 };
 
 #endif // !GRADIENT_ENVIRONMENT_H

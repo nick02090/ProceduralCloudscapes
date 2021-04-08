@@ -10,8 +10,8 @@
 #include <vector>
 
 #include "Camera.h"
-#include "GUI.h"
-#include "GUIBuilder.h"
+#include "GUI/GUI.h"
+#include "GUI/GUIBuilder.h"
 
 // default window settings
 const size_t WINDOW_WIDTH = 1280;

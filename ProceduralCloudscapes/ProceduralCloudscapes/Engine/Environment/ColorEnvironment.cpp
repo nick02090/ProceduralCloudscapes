@@ -20,3 +20,7 @@ void ColorEnvironment::update()
 	// draw the selected background color
 	glClearColor(color.getRf(), color.getGf(), color.getBf(), 1.0f);
 }
+
+void ColorEnvironment::extendGUI()
+{
+}

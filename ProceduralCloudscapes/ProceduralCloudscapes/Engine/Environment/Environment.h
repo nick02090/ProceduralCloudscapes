@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <iostream>
+#include <imgui.h>
 
 #include "../Window.h"
 
@@ -20,9 +21,11 @@ enum class EnvironmentType
 struct EnvironmentData {
 };
 
-class Environment {
+class Environment : public GUIBuilder {
 public:
-	Environment(Window* _window) : window(_window) {}
+	Environment(Window* _window) : window(_window) {
+		window->getGUI()->subscribe(this);
+	}
 	virtual ~Environment() {
 		delete data;
 	};
@@ -37,6 +40,19 @@ public:
 	}
 
 	virtual void update() = 0;
+
+	void buildGUI() override {
+		// create the environment window
+		ImGui::Begin("Environment");
+
+		// let the child expand the window
+		extendGUI();
+
+		// finish the window
+		ImGui::End();
+	}
+
+	virtual void extendGUI() = 0;
 
 	EnvironmentType getType() const { return type; }
 	const char* getType_c() const {

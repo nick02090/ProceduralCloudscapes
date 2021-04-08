@@ -52,3 +52,21 @@ void SkyboxEnvironment::update()
 	// enable the depth test back
 	glEnable(GL_DEPTH_TEST);
 }
+
+void SkyboxEnvironment::extendGUI()
+{
+	// Sun altitude
+	float sunAltitude = getSunAltitude();
+	ImGui::SliderFloat("Sun altitude", &sunAltitude, 0.0f, 1.0f);
+	setSunAltitude(sunAltitude);
+
+	// Sun azimuth
+	float sunAzimuth = getSunAzimuth();
+	ImGui::SliderFloat("Sun azimuth", &sunAzimuth, 0.0f, 2.0f);
+	setSunAzimuth(sunAzimuth);
+
+	// Sun intensity
+	float sunIntensity = getSunIntensity();
+	ImGui::SliderFloat("Sun intensity", &sunIntensity, 10.0f, 30.0f);
+	setSunIntensity(sunIntensity);
+}

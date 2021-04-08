@@ -181,8 +181,6 @@ vec3 sky(ray view, planet earth, sun sun, scattering_info rayleigh, scattering_i
 				// calculate current sample position (middle point) and height
 				vec3 samplePositionSun = samplePosition + (tCurrentSun + segmentLengthSun * 0.5) * sunDirection;
 				float heightSun = length(samplePositionSun) - earth.radius;
-				// check if the height is below the ground
-				if (heightSun < 0.0) break;
 				// calculate optical depth for this height
 				float hrSun = exp(-heightSun / rayleigh.scaleHeight) * segmentLengthSun;
 				float hmSun = exp(-heightSun / mie.scaleHeight) * segmentLengthSun;

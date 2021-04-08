@@ -157,7 +157,7 @@
     <ClCompile Include="Engine\Environment\GradientEnvironment.cpp" />
     <ClCompile Include="Engine\Environment\SkyboxEnvironment.cpp" />
     <ClCompile Include="Engine\FrameBufferObject.cpp" />
-    <ClCompile Include="Engine\GUI.cpp" />
+    <ClCompile Include="Engine\GUI\GUI.cpp" />
     <ClCompile Include="Engine\ScreenShader.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
@@ -175,8 +175,8 @@
     <ClInclude Include="Engine\Environment\GradientEnvironment.h" />
     <ClInclude Include="Engine\Environment\SkyboxEnvironment.h" />
     <ClInclude Include="Engine\FrameBufferObject.h" />
-    <ClInclude Include="Engine\GUI.h" />
-    <ClInclude Include="Engine\GUIBuilder.h" />
+    <ClInclude Include="Engine\GUI\GUI.h" />
+    <ClInclude Include="Engine\GUI\GUIBuilder.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneObject.h" />
     <ClInclude Include="Engine\ScreenShader.h" />
