@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <iostream>
+#include <cstdlib>
 
 namespace util {
 	template<typename T>
@@ -14,6 +17,14 @@ namespace util {
 	{
 		vector.erase(std::remove(vector.begin(), vector.end(), value), vector.end());
 	}
+
+    static void print(glm::vec3 vector) {
+        std::cout << "(" << vector.x << ", " << vector.y << ", " << vector.z << ")" << std::endl;
+    }
+
+    static float random(float LO = 0.0, float HI = 1.0) {
+        return LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+    }
 
     static unsigned int loadTexture(char const* path)
     {

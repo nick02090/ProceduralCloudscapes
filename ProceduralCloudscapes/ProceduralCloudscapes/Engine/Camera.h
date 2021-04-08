@@ -39,6 +39,7 @@ public:
 	inline float getMouseSensitivity() const { return mouseSensitivity; }
 	inline glm::vec3 getPosition() const { return position; }
 	inline glm::vec3 getDirection() const { return glm::normalize(front); }
+	inline glm::vec3 getUp() const { return glm::normalize(up); }
 	void setMovementSpeed(float value) { movementSpeed = value; };
 	void setMouseSensitivity(float value) { mouseSensitivity = value; };
 

@@ -12,8 +12,8 @@
 #include "Camera.h"
 
 // default window settings
-const size_t WINDOW_WIDTH = 800;
-const size_t WINDOW_HEIGHT = 600;
+const size_t WINDOW_WIDTH = 1280;
+const size_t WINDOW_HEIGHT = 720;
 
 enum class Callback
 {
@@ -61,8 +61,24 @@ public:
 	inline bool isRunning() const { return !glfwWindowShouldClose(glfwWindow); }
 	inline size_t getWidth() const { return width; }
 	inline size_t getHeight() const { return height; }
+	inline glm::vec2 getSize() const { return glm::vec2(width, height); }
+	inline float getDeltaTime() const { return deltaTime; }
 	inline Camera* getCamera() const { return camera; }
 	glm::mat4 getProjectionMatrix() const;
+
+	void setSize(size_t _width, size_t _height) {
+		width = _width;
+		height = _height;
+		glfwSetWindowSize(glfwWindow, static_cast<int>(width), static_cast<int>(height));
+	}
+	void setWidth(size_t _width) { 
+		width = _width;
+		glfwSetWindowSize(glfwWindow, static_cast<int>(width), static_cast<int>(height));
+	}
+	void setHeight(size_t _height) { 
+		height = _height;
+		glfwSetWindowSize(glfwWindow, static_cast<int>(width), static_cast<int>(height));
+	}
 
 private:
 	/// <summary>

@@ -5,7 +5,7 @@
 
 class ScreenShader {
 public:
-	ScreenShader(const char* fragShaderPath);
+	ScreenShader(const char* fragShaderPath, const char* vertShaderPath = "Shaders/Screen/shader.vert");
 	~ScreenShader();
 
 	void draw(unsigned int texID);

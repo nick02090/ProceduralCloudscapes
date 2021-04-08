@@ -1,10 +1,10 @@
 #include "ScreenShader.h"
 
-ScreenShader::ScreenShader(const char* fragShaderPath)
+ScreenShader::ScreenShader(const char* fragShaderPath, const char* vertShaderPath)
 {
     // Build and compile shader program
     shader = new Shader();
-    shader->attachShader("Shaders/Screen/shader.vert", ShaderInfo(ShaderType::kVertex));
+    shader->attachShader(vertShaderPath, ShaderInfo(ShaderType::kVertex));
     shader->attachShader(fragShaderPath, ShaderInfo(ShaderType::kFragment));
     shader->linkProgram();
 

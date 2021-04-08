@@ -81,6 +81,7 @@ GLFWwindow* Window::initGLFW(const char* title)
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
     glfwSetWindowUserPointer(window, this);
+    glfwSetWindowPos(window, 10, 40);
 
     return window;
 }

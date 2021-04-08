@@ -179,17 +179,15 @@
     <ClInclude Include="Scenes\SkyboxTestScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Default\shader.vert" />
+    <None Include="Shaders\Default\textureShader.frag" />
     <None Include="Shaders\FramebufferTest\screenShader.frag" />
-    <None Include="Shaders\FramebufferTest\screenShader.vert" />
-    <None Include="Shaders\FramebufferTest\shader.frag" />
-    <None Include="Shaders\FramebufferTest\shader.vert" />
     <None Include="Shaders\RaymarchTest\screenShader.frag" />
-    <None Include="Shaders\RaymarchTest\screenShader.vert" />
-    <None Include="Shaders\RaymarchTest\shader.frag" />
-    <None Include="Shaders\RaymarchTest\shader.vert" />
+    <None Include="Shaders\Screen\shader.vert" />
     <None Include="Shaders\ShaderTest\lightShader.frag" />
     <None Include="Shaders\ShaderTest\shader.frag" />
     <None Include="Shaders\ShaderTest\shader.vert" />
+    <None Include="Shaders\Skybox\sky.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

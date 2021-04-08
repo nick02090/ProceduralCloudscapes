@@ -1,6 +1,7 @@
 #include "SkyboxEnvironment.h"
 #include "../ScreenShader.h"
 #include "../FrameBufferObject.h"
+#include "../Utilities.h"
 
 SkyboxEnvironment::SkyboxEnvironment(Window* _window) : Environment(_window)
 {
@@ -10,16 +11,12 @@ SkyboxEnvironment::SkyboxEnvironment(Window* _window) : Environment(_window)
 
 	// Initialize skybox properties
 	SkyboxEnvironmentData* skyboxData = static_cast<SkyboxEnvironmentData*>(data);
-	skyboxData->sunDirection = glm::vec3(0.f, 1.f, 0.f);
-	skyboxData->earthRadius = 6371e3;
-	skyboxData->atmosphereRadius = 6420e3;
-	skyboxData->Hr = 7994;
-	skyboxData->Hm = 1200;
-	skyboxData->betaR = glm::vec3(3.8e-6f, 13.5e-6f, 33.1e-6f);
-	skyboxData->betaM = glm::vec3(21e-6f);
+	skyboxData->sunAltitude = 1.0f;
+	skyboxData->sunAzimuth = 0.0f;
+	skyboxData->sunIntensity = 20.0f;
 
 	// Build and compile shader program
-	skyboxShader = new ScreenShader("Shaders/RaymarchTest/screenShader.frag");
+	skyboxShader = new ScreenShader("Shaders/Skybox/sky.frag");
 }
 
 SkyboxEnvironment::~SkyboxEnvironment()
@@ -35,11 +32,19 @@ void SkyboxEnvironment::update()
 	glDisable(GL_DEPTH_TEST);
 
 	// configure shader data
-	Shader* ssShader = skyboxShader->getShader();
-	ssShader->use();
-	ssShader->setVec3("cameraPos", camera->getPosition());
-	ssShader->setVec3("lookAt", camera->getDirection());
-	ssShader->setFloat("zoom", camera->getZoom());
+	Shader* shader = skyboxShader->getShader();
+	shader->use();
+
+	// set shaders camera info
+	shader->setVec3("cameraPosition", camera->getPosition());
+	shader->setVec3("cameraDirection", camera->getDirection());
+	shader->setVec3("cameraUp", camera->getUp());
+	shader->setVec2("resolution", window->getSize());
+
+	// set shaders sky info
+	shader->setFloat("sunAltitude", getSunAltitude());
+	shader->setFloat("sunAzimuth", getSunAzimuth());
+	shader->setFloat("sunIntensity", getSunIntensity());
 
 	// draw the sky
 	skyboxShader->draw(0);

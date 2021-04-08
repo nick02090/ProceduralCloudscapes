@@ -6,6 +6,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <cstdlib>
+#include <ctime>
 
 #include "Engine/Window.h"
 #include "Engine/Scene.h"
@@ -16,6 +18,9 @@
 
 int main()
 {
+    // generate seed for random number generation
+    srand(static_cast <unsigned> (time(0)));
+
     // configure global stbi state
     stbi_set_flip_vertically_on_load(true);
 

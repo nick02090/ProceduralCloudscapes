@@ -23,7 +23,7 @@ ray create_camera_ray(vec2 uv, vec3 camPos, vec3 lookAt, float zoom){
     vec3 c=camPos+f*zoom;
     vec3 i=c+uv.x*r+uv.y*u;
     vec3 dir=i-camPos;
-    return ray(camPos,dir);
+    return ray(camPos,-dir);
 }
 
 float GetDist(vec3 p) {
@@ -67,17 +67,12 @@ float GetLight(vec3 p) {
 
 void main()
 {
-//    vec3 col = texture(screenTexture, TexCoords).rgb;
-
-    vec2 iResolution = vec2(800.0, 600.0);
+    vec2 iResolution = vec2(1280, 720);
     vec2 uv = (gl_FragCoord.xy-0.5*iResolution.xy)/iResolution.y;
     vec3 col = vec3(0);
-
-//    vec3 ro = vec3(0, 2, 0);
     ray ray = create_camera_ray(uv, cameraPos, lookAt, zoom);
     vec3 ro = ray.pos;
     vec3 rd = normalize(vec3(uv.x, uv.y, 1));
-//    vec3 rd = ray.dir;
     float d = RayMarch(ro, rd);
     vec3 p = ro + rd * d;
 

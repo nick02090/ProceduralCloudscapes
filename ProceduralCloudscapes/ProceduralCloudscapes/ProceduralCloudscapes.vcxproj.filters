@@ -52,6 +52,15 @@
     <Filter Include="Source Files\Engine\Environment">
       <UniqueIdentifier>{239239f0-9e3c-4405-9204-105361b23d05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Default">
+      <UniqueIdentifier>{d21f2cb8-4389-461c-80ef-36dac04a178d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Screen">
+      <UniqueIdentifier>{f60d2066-7ae0-4f5c-8990-6b8fc7ebaa71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Skybox">
+      <UniqueIdentifier>{d8e63cc9-5de4-4e30-ab57-31cf6057a0a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -160,25 +169,7 @@
     <None Include="Shaders\FramebufferTest\screenShader.frag">
       <Filter>Resource Files\Shaders\FramebufferTest</Filter>
     </None>
-    <None Include="Shaders\FramebufferTest\screenShader.vert">
-      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
-    </None>
     <None Include="Shaders\RaymarchTest\screenShader.frag">
-      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
-    </None>
-    <None Include="Shaders\RaymarchTest\screenShader.vert">
-      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
-    </None>
-    <None Include="Shaders\FramebufferTest\shader.frag">
-      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
-    </None>
-    <None Include="Shaders\RaymarchTest\shader.frag">
-      <Filter>Resource Files\Shaders\RaymarchTest</Filter>
-    </None>
-    <None Include="Shaders\FramebufferTest\shader.vert">
-      <Filter>Resource Files\Shaders\FramebufferTest</Filter>
-    </None>
-    <None Include="Shaders\RaymarchTest\shader.vert">
       <Filter>Resource Files\Shaders\RaymarchTest</Filter>
     </None>
     <None Include="Shaders\ShaderTest\lightShader.frag">
@@ -189,6 +180,18 @@
     </None>
     <None Include="Shaders\ShaderTest\shader.vert">
       <Filter>Resource Files\Shaders\ShaderTest</Filter>
+    </None>
+    <None Include="Shaders\Default\shader.vert">
+      <Filter>Resource Files\Shaders\Default</Filter>
+    </None>
+    <None Include="Shaders\Default\textureShader.frag">
+      <Filter>Resource Files\Shaders\Default</Filter>
+    </None>
+    <None Include="Shaders\Screen\shader.vert">
+      <Filter>Resource Files\Shaders\Screen</Filter>
+    </None>
+    <None Include="Shaders\Skybox\sky.frag">
+      <Filter>Resource Files\Shaders\Skybox</Filter>
     </None>
   </ItemGroup>
 </Project>
