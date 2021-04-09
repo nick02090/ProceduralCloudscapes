@@ -10,7 +10,7 @@ class FrameBufferObject;
 struct SkyboxEnvironmentData : EnvironmentData {
     // altitude of the sun from range [0.0, 1.0] where 0.0 is night and 1.0 is clear day
     float sunAltitude;
-    // azimuth of the sun from range [0.0, 2.0] where 0.0 is in front and 1.0 is behind and 2.0 is in front again
+    // azimuth of the sun from range [-1.0, 1.0] where 0.0 is in front and -1.0 and 1.0 is behind (but coming from different side)
     float sunAzimuth;
     // sun intensity (default is 20.f) from range [10.0, 30.0]
     float sunIntensity;

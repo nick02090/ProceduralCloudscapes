@@ -11,7 +11,7 @@ uniform vec2 resolution;
 
 // Sun
 uniform float sunAltitude; // from range [0.0, 1.0] where 0.0 is night and 1.0 is clear day
-uniform float sunAzimuth; // from range [0.0, 1.0] where 0.0 is in front and 1.0 is behind
+uniform float sunAzimuth; // from range [-1.0, 1.0] where 0.0 is in front and (-)1.0 is behind
 uniform float sunIntensity;
 uniform vec3 sunColor;
 

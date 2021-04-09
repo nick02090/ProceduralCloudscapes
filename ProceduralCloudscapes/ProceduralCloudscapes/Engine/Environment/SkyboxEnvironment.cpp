@@ -62,7 +62,7 @@ void SkyboxEnvironment::extendGUI()
 
 	// Sun azimuth
 	float sunAzimuth = getSunAzimuth();
-	ImGui::SliderFloat("Sun azimuth", &sunAzimuth, 0.0f, 2.0f);
+	ImGui::SliderFloat("Sun azimuth", &sunAzimuth, -1.0f, 1.0f);
 	setSunAzimuth(sunAzimuth);
 
 	// Sun intensity
