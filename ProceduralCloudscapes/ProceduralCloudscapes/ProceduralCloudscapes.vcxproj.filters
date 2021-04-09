@@ -144,6 +144,12 @@
     <ClCompile Include="Engine\GUI\GUI.cpp">
       <Filter>Source Files\Engine\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjects\Clouds.cpp">
+      <Filter>Source Files\SceneObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Texture.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -202,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="Engine\GUI\GUIBuilder.h">
       <Filter>Header Files\Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjects\Clouds.h">
+      <Filter>Header Files\SceneObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Texture.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

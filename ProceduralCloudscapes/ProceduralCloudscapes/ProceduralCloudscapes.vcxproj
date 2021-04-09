@@ -160,8 +160,10 @@
     <ClCompile Include="Engine\GUI\GUI.cpp" />
     <ClCompile Include="Engine\ScreenShader.cpp" />
     <ClCompile Include="Engine\Shader.cpp" />
+    <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="ProceduralCloudscapes.cpp" />
+    <ClCompile Include="SceneObjects\Clouds.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
@@ -181,8 +183,10 @@
     <ClInclude Include="Engine\SceneObject.h" />
     <ClInclude Include="Engine\ScreenShader.h" />
     <ClInclude Include="Engine\Shader.h" />
+    <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Utilities.h" />
     <ClInclude Include="Engine\Window.h" />
+    <ClInclude Include="SceneObjects\Clouds.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />
