@@ -44,11 +44,14 @@ public:
 	// texture ID
 	unsigned int ID;
 
-	Texture(TextureType _type, size_t _size, uint8_t nrChannels);
+	Texture(TextureType _type, size_t _size, uint8_t nrChannels, bool is8bit);
+	void bind(int binding);
 	~Texture();
 
+	unsigned int getGLType() const { return info->glType; }
+	TextureType getType() const { return info->type; }
 private:
-	unsigned int generateGlTexture(uint8_t nrChannels);
+	unsigned int generateGlTexture(uint8_t nrChannels, bool is8bit);
 
 	TextureInfo* info;
 	size_t size;

@@ -11,7 +11,7 @@ FramebufferTestScene::FramebufferTestScene(Window* _window) : Scene(_window, "Fr
     // build and compile shader programs
     shader = new Shader();
     shader->attachShader("Shaders/Default/shader.vert", ShaderInfo(ShaderType::kVertex));
-    shader->attachShader("Shaders/Default/textureShader.frag", ShaderInfo(ShaderType::kFragment));
+    shader->attachShader("Shaders/Default/textureShader2D.frag", ShaderInfo(ShaderType::kFragment));
     shader->linkProgram();
 
     screenShader = new ScreenShader("Shaders/FramebufferTest/screenShader.frag");

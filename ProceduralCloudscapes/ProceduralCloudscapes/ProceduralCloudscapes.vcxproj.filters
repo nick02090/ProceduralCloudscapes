@@ -70,6 +70,12 @@
     <Filter Include="Source Files\Engine\GUI">
       <UniqueIdentifier>{adfd7469-0fb2-451c-9777-7275e5a770d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Noise">
+      <UniqueIdentifier>{975a21a1-b5a9-4242-a51d-42e223c5fb75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Clouds">
+      <UniqueIdentifier>{98f57bad-d1fe-451b-bce2-7dd8cdb2e6cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -150,6 +156,9 @@
     <ClCompile Include="Engine\Texture.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjects\PlaneTexture.cpp">
+      <Filter>Source Files\SceneObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -215,6 +224,9 @@
     <ClInclude Include="Engine\Texture.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="SceneObjects\PlaneTexture.h">
+      <Filter>Header Files\SceneObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">
@@ -235,7 +247,7 @@
     <None Include="Shaders\Default\shader.vert">
       <Filter>Resource Files\Shaders\Default</Filter>
     </None>
-    <None Include="Shaders\Default\textureShader.frag">
+    <None Include="Shaders\Default\textureShader2D.frag">
       <Filter>Resource Files\Shaders\Default</Filter>
     </None>
     <None Include="Shaders\Screen\shader.vert">
@@ -243,6 +255,21 @@
     </None>
     <None Include="Shaders\Skybox\sky.frag">
       <Filter>Resource Files\Shaders\Skybox</Filter>
+    </None>
+    <None Include="Shaders\Noise\curl.comp">
+      <Filter>Resource Files\Shaders\Noise</Filter>
+    </None>
+    <None Include="Shaders\Noise\perlinWorley.comp">
+      <Filter>Resource Files\Shaders\Noise</Filter>
+    </None>
+    <None Include="Shaders\Noise\worley.comp">
+      <Filter>Resource Files\Shaders\Noise</Filter>
+    </None>
+    <None Include="Shaders\Clouds\weatherMap.comp">
+      <Filter>Resource Files\Shaders\Clouds</Filter>
+    </None>
+    <None Include="Shaders\Default\textureShader3D.frag">
+      <Filter>Resource Files\Shaders\Default</Filter>
     </None>
   </ItemGroup>
 </Project>
