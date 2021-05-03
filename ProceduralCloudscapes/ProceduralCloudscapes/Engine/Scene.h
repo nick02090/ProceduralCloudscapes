@@ -28,7 +28,9 @@ public:
 	}
 
 	void draw() {
-		// render the environment
+		// clear the buffers
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// render the environment (environment is rendered in main buffer and in seperate texture)
 		environment->draw();
 		// update the scene
 		update();
@@ -41,10 +43,7 @@ public:
 
 	virtual void update() = 0;
 
-protected:
-	Window* window;
-	std::vector<SceneObject*> sceneObjects;
-	const char* name;
+	Texture* getEnvironmentTexture() const { return environment->getTexture(); }
 
 	template<class T, typename std::enable_if<!std::is_same<T, Environment>::value, int>::type = 0>
 	T* getEnvironment() {
@@ -58,8 +57,20 @@ protected:
 		return static_cast<T*>(environment);
 	}
 
+protected:
+	Window* window;
+	const char* name;
+
+	void addSceneObject(SceneObject* sceneObject) {
+		// Add scene object to the list
+		sceneObjects.push_back(sceneObject);
+		// Set scene object scene to this
+		sceneObject->setScene(this);
+	}
+
 private:
 	Environment* environment;
+	std::vector<SceneObject*> sceneObjects;
 };
 
 #endif // !SCENE_H

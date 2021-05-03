@@ -28,9 +28,6 @@ void SkyboxEnvironment::update()
 {
 	Camera* camera = window->getCamera();
 
-	// disable depth test while drawing the sky (so the sky is in the background of everything)
-	glDisable(GL_DEPTH_TEST);
-
 	// configure shader data
 	Shader* shader = skyboxShader->getShader();
 	shader->use();
@@ -45,12 +42,6 @@ void SkyboxEnvironment::update()
 	shader->setFloat("sunAltitude", getSunAltitude());
 	shader->setFloat("sunAzimuth", getSunAzimuth());
 	shader->setFloat("sunIntensity", getSunIntensity());
-
-	// draw the sky
-	skyboxShader->draw(0);
-
-	// enable the depth test back
-	glEnable(GL_DEPTH_TEST);
 }
 
 void SkyboxEnvironment::extendGUI()

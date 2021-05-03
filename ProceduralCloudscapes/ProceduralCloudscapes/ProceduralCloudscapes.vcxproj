@@ -83,6 +83,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\FER\dipl\master\ProceduralCloudscapes\ProceduralCloudscapes\ProceduralCloudscapes\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\FER\dipl\master\ProceduralCloudscapes\ProceduralCloudscapes\ProceduralCloudscapes\Libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -195,6 +197,7 @@
     <ClInclude Include="Scenes\SkyboxTestScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Clouds\clouds.frag" />
     <None Include="Shaders\Clouds\weatherMap.comp" />
     <None Include="Shaders\Default\shader.vert" />
     <None Include="Shaders\Default\textureShader2D.frag" />

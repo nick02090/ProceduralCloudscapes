@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Texture::Texture(TextureType _type, size_t _size, uint8_t nrChannels, bool is8bit)
+Texture::Texture(TextureType _type, glm::vec3 _size, uint8_t nrChannels, bool is8bit)
 {
 	// initialize member variables
 	size = _size;
@@ -58,13 +58,13 @@ unsigned int Texture::generateGlTexture(uint8_t nrChannels, bool is8bit)
 	switch (info->type)
 	{
 	case TextureType::oneDimensional:
-		glTexImage1D(GL_TEXTURE_1D, 0, format, static_cast<GLsizei>(size), 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage1D(GL_TEXTURE_1D, 0, format, static_cast<GLsizei>(size.x), 0, GL_RGBA, GL_FLOAT, NULL);
 		break;
 	case TextureType::twoDimensional:
-		glTexImage2D(GL_TEXTURE_2D, 0, format, static_cast<GLsizei>(size), static_cast<GLsizei>(size), 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, static_cast<GLsizei>(size.x), static_cast<GLsizei>(size.y), 0, GL_RGBA, GL_FLOAT, NULL);
 		break;
 	case TextureType::threeDimensional:
-		glTexImage3D(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(size), static_cast<GLsizei>(size), static_cast<GLsizei>(size), 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage3D(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(size.x), static_cast<GLsizei>(size.y), static_cast<GLsizei>(size.z), 0, GL_RGBA, GL_FLOAT, NULL);
 		break;
 	default:
 		std::cout << "ERROR::TEXTURE TextureType is invalidly set!" << std::endl;

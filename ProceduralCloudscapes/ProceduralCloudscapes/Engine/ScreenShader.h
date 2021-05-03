@@ -3,12 +3,14 @@
 
 #include "Shader.h"
 
+class Texture;
+
 class ScreenShader {
 public:
 	ScreenShader(const char* fragShaderPath, const char* vertShaderPath = "Shaders/Screen/shader.vert");
 	~ScreenShader();
 
-	void draw(unsigned int texID);
+	void draw(const Texture& texture);
 
 	// GETTERS
 	Shader* getShader() { return shader; }

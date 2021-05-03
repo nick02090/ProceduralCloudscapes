@@ -1,5 +1,7 @@
 #include "FrameBufferObject.h"
 
+#include "Texture.h"
+
 FrameBufferObject::FrameBufferObject()
 {
 	glGenFramebuffers(1, &FBO);
@@ -10,9 +12,9 @@ FrameBufferObject::~FrameBufferObject()
 	// delete the frame buffer
 	glDeleteFramebuffers(1, &FBO);
 	// delete color attachments
-	for (auto colorTex : colorAttachments)
+	for (auto colorTex : colorTextures)
 	{
-		glDeleteTextures(1, &colorTex);
+		glDeleteTextures(1, &colorTex->ID);
 	}
 }
 
@@ -45,19 +47,15 @@ void FrameBufferObject::attachColorTexture(unsigned int width, unsigned int heig
 	// first bind the FBO
 	bind();
 
-	unsigned int colorTex;
-	glGenTextures(1, &colorTex);
-	glBindTexture(GL_TEXTURE_2D, colorTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, getColorAttachmentNumber(), GL_TEXTURE_2D, colorTex, 0);
+	Texture* colorTex = new Texture(TextureType::twoDimensional, glm::vec3(width, height, 0.0), 3, false);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, getColorAttachmentNumber(), colorTex->getGLType(), colorTex->ID, 0);
 
 	// unbind the FBO since the configuration is done
 	unbind();
 
 	// add the attachment to the list
-	colorAttachments.push_back(colorTex);
+	colorTextures.push_back(colorTex);
 }
 
 void FrameBufferObject::attachDepthTexture(unsigned int width, unsigned int height)
@@ -78,5 +76,5 @@ void FrameBufferObject::attachDepthTexture(unsigned int width, unsigned int heig
 
 GLenum FrameBufferObject::getColorAttachmentNumber() const
 {
-	return static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + colorAttachments.size());
+	return static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + colorTextures.size());
 }

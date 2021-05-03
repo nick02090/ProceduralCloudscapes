@@ -3,6 +3,8 @@
 
 #include "Window.h"
 
+class Scene;
+
 class SceneObject {
 public:
 	SceneObject(Window* _window) : window(_window) {};
@@ -17,6 +19,11 @@ public:
 
 protected:
 	Window* window;
+	Scene* scene = nullptr;
+
+	friend class Scene;
+	inline void setScene(Scene* _scene) { scene = _scene; }
+	inline Scene* getScene() const { return scene; }
 };
 
 #endif // !SCENE_OBJECT_H

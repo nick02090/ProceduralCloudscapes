@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include <string>
+#include <glm/glm.hpp>
 
 enum class TextureType {
 	oneDimensional = 0,
@@ -44,7 +45,7 @@ public:
 	// texture ID
 	unsigned int ID;
 
-	Texture(TextureType _type, size_t _size, uint8_t nrChannels, bool is8bit);
+	Texture(TextureType _type, glm::vec3 _size, uint8_t nrChannels, bool is8bit);
 	void bind(int binding);
 	~Texture();
 
@@ -54,7 +55,7 @@ private:
 	unsigned int generateGlTexture(uint8_t nrChannels, bool is8bit);
 
 	TextureInfo* info;
-	size_t size;
+	glm::vec3 size;
 };
 
 #endif // !TEXTURE_H

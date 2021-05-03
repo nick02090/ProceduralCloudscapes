@@ -2,10 +2,11 @@
 
 #include "../Engine/Texture.h"
 
-PlaneTexture::PlaneTexture(Window* _window, Texture* _texture, glm::vec3 offset) : SceneObject(_window)
+PlaneTexture::PlaneTexture(Window* _window, Texture* _texture, glm::vec3 offset, TextureChannel _channel) : SceneObject(_window)
 {
 	// initialize member variables
 	texture = _texture;
+	channel = _channel;
 
 	// create shader
 	shader = new Shader();
@@ -37,10 +38,14 @@ void PlaneTexture::update()
 	glm::mat4 projection = glm::perspective(glm::radians(camera->getZoom()), (float)window->getWidth() / (float)window->getHeight(), 0.1f, 100.0f);
 	shader->setMat4("view", view);
 	shader->setMat4("projection", projection);
+	shader->setMat4("model", glm::mat4(1.0f));
+
+	shader->setInt("channel", static_cast<int>(channel));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(texture->getGLType(), texture->ID);
 
 	glBindVertexArray(planeVAO);
-	glBindTexture(texture->getGLType(), texture->ID);
-	shader->setMat4("model", glm::mat4(1.0f));
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }

@@ -1,0 +1,145 @@
+#version 460 core
+//===============================================================================================
+// INPUT/OUTPUT
+//===============================================================================================
+
+// 4 threads are used for every dimension
+layout (local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+
+// Output 3D texture
+layout (rgba8, binding = 0) uniform image3D worleyTex;
+
+//===============================================================================================
+// CONSTANTS
+//===============================================================================================
+
+// Hash
+#define UI0 1597334673U
+#define UI1 3812015801U
+#define UI2 uvec2(UI0, UI1)
+#define UI3 uvec3(UI0, UI1, 2798796415U)
+#define UIF (1.0 / float(0xffffffffU))
+
+// 3D texture
+const float resolution = 32.0f;
+
+// Worley
+const float worleyAmplitude = 0.8f;
+const float worleyFrequency = 5.0f;
+const int worleyOctaves = 3;
+const float worleyLacunarity = 4.0f;
+const float worleyGain = 0.2f;
+
+//===============================================================================================
+// STRUCTS
+//===============================================================================================
+
+struct fbm {
+    float amplitude;
+    float frequency;
+    int octaves;
+    float lacunarity;
+    float gain;
+};
+
+//===============================================================================================
+// METHODS
+//===============================================================================================
+
+// Hash function
+vec3 hash33(vec3 p)
+{
+	uvec3 q = uvec3(ivec3(p)) * UI3;
+	q = (q.x ^ q.y ^ q.z) * UI3;
+	return -1.0 + 2.0 * vec3(q) * UIF;
+}
+
+// Converts/Remaps a value from one range to another, where x is value to be remapped,
+// original range is [Lo, Ho] and a new one is [Ln, Hn].
+float remap(float x, float Lo, float Ho, float Ln, float Hn)
+{
+    return (((x - Lo) / (Ho - Lo)) * (Hn - Ln)) + Ln;
+}
+
+// Calculates Worley noise (inverted)
+float worleyNoise(vec3 coord, float frequency)
+{
+    // tile the space
+    vec3 id = floor(coord);
+    vec3 point = fract(coord);
+
+    // set initial distance value
+    float minDist = 10000.0;
+
+    // iterate through the neighbour tiles
+    for (float x = -1.0; x <= 1.0; ++x)
+    {
+        for(float y = -1.0; y <= 1.0; ++y)
+        {
+            for(float z = -1.0; z <= 1.0; ++z)
+            {
+                // neighbour place in the grid
+                vec3 neighbour = vec3(x, y, z);
+                // create a random Worley point for this tile
+            	vec3 randomPoint = hash33(mod(id + neighbour, vec3(frequency))) * 0.5 + 0.5;
+    			randomPoint += neighbour;
+
+                // distance to the calculated random point
+            	vec3 diff = point - randomPoint;
+                // keep the closer distance
+           		minDist = min(minDist, dot(diff, diff));
+            }
+        }
+    }
+    
+    // inverted worley noise
+    return 1.0f - minDist;
+}
+
+// Calculates fBm for the worley noise defined with fbm at coord
+float noiseFBM(vec3 coord, fbm fbm) {
+    // initial values
+    float frequency = fbm.frequency;
+    float amplitude = fbm.amplitude;
+    float noise = 0.0f;
+    // loop through octaves
+    for (int i = 0; i < fbm.octaves; ++i) {
+        // calculate worley noise
+        float noiseRes = worleyNoise(coord * frequency, frequency);
+        // accumulate noise
+        noise += amplitude * noiseRes;
+        // update properties
+        frequency *= fbm.lacunarity;
+        amplitude *= fbm.gain;
+    }
+    // return final fBm noise
+    return noise;
+}
+
+//===============================================================================================
+// MAIN
+//===============================================================================================
+
+void main()
+{
+    // get current workgroup pixel
+    ivec3 pixel = ivec3(gl_GlobalInvocationID.xyz);
+    // calculate current coord
+    vec3 coord = vec3(float(pixel.x) / resolution, float(pixel.y) / resolution, float(pixel.z) / resolution);
+
+    // initialize result color
+    vec4 col = vec4(0.0);
+    
+    // prepare worley noise fbm
+    fbm worley = fbm(worleyAmplitude, worleyFrequency, worleyOctaves, worleyLacunarity, worleyGain);
+
+    // calculate Worley fBm noises with increasing frequencies
+    col.r += noiseFBM(coord, worley);
+    worley.frequency *= 2.0f;
+    col.g += noiseFBM(coord, worley);
+    worley.frequency *= 2.0f;
+    col.b += noiseFBM(coord, worley);
+
+    // save final 3D texture
+	imageStore(worleyTex, pixel, col);
+}

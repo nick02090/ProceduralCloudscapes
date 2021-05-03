@@ -71,7 +71,7 @@ void FramebufferTestScene::update()
     glClear(GL_COLOR_BUFFER_BIT);
 
     screenShader->getShader()->use();
-    screenShader->draw(framebuffer->getColorTextureID(0));
+    screenShader->draw(*framebuffer->getColorTexture(0));
 
     glm::vec3 camPos = camera->getPosition();
     std::cout << camPos.x << " " << camPos.y << " " << camPos.z << std::endl;

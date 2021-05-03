@@ -9,6 +9,9 @@
 #include <imgui.h>
 
 #include "../Window.h"
+#include "../FrameBufferObject.h"
+#include "../ScreenShader.h"
+#include "../Texture.h"
 
 enum class EnvironmentType
 {
@@ -24,19 +27,52 @@ struct EnvironmentData {
 class Environment : public GUIBuilder {
 public:
 	Environment(Window* _window) : window(_window) {
+		// subscribe to GUI
 		window->getGUI()->subscribe(this);
+
+		// framebuffer configuration
+		framebuffer = new FrameBufferObject();
+		// create a color attachment texture
+		framebuffer->attachColorTexture((unsigned int)window->getWidth(), (unsigned int)window->getHeight());
+		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+		framebuffer->attachDepthTexture((unsigned int)window->getWidth(), (unsigned int)window->getHeight());
+		// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+		if (!framebuffer->checkStatus())
+			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 	}
 	virtual ~Environment() {
 		delete data;
+		delete framebuffer;
 	};
 
 	static Environment* createEnvironment(EnvironmentType environmentType, Window* _window);
 
+	Texture* getTexture() const { return framebuffer->getColorTexture(0); }
+
 	void draw() {
 		// clear the buffers
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// bind the framebuffer
+		framebuffer->bind();
+		// clear its data before any rendering
+		framebuffer->clear();
+
 		// render the environment
 		update();
+
+		// unbind the buffer (set the default buffer)
+		FrameBufferObject::unbind();
+
+		// create a screen shader for rendering the buffer on the screen
+		ScreenShader* screenShader = new ScreenShader("Shaders/Default/textureShader2D.frag");
+		// disable depth test so screen-space quad isn't discarded due to depth test
+		glDisable(GL_DEPTH_TEST);
+		// draw the screen shader with the buffer texture
+		screenShader->draw(*getTexture());
+		// delete the created screen shader
+		delete screenShader;
+		// enable back depth test
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	virtual void update() = 0;
@@ -101,6 +137,7 @@ protected:
 	EnvironmentType type = EnvironmentType::UNINITIALIZED;
 	EnvironmentData* data = nullptr;
 	Window* window;
+	FrameBufferObject* framebuffer;
 };
 
 #endif // !ENVIRONMENT_H

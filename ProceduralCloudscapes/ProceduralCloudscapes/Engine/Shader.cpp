@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include "Texture.h"
+
 Shader::Shader()
 {
 	// create a shader program
@@ -74,6 +76,13 @@ void Shader::setVec3(const std::string& name, glm::vec3 value) const
 void Shader::setVec2(const std::string& name, glm::vec2 value) const
 {
 	glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+}
+
+void Shader::setSampler(const std::string& name, const Texture& texture, GLenum unit)
+{
+	glActiveTexture(GL_TEXTURE0 + unit);
+	glBindTexture(texture.getGLType(), texture.ID);
+	glUniform1i(glGetUniformLocation(texture.ID, name.c_str()), unit);
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type)

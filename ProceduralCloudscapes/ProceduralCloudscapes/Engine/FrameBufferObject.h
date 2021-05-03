@@ -7,6 +7,8 @@
 
 #include <vector>
 
+class Texture;
+
 class FrameBufferObject {
 public:
 	// FBO ID
@@ -26,10 +28,10 @@ public:
 	void attachColorTexture(unsigned int width, unsigned int height);
 	void attachDepthTexture(unsigned int width, unsigned int height);
 
-	unsigned int getColorTextureID(size_t texIndex) const { return colorAttachments.at(texIndex); }
+	Texture* getColorTexture(size_t texIndex) const { return colorTextures.at(texIndex); }
 private:
 	unsigned int depthTexture{ 0 };
-	std::vector<unsigned int> colorAttachments;
+	std::vector<Texture*> colorTextures;
 
 	// determines the suitable GLenum for the current color texture
 	GLenum getColorAttachmentNumber() const;

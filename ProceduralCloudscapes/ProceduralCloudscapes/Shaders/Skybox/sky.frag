@@ -44,7 +44,7 @@ const int SUN_RAY_SAMPLES = 6;
 // STRUCTS
 //===============================================================================================
 
-struct scattering_info {
+struct scatteringInfo {
     vec3 coefficient;
     float scaleHeight;
 };
@@ -123,7 +123,7 @@ float miePhase(float mu, float g) {
 }
 
 // Calculates the color of the sky
-vec3 sky(ray view, planet earth, sun sun, scattering_info rayleigh, scattering_info mie, float g)
+vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInfo mie, float g)
 {
 	// prepare data for view-atmosphere intersection
     float t;
@@ -246,8 +246,8 @@ void main()
 	planet earth = planet(earthRadius, atmosphereRadius);
 
 	// prepare scattering info for sky calculation
-	scattering_info rayleigh = scattering_info(betaR, Hr);
-	scattering_info mie = scattering_info(betaM, Hm);
+	scatteringInfo rayleigh = scatteringInfo(betaR, Hr);
+	scatteringInfo mie = scatteringInfo(betaM, Hm);
 
 	// calculate the sky color
 	vec3 result = sky(view, earth, sun, rayleigh, mie, g);

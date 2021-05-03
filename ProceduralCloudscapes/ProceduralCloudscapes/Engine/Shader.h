@@ -13,6 +13,8 @@
 #include <iostream>
 #include <list>
 
+class Texture;
+
 enum class ShaderType {
 	kVertex = 0,
 	kFragment = 1,
@@ -85,6 +87,7 @@ public:
 	void setMat4(const std::string& name, glm::mat4 value) const;
 	void setVec3(const std::string& name, glm::vec3 value) const;
 	void setVec2(const std::string& name, glm::vec2 value) const;
+	void setSampler(const std::string& name, const Texture& texture, GLenum unit);
 private:
 	// utility function for checking shader compilation/linking errros
 	void checkCompileErrors(unsigned int shader, std::string type);

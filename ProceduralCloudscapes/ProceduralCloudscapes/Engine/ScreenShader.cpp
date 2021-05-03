@@ -1,5 +1,7 @@
 #include "ScreenShader.h"
 
+#include "Texture.h"
+
 ScreenShader::ScreenShader(const char* fragShaderPath, const char* vertShaderPath)
 {
     // Build and compile shader program
@@ -17,10 +19,10 @@ ScreenShader::~ScreenShader()
     delete shader;
 }
 
-void ScreenShader::draw(unsigned int texID)
+void ScreenShader::draw(const Texture& texture)
 {
     glBindVertexArray(quadVAO);
-    glBindTexture(GL_TEXTURE_2D, texID);	// use the color attachment texture as the texture of the quad plane
+    glBindTexture(GL_TEXTURE_2D, texture.ID);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 

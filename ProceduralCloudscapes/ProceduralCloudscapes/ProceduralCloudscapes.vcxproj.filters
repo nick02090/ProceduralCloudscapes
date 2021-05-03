@@ -271,5 +271,8 @@
     <None Include="Shaders\Default\textureShader3D.frag">
       <Filter>Resource Files\Shaders\Default</Filter>
     </None>
+    <None Include="Shaders\Clouds\clouds.frag">
+      <Filter>Resource Files\Shaders\Clouds</Filter>
+    </None>
   </ItemGroup>
 </Project>

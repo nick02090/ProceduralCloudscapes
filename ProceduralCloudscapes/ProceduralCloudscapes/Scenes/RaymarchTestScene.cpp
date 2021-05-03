@@ -8,7 +8,7 @@ RaymarchTestScene::RaymarchTestScene(Window* _window) : Scene(_window, "Raymarch
     // build and compile shader programs
     shader = new Shader();
     shader->attachShader("Shaders/Default/shader.vert", ShaderInfo(ShaderType::kVertex));
-    shader->attachShader("Shaders/Default/textureShader.frag", ShaderInfo(ShaderType::kFragment));
+    shader->attachShader("Shaders/Default/textureShader2D.frag", ShaderInfo(ShaderType::kFragment));
     shader->linkProgram();
 
     screenShader = new ScreenShader("Shaders/RaymarchTest/screenShader.frag");
@@ -55,7 +55,7 @@ void RaymarchTestScene::update()
     ssShader->setVec3("cameraPos", camera->getPosition());
     ssShader->setVec3("lookAt", camera->getDirection());
     ssShader->setFloat("zoom", camera->getZoom());
-    screenShader->draw(framebuffer->getColorTextureID(0));
+    screenShader->draw(*getEnvironmentTexture());
 }
 
 void RaymarchTestScene::configureData()

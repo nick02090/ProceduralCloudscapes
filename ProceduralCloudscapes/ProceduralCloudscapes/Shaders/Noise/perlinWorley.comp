@@ -64,7 +64,7 @@ vec3 hash33(vec3 p)
 }
 
 // Converts/Remaps a value from one range to another, where x is value to be remapped,
-// where original range is [Lo, Ho] and a new one is [Ln, Hn].
+// original range is [Lo, Ho] and a new one is [Ln, Hn].
 float remap(float x, float Lo, float Ho, float Ln, float Hn)
 {
     return (((x - Lo) / (Ho - Lo)) * (Hn - Ln)) + Ln;
