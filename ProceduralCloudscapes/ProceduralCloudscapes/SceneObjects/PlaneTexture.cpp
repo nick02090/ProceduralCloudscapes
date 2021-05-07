@@ -41,9 +41,7 @@ void PlaneTexture::update()
 	shader->setMat4("model", glm::mat4(1.0f));
 
 	shader->setInt("channel", static_cast<int>(channel));
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(texture->getGLType(), texture->ID);
+	shader->setSampler("texture1", *texture, 0);
 
 	glBindVertexArray(planeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

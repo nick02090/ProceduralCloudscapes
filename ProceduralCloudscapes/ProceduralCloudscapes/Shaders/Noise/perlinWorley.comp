@@ -26,7 +26,7 @@ const float resolution = 128.0f;
 // Perlin
 const int perlinID = 0;
 const float perlinAmplitude = 1.0f;
-const float perlinFrequency = 4.0f;
+const float perlinFrequency = 6.0f;
 const int perlinOctaves = 8;
 const float perlinLacunarity = 2.0f;
 const float perlinGain = exp2(-0.85f);
@@ -34,7 +34,7 @@ const float perlinGain = exp2(-0.85f);
 // Worley
 const int worleyID = 1;
 const float worleyAmplitude = 0.8f;
-const float worleyFrequency = 4.0f;
+const float worleyFrequency = 10.0f;
 const int worleyOctaves = 3;
 const float worleyLacunarity = 4.0f;
 const float worleyGain = 0.2f;

@@ -1,0 +1,194 @@
+#version 460 core
+//===============================================================================================
+// INPUT/OUTPUT
+//===============================================================================================
+
+// 16 threads are used for every used dimension
+layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+
+// Output 2D texture
+layout (rgba8, binding = 0) uniform image2D weatherMapTex;
+
+//===============================================================================================
+// CONSTANTS
+//===============================================================================================
+
+// Hash
+#define UI0 1597334673U
+#define UI1 3812015801U
+#define UI2 uvec2(UI0, UI1)
+#define UIF (1.0 / float(0xffffffffU))
+
+// 2D texture
+const float resolution = 1024.0f;
+
+// Perlin
+const int perlinID = 0;
+const float perlinAmplitude = 1.0f;
+const float perlinFrequency = 15.0f;
+const int perlinOctaves = 8;
+const float perlinLacunarity = 2.0f;
+const float perlinGain = exp2(-0.85f);
+
+// Worley
+const int worleyID = 1;
+const float worleyAmplitude = 0.8f;
+const float worleyFrequency = 3.0f;
+const int worleyOctaves = 3;
+const float worleyLacunarity = 4.0f;
+const float worleyGain = 0.2f;
+
+//===============================================================================================
+// STRUCTS
+//===============================================================================================
+
+struct fbm {
+    float amplitude;
+    float frequency;
+    int octaves;
+    float lacunarity;
+    float gain;
+};
+
+//===============================================================================================
+// METHODS
+//===============================================================================================
+
+// Hash function
+vec2 hash22(vec2 p)
+{
+	uvec2 q = uvec2(ivec2(p)) * UI2;
+	q = (q.x ^ q.y) * UI2;
+	return -1.0 + 2.0 * vec2(q) * UIF;
+}
+
+// Converts/Remaps a value from one range to another, where x is value to be remapped,
+// original range is [Lo, Ho] and a new one is [Ln, Hn].
+float remap(float x, float Lo, float Ho, float Ln, float Hn)
+{
+    return (((x - Lo) / (Ho - Lo)) * (Hn - Ln)) + Ln;
+}
+
+// Calculates Perlin noise
+float perlinNoise(vec2 x, float freq)
+{
+    // grid
+    vec2 p = floor(x);
+    vec2 w = fract(x);
+    
+    // quintic interpolant
+    vec2 u = w * w * w * (w * (w * 6.0 - 15.0) + 10.0);
+    
+    // gradients
+    vec2 ga = hash22(mod(p + vec2(0.0, 0.0), freq));
+    vec2 gb = hash22(mod(p + vec2(1.0, 0.0), freq));
+    vec2 gc = hash22(mod(p + vec2(0.0, 1.0), freq));
+    vec2 gd = hash22(mod(p + vec2(1.0, 1.0), freq));
+    
+    // projections
+    float va = dot(ga, w - vec2(0.0, 0.0));
+    float vb = dot(gb, w - vec2(1.0, 0.0));
+    float vc = dot(gc, w - vec2(0.0, 1.0));
+    float vd = dot(gd, w - vec2(1.0, 1.0));
+	
+    // interpolation
+    return va + 
+           u.x * (vb - va) + 
+           u.y * (vc - va) + 
+           u.x * u.y * (va - vb - vc + vd);
+}
+
+// Calculates Worley noise (inverted)
+float worleyNoise(vec2 coord, float frequency)
+{
+    // tile the space
+    vec2 id = floor(coord);
+    vec2 point = fract(coord);
+
+    // set initial distance value
+    float minDist = 10000.0;
+
+    // iterate through the neighbour tiles
+    for (float x = -1.0; x <= 1.0; ++x)
+    {
+        for(float y = -1.0; y <= 1.0; ++y)
+        {
+            // neighbour place in the grid
+            vec2 neighbour = vec2(x, y);
+            // create a random Worley point for this tile
+            vec2 randomPoint = hash22(mod(id + neighbour, vec2(frequency))) * 0.5 + 0.5;
+    		randomPoint += neighbour;
+
+            // distance to the calculated random point
+            vec2 diff = point - randomPoint;
+            // keep the closer distance
+           	minDist = min(minDist, dot(diff, diff));
+        }
+    }
+    
+    // inverted worley noise
+    return 1.0f - minDist;
+}
+
+// Calculates fBm for the noise defined with fbm at coord
+// Expected values for noiseID: {
+//      0: Perlin,
+//      1: Worley
+// }
+float noiseFBM(vec2 coord, fbm fbm, int noiseID) {
+    // initial values
+    float frequency = fbm.frequency;
+    float amplitude = fbm.amplitude;
+    float noise = 0.0f;
+    // loop through octaves
+    for (int i = 0; i < fbm.octaves; ++i) {
+        // initial value for this noise
+        float noiseRes = 0.0f;
+        // check which noise to calculate
+        if (noiseID == 0) {
+            noiseRes = perlinNoise(coord * frequency, frequency);
+        } else if (noiseID == 1) {
+            noiseRes = worleyNoise(coord * frequency, frequency);
+        }
+        // accumulate noise
+        noise += amplitude * noiseRes;
+        // update properties
+        frequency *= fbm.lacunarity;
+        amplitude *= fbm.gain;
+    }
+    // return final fBm noise
+    return noise;
+}
+
+//===============================================================================================
+// MAIN
+//===============================================================================================
+
+void main()
+{
+    // get current workgroup pixel
+    ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
+    // calculate current coord
+    vec2 coord = vec2(float(pixel.x) / resolution, float(pixel.y) / resolution);
+
+    // initialize result color
+    vec4 col = vec4(0.0);
+
+    // prepare perlin noise fBm
+    fbm perlin = fbm(perlinAmplitude, perlinFrequency, perlinOctaves, perlinLacunarity, perlinGain);
+    // calculate perlin fBm
+    float perlinFBM = noiseFBM(coord, perlin, perlinID);
+    
+    // prepare worley noise fBm
+    fbm worley = fbm(worleyAmplitude, worleyFrequency, worleyOctaves, worleyLacunarity, worleyGain);
+    // calculate worley fBm
+    float worleyFBM = noiseFBM(coord, worley, worleyID);
+
+    col.r = perlinFBM * 2.5;
+    col.g = remap(perlinFBM, 0.0, 1.0, worleyFBM, 1.0);
+    col.b = 1.0;
+    col.a = 0.6;
+
+    // save final 2D texture
+	imageStore(weatherMapTex, pixel.xy, col);
+}

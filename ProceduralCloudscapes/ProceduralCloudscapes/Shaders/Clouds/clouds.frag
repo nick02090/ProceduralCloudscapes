@@ -16,12 +16,11 @@ uniform float sunIntensity;
 uniform vec3 sunColor = vec3(0.5, 0.3, 0.1);;
 
 // Noise textures
-uniform sampler3D perlinWorleyTex;
-uniform sampler3D worleyTex;
-uniform sampler2D curlTex;
+layout ( binding = 1 ) uniform sampler3D perlinWorleyTex;
+layout ( binding = 2 ) uniform sampler3D worleyTex;
 
 // Clouds
-uniform sampler2D weatherMapTex;
+layout ( binding = 0 ) uniform sampler2D weatherMapTex;
 uniform float globalCloudsCoverage = 0.3f;
 uniform float globalCloudsDensity = 0.5f;
 uniform vec3 cloudsColor = vec3(1.f);
@@ -47,20 +46,24 @@ const float atmosphereRadius = 6420e3f;
 const float sunAngularDiameter = 0.009250245; // deg2rad(0.53)
 
 // Scattering
-const int VIEW_RAY_SAMPLES = 256;
+const int VIEW_RAY_SAMPLES = 512;
 const int SUN_RAY_SAMPLES = 12;
 
 // Clouds
 const float cloudHeightLOW = 5e3f;
 const float cloudHeightHIGH = 12e3f;
+
 const vec4 cloudGradientLOW = vec4(0.0, 0.07, 0.08, 0.15);
 const vec4 cloudGradientMEDIUM = vec4(0.0, 0.2, 0.42, 0.6);
 const vec4 cloudGradientHIGH = vec4(0.0, 0.08, 0.75, 0.98);
+
 const float cloudBaseScale = 0.00001;
 const vec3 cloudBaseWeights = vec3(0.625, 0.25, 0.125);
-const float cloudDetailScale = 0.0002;
+
+const float cloudDetailScale = 0.0005;
 const vec3 cloudDetailWeights = vec3(0.625, 0.25, 0.125);
-const float cloudDetailMultiplier = 0.05;
+
+const float cloudWeatherScale = 0.00005;
 
 //===============================================================================================
 // STRUCTS
@@ -179,21 +182,47 @@ float calculateCloudHeightFraction(vec3 position, cloud cloud) {
 	return (position.y - cloud.heightMin) / (cloud.heightMax - cloud.heightMin);
 }
 
+// Calculates cloud height alterations (rounds the clouds towards the bottom and top)
+float calculateCloudHeightAlteration(vec3 position, float cloudHeightFraction, cloud cloud, float weatherMapB) {
+	float alterBottom = clamp(remap(cloudHeightFraction, 0, 0.07, 0.0, 1.0), 0.0, 1.0);
+	float alterTop = clamp(remap(cloudHeightFraction, weatherMapB * 0.2, weatherMapB, 1.0, 0.0), 0.0, 1.0);
+	return alterBottom * alterTop;
+}
+
+// Calculates cloud density alterations (fluffy at the bottom, defined shapes towards the top)
+float calculateCloudDensityAlteration(vec3 position, float cloudHeightFraction, cloud cloud, float weatherMapA) {
+	float alterBottom = cloudHeightFraction * clamp(remap(cloudHeightFraction, 0.0, 0.15, 0.0, 1.0), 0.0, 1.0);
+	float alterTop = clamp(remap(cloudHeightFraction, 0.9, 1.0, 1.0, 0.0), 0.0, 1.0);
+	return globalCloudsDensity * alterBottom * alterTop * 2.0 * weatherMapA;
+}
+
+// Projects position (3D) onto plane (2D) for texture loading
+vec2 getProjection(vec3 position){
+    vec3 sphereNormal = normalize(position);
+    float u = atan(sphereNormal.x, sphereNormal.z) / (2 * PI) + 0.5;
+    float v = asin(sphereNormal.y) / PI + 0.5;
+	return vec2(u, v);
+}
+
 // Calculates cloud density (models cloud shape)
 float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	// load base shape texture (perlin-worley noise)
 	vec4 base = texture(perlinWorleyTex, cloudBaseScale * position);
 	float baseFBM = dot(base.gba, cloudBaseWeights);
 
+	// load the weather map
+	vec4 weatherMap = texture(weatherMapTex, getProjection(position) * cloudWeatherScale);
+	// calculate weather map control
+	float weatherMapControl = max(weatherMap.r, clamp(globalCloudsCoverage - 0.5, 0.0, 1.0) * weatherMap.g * 2.0);
+
 	// calculate density with base noise
-	float density = remap(base.r, baseFBM - 1.0, 1.0, 0.0, 1.0);
-	// TODO: 1.0 in calculateDensityHeightGradient(height, 1.0) is a cloudType and should be replaced with a weatherMap information
-	density *= calculateDensityHeightGradient(calculateCloudHeightFraction(position, cloud), 1.0);
-	
-	// recalculate the density based on the global coverage
-	density = remap(density, 1.0 - globalCloudsCoverage, 1.0, 0.0, 1.0);
-	// TODO: update this when a more efficient way for density calculation is implemented
-	density *= globalCloudsDensity;
+	float baseDensity = remap(base.r, baseFBM - 1.0, 1.0, 0.0, 1.0);
+
+	// calculate cloud height fraction
+	float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
+
+	// calculate the density
+	float density = remap(baseDensity * calculateCloudHeightAlteration(position, cloudHeightFraction, cloud, weatherMap.b), 1.0 - globalCloudsCoverage * weatherMapControl, 1.0, 0.0, 1.0);
 
 	// sample extra detail noise on the edges if isHighQuality
 	if (isHighQuality) {
@@ -201,16 +230,14 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 		vec3 detail = texture(worleyTex, cloudDetailScale * position).rgb;
 		float detailFBM = dot(detail, cloudDetailWeights);
 
-		// calculate detail density modifier
-		float heightFraction = calculateCloudHeightFraction(position, cloud);
-		float detailDensityModifier = mix(detailFBM, 1.0 - detailFBM, clamp(heightFraction * 10.0, 0.0, 1.0));
+		float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
+		float densityModification = 0.35 * exp(- globalCloudsCoverage * 0.75) * mix(detailFBM, 1 - detailFBM, clamp(cloudHeightFraction * 0.5, 0.0, 1.0));
 
-		// update the density with the calculated details
-		density = remap(density, detailDensityModifier * cloudDetailMultiplier, 1.0, 0.0, 1.0);
+		density = remap(density, densityModification, 1.0, 0.0, 1.0);
 	}
 
 	// return clamped value
-	return clamp(density, 0.0, 1.0);
+	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a);
 }
 
 // Calculates the color for the clouds
@@ -271,7 +298,7 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud)
 // MAIN
 //===============================================================================================
 
-void main() 
+void main()
 {
 	// recalculate space
 	vec2 q = gl_FragCoord.xy / resolution.xy;

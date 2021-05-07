@@ -31,15 +31,15 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	generateNoiseTextures();
 
 	// Create weather map shader
-	//weatherMapShader = new Shader();
-	//weatherMapShader->attachShader("Shaders/Clouds/weatherMap.comp", ShaderInfo(ShaderType::kCompute));
-	//weatherMapShader->linkProgram();
+	weatherMapShader = new Shader();
+	weatherMapShader->attachShader("Shaders/Clouds/weatherMap.comp", ShaderInfo(ShaderType::kCompute));
+	weatherMapShader->linkProgram();
 
 	// Create weather map texture
-	//weatherMapTex = new Texture(TextureType::twoDimensional, 1024, 4, false);
+	weatherMapTex = new Texture(TextureType::twoDimensional, glm::vec3(1024.f, 1024.f, 0.f), 4, true);
 
 	// Generate weather map
-	//generateWeatherMap();
+	generateWeatherMap();
 
 	// Build and compile the shader program
 	cloudsShader = new ScreenShader("Shaders/Clouds/clouds.frag");
@@ -49,9 +49,9 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 
 	// TODO: Remove upon finished debugging
 	// Test plane textures for checking cloud textures calculation
-	perlinWorleyPlaneTexture = new PlaneTexture(window, perlinWorleyTex, glm::vec3(-2.5, 0.0, 0.0));
-	worleyPlaneTexture = new PlaneTexture(window, worleyTex, glm::vec3(0.0, 0.0, 0.0));
-	//weatherMapPlaneTexture = new PlaneTexture(window, weatherMapTex, glm::vec3(2.5, 0.0, 0.0));
+	perlinWorleyPlaneTexture = new PlaneTexture(window, perlinWorleyTex, glm::vec3(-2.5, 0.0, 0.0), TextureChannel::R);
+	worleyPlaneTexture = new PlaneTexture(window, worleyTex, glm::vec3(0.0, 0.0, 0.0), TextureChannel::R);
+	weatherMapPlaneTexture = new PlaneTexture(window, weatherMapTex, glm::vec3(2.5, 0.0, 0.0), TextureChannel::R);
 }
 
 Clouds::~Clouds()
@@ -102,10 +102,12 @@ void Clouds::update()
 		std::cout << "ERROR::CLOUDS::update() Clouds should be rendered only using Skybox environment!" << std::endl;
 	}
 
-	// set textures
-	shader->setSampler("perlinWorleyTex", *perlinWorleyTex, 0);
-	shader->setSampler("worleyTex", *worleyTex, 1);
-	//shader->setSampler("weatherTex", *weatherMapTex, 2);
+	// set 2D textures
+	shader->setSampler("weatherMapTex", *weatherMapTex, 0);
+
+	// set 3D textures
+	shader->setSampler("perlinWorleyTex", *perlinWorleyTex, 1);
+	shader->setSampler("worleyTex", *worleyTex, 2);
 
 	// set clouds info
 	shader->setFloat("globalCloudsCoverage", data->globalCoverage);
@@ -132,9 +134,9 @@ void Clouds::update()
 
 	// TODO: Remove upon finished debugging
 	// Update the test plane texture
-	//perlinWorleyPlaneTexture->update();
-	//worleyPlaneTexture->update();
-	//weatherMapPlaneTexture->update();
+	perlinWorleyPlaneTexture->update();
+	worleyPlaneTexture->update();
+	weatherMapPlaneTexture->update();
 }
 
 void Clouds::buildGUI()
@@ -219,8 +221,7 @@ void Clouds::generateWeatherMap()
 	weatherMapShader->use();
 	glActiveTexture(GL_TEXTURE0);
 	weatherMapShader->setInt("weatherMapTex", 0);
-	weatherMapShader->setVec3("seed", glm::vec3(0.0));
 	glBindTexture(GL_TEXTURE_2D, weatherMapTex->ID);
-	glBindImageTexture(0, weatherMapTex->ID, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+	glBindImageTexture(0, weatherMapTex->ID, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 	glDispatchCompute(INT_CEIL(1024, 8), INT_CEIL(1024, 8), 1);
 }
