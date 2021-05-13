@@ -19,6 +19,7 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	data->beerCoeff = 1.0f;
 	data->enablePowder = true;
 	data->powderCoeff = 10.0f;
+	data->csi = 5.0f;
 	data->color = Color(1.f, 1.f, 1.f);
 
 	// framebuffer configuration
@@ -121,6 +122,7 @@ void Clouds::update()
 	shader->setFloat("beerCoeff", data->beerCoeff);
 	shader->setBool("isPowder", data->enablePowder);
 	shader->setFloat("powderCoeff", data->powderCoeff);
+	shader->setFloat("csi", data->csi);
 
 	FrameBufferObject::unbind();
 
@@ -142,9 +144,9 @@ void Clouds::update()
 
 	// TODO: Remove upon finished debugging
 	// Update the test plane texture
-	//perlinWorleyPlaneTexture->update();
-	//worleyPlaneTexture->update();
-	//weatherMapPlaneTexture->update();
+	perlinWorleyPlaneTexture->update();
+	worleyPlaneTexture->update();
+	weatherMapPlaneTexture->update();
 }
 
 void Clouds::buildGUI()
@@ -183,6 +185,11 @@ void Clouds::buildGUI()
 		float powderCoeff = getPowderCoeff();
 		ImGui::SliderFloat("Powder coefficient", &powderCoeff, 1.0f, 10.0f);
 		setPowderCoeff(powderCoeff);
+
+		// Extra sun intensity
+		float extraSunIntensity = getCSI();
+		ImGui::SliderFloat("Extra sun intensity", &extraSunIntensity, 0.0f, 100.0f);
+		setCSI(extraSunIntensity);
 
 		// Color
 		ImVec4 color = data->color.toIMGUI();

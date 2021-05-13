@@ -32,6 +32,8 @@ struct CloudsData {
 	bool enablePowder;
 	// powder coefficient
 	float powderCoeff;
+	// extra sun intensity (increases HG effect)
+	float csi;
 	// clouds base color
 	Color color;
 };
@@ -51,6 +53,7 @@ public:
 	inline void setBeerCoeff(float _beerCoeff) { data->beerCoeff = _beerCoeff; }
 	inline void setPowder(bool _isPowder) { data->enablePowder = _isPowder; }
 	inline void setPowderCoeff(float _powderCoeff) { data->powderCoeff = _powderCoeff; }
+	inline void setCSI(float _csi) { data->csi = _csi; }
 	inline void setColor(Color _color) { data->color = _color; }
 	inline void setColor(int r, int g, int b) { data->color.set(r, g, b); }
 	inline void setColor(float r, float g, float b) { data->color.setf(r, g, b); }
@@ -62,6 +65,7 @@ public:
 	inline float getBeerCoeff() const { return data->beerCoeff; }
 	inline float getPowder() const { return data->enablePowder; }
 	inline float getPowderCoeff() const { return data->powderCoeff; }
+	inline float getCSI() const { return data->csi; }
 
 private:
 	void generateNoiseTextures();

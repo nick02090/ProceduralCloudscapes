@@ -33,6 +33,8 @@ uniform float minTransmittance = 1e-3f;
 uniform float beerCoeff = 1.0;
 uniform bool isPowder = true;
 uniform float powderCoeff = 5.0;
+uniform float csi = 5.0f; // amount of extra intensity
+uniform float cse = 20.0f; // exponent deciding how centralized around the sun extra intensity is
 
 //===============================================================================================
 // CONSTANTS
@@ -49,11 +51,12 @@ const float atmosphereRadius = 6420e3f;
 
 // Sun
 const float sunAngularDiameter = 0.009250245; // deg2rad(0.53)
-const float g = 0.76f;
 
 // Scattering
 const int VIEW_RAY_SAMPLES = 256;
 const int SUN_RAY_SAMPLES = 12;
+const float cloudsScatteringIN = 0.5f;
+const float cloudsScatteringOUT = 0.5f;
 
 // Clouds
 const float cloudHeightLOW = 8e3f;
@@ -99,7 +102,7 @@ struct cloud {
 };
 
 //===============================================================================================
-// METHODS
+// METHODS (MATH)
 //===============================================================================================
 
 // Converts/Remaps a value from one range to another, where x is value to be remapped,
@@ -136,6 +139,10 @@ void raySphereIntersection(ray ray, float sphereRadius, out float t0, out float 
     // calculate the equation
     solveQuadratic(a, b, c, t0, t1);
 }
+
+//===============================================================================================
+// METHODS (CLOUDS SHAPE)
+//===============================================================================================
 
 // Calculates where the ray intersects with the cloud layer
 // Outputs the distances to the cloud layer (low and high border range) as well as the size of the layer
@@ -246,6 +253,10 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a);
 }
 
+//===============================================================================================
+// METHODS (CLOUDS LIGHTING)
+//===============================================================================================
+
 // Calculates attenuation of light for given cloud density based on Beer-Lambert's law
 float calculateBeerLambert(float density) {
 	return exp(- beerCoeff * density);
@@ -284,16 +295,28 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 			// calculate transmittance
 			transmittance *= calculateBeerLambert(density * segmentLength);
 			// accumulate final color
-			color += density * segmentLength * transmittance * calculateHenyeyGreensteinPhase(mu, g) * (sunIntensity / 20.);
+			color += density * segmentLength * transmittance;
 		}
 
 		// increase current position
 		view.origin += segmentLength * sunDirection;
 	}
 
+	// calculate extra sun intensity (this is used to increase the HG effect)
+	float extraSunIntensity = csi * clamp(pow(mu, cse), 0.0, 1.0) * (sunIntensity / 20.);
+	
+	// calculate scattering
+	float inScattering = calculateHenyeyGreensteinPhase(mu, cloudsScatteringIN);
+	float outScattering = calculateHenyeyGreensteinPhase(mu, -cloudsScatteringOUT);
+	float scattering = mix(max(inScattering, extraSunIntensity), outScattering, 0.5);
+
 	// return final color
-	return color + cloudsColor;
+	return color * scattering + cloudsColor;
 }
+
+//===============================================================================================
+// METHODS (CLOUDS)
+//===============================================================================================
 
 // Calculates the color for the clouds
 vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float distanceToCloudLayer) 
@@ -409,12 +432,12 @@ void main()
 	// calculate the clouds color
 	vec4 clouds = clouds(view, earth, cloud, sun, distanceToCloudLayer);
 
-	// calculate fog amount for the clouds
-	vec3 fogColor = vec3(0.0, 0.0, 0.0); // fog color should be black due to blending clouds with background texture
-	float fogAmount = (1.0f / renderDistance) * distanceToCloudLayer;
+	// calculate atmosphere amount for the clouds
+	vec3 atmosphereColor = vec3(0.0, 0.0, 0.0); // atmosphere color should be black due to blending clouds with background texture
+	float atmosphereAmount = (1.0f / renderDistance) * distanceToCloudLayer;
 
-	// blend clouds with fog
-	vec4 result = mix(clouds, vec4(fogColor, 1.0), fogAmount);
+	// blend clouds with atmosphere
+	vec4 result = mix(clouds, vec4(atmosphereColor, 1.0), atmosphereAmount);
 
 	// output the final result
 	gl_FragColor = result;
