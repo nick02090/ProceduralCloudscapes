@@ -184,7 +184,7 @@ void main()
     // calculate worley fBm
     float worleyFBM = noiseFBM(coord, worley, worleyID);
 
-    col.r = perlinFBM * 2.5;
+    col.r = perlinFBM * 20.5;
     col.g = remap(perlinFBM, 0.0, 1.0, worleyFBM, 1.0);
     col.b = 1.0;
     col.a = 0.6;

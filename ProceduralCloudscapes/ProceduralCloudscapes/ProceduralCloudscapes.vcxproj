@@ -182,6 +182,7 @@
     <ClInclude Include="Engine\FrameBufferObject.h" />
     <ClInclude Include="Engine\GUI\GUI.h" />
     <ClInclude Include="Engine\GUI\GUIBuilder.h" />
+    <ClInclude Include="Engine\GUI\ImGUIExpansions.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SceneObject.h" />
     <ClInclude Include="Engine\ScreenShader.h" />

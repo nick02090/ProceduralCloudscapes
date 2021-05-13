@@ -75,9 +75,11 @@ void Window::buildGUI()
 {
     ImGui::Begin("Main");
 
-    ImGui::Text("NOTE: To enable/disable mouse cursor press TAB button on the keyboard.");
+    ImGui::TextWrapped("Move using WASD keys and mouse to look around.");
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::TextWrapped("To enable/disable mouse cursor press TAB button on the keyboard.");
+
+    ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
     ImGui::End();
 }

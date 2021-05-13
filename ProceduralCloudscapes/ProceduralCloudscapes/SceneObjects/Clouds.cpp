@@ -6,6 +6,7 @@
 #include "../Engine/Environment/SkyboxEnvironment.h"
 #include "../Engine/Environment/ColorEnvironment.h"
 #include "../Engine/FrameBufferObject.h"
+#include "../Engine/GUI/ImGUIExpansions.h"
 
 Clouds::Clouds(Window* _window) : SceneObject(_window)
 {
@@ -15,6 +16,9 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	// Initialize clouds properties
 	data->globalCoverage = 0.3f;
 	data->globalDensity = 0.5f;
+	data->beerCoeff = 1.0f;
+	data->enablePowder = true;
+	data->powderCoeff = 10.0f;
 	data->color = Color(1.f, 1.f, 1.f);
 
 	// framebuffer configuration
@@ -104,6 +108,7 @@ void Clouds::update()
 
 	// set 2D textures
 	shader->setSampler("weatherMapTex", *weatherMapTex, 0);
+	shader->setSampler("environmentTex", *getScene()->getEnvironmentTexture(), 3);
 
 	// set 3D textures
 	shader->setSampler("perlinWorleyTex", *perlinWorleyTex, 1);
@@ -113,6 +118,9 @@ void Clouds::update()
 	shader->setFloat("globalCloudsCoverage", data->globalCoverage);
 	shader->setFloat("globalCloudsDensity", data->globalDensity);
 	shader->setVec3("cloudsColor", data->color.getf());
+	shader->setFloat("beerCoeff", data->beerCoeff);
+	shader->setBool("isPowder", data->enablePowder);
+	shader->setFloat("powderCoeff", data->powderCoeff);
 
 	FrameBufferObject::unbind();
 
@@ -134,9 +142,9 @@ void Clouds::update()
 
 	// TODO: Remove upon finished debugging
 	// Update the test plane texture
-	perlinWorleyPlaneTexture->update();
-	worleyPlaneTexture->update();
-	weatherMapPlaneTexture->update();
+	//perlinWorleyPlaneTexture->update();
+	//worleyPlaneTexture->update();
+	//weatherMapPlaneTexture->update();
 }
 
 void Clouds::buildGUI()
@@ -144,20 +152,43 @@ void Clouds::buildGUI()
 	// Create the clouds control window
 	ImGui::Begin("Clouds");
 
-	// Global coverage
-	float globalCoverage = getGlobalCoverage();
-	ImGui::SliderFloat("Global coverage", &globalCoverage, 0.0f, 1.0f);
-	setGlobalCoverage(globalCoverage);
+	// Create clouds shape header
+	if (ImGui::CollapsingHeader("Shape", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		// Global coverage
+		float globalCoverage = getGlobalCoverage();
+		ImGui::SliderFloat("Global coverage", &globalCoverage, 0.0f, 1.0f);
+		setGlobalCoverage(globalCoverage);
 
-	// Global density
-	float globalDensity = getGlobalDensity();
-	ImGui::SliderFloat("Global density", &globalDensity, 0.0f, 1.0f);
-	setGlobalDensity(globalDensity);
+		// Global density
+		float globalDensity = getGlobalDensity();
+		ImGui::SliderFloat("Global density", &globalDensity, 0.0f, 1.0f);
+		setGlobalDensity(globalDensity);
+	}
 
-	// Color
-	ImVec4 color = data->color.toIMGUI();
-	ImGui::ColorEdit3("Color", (float*)&color);
-	setColor(Color::fromIMGUI(color));
+	// Create clouds lighting header
+	if (ImGui::CollapsingHeader("Lighting", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		// Beer extinction coefficient
+		float beerCoeff = getBeerCoeff();
+		ImGui::SliderFloat("Beer coefficient", &beerCoeff, 0.0f, 5.0f);
+		setBeerCoeff(beerCoeff);
+
+		// Powder
+		bool enablePowder = getPowder();
+		imgui_exp::ToggleButton("Enable powder effect", &enablePowder);
+		setPowder(enablePowder);
+
+		// Powder coefficient
+		float powderCoeff = getPowderCoeff();
+		ImGui::SliderFloat("Powder coefficient", &powderCoeff, 1.0f, 10.0f);
+		setPowderCoeff(powderCoeff);
+
+		// Color
+		ImVec4 color = data->color.toIMGUI();
+		ImGui::ColorEdit3("Color", (float*)&color);
+		setColor(Color::fromIMGUI(color));
+	}
 
 	// Finish the window
 	ImGui::End();

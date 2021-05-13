@@ -227,6 +227,9 @@
     <ClInclude Include="SceneObjects\PlaneTexture.h">
       <Filter>Header Files\SceneObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\GUI\ImGUIExpansions.h">
+      <Filter>Header Files\Engine\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">

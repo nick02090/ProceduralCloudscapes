@@ -25,9 +25,18 @@ uniform float globalCloudsCoverage = 0.3f;
 uniform float globalCloudsDensity = 0.5f;
 uniform vec3 cloudsColor = vec3(1.f);
 
+// Background (environment)
+layout ( binding = 3 ) uniform sampler2D environmentTex;
+in vec2 TexCoords;
+
 // Rendering
 uniform float renderDistance = 1e5f;
 uniform float minTransmittance = 1e-3f;
+
+// Lighting
+uniform float beerCoeff = 1.0;
+uniform bool isPowder = true;
+uniform float powderCoeff = 5.0;
 
 //===============================================================================================
 // CONSTANTS
@@ -44,14 +53,15 @@ const float atmosphereRadius = 6420e3f;
 
 // Sun
 const float sunAngularDiameter = 0.009250245; // deg2rad(0.53)
+const float g = 0.76f;
 
 // Scattering
-const int VIEW_RAY_SAMPLES = 512;
+const int VIEW_RAY_SAMPLES = 256;
 const int SUN_RAY_SAMPLES = 12;
 
 // Clouds
-const float cloudHeightLOW = 5e3f;
-const float cloudHeightHIGH = 12e3f;
+const float cloudHeightLOW = 8e3f;
+const float cloudHeightHIGH = 15e3f;
 
 const vec4 cloudGradientLOW = vec4(0.0, 0.07, 0.08, 0.15);
 const vec4 cloudGradientMEDIUM = vec4(0.0, 0.2, 0.42, 0.6);
@@ -240,8 +250,57 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a);
 }
 
+// Calculates attenuation of light for given cloud density based on Beer-Lambert's law
+float calculateBeerLambert(float density) {
+	return exp(- beerCoeff * density);
+}
+
+// Calculates powder effect for given cloud density
+float calculatePowder(float density) {
+	return 1.0 - calculateBeerLambert(density * powderCoeff);
+}
+
+// Calculates in-scattering (to create silver lining) based on Henyey-Greenstein phase function
+float calculateHenyeyGreensteinPhase(float mu, float g) {
+	float g2 = g * g;
+	float mu2 = mu * mu;
+    return 3.0 / (8.0 * PI) * ((1.0 - g2) * (1.0 + mu2) / ((2.0 + g2) * pow(1.0 + g2 - 2.0 * g * mu, 1.5)));
+}
+
+// Calculates cloud density (ray-march from cloud position to sun)
+vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, cloud cloud, float cloudLayer, sun sun) {
+	// initialize variables for ray-marching
+	vec3 color = vec3(0.0f);
+	float transmittance = 1.0f;
+
+	// calculate the sun ray segment length
+	float segmentLength = cloudLayer / float(SUN_RAY_SAMPLES);
+
+	// iterate over sun-ray direction
+	for (int i = 0; i < SUN_RAY_SAMPLES; ++i) {
+		// calculate current sample position
+		vec3 samplePosition = position + segmentLength * sunDirection;
+		// calculate density
+		float density = calculateCloudDensity(samplePosition, true, cloud);
+
+		// calculate the color if the density is above zero
+		if (density > 0.0) {
+			// calculate transmittance
+			transmittance *= calculateBeerLambert(density * segmentLength);
+			// accumulate final color
+			color += density * segmentLength * transmittance * calculateHenyeyGreensteinPhase(mu, g) * (sunIntensity / 20.);
+		}
+
+		// increase current position
+		view.origin += segmentLength * sunDirection;
+	}
+
+	// return final color
+	return color + cloudsColor;
+}
+
 // Calculates the color for the clouds
-vec4 clouds(in ray view, in planet earth, in cloud cloud) 
+vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun) 
 {
 	// prepare data for ray-cloud_layer intersections
 	float distanceToCloudLow, distanceToCloudHigh, cloudLayer;
@@ -263,6 +322,13 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud)
 	// update the distance passed
 	distancePassed += distanceToCloudLayer;
 
+	// calculate the sun direction
+	float cosSunAlt = cos(sun.altitude);
+	vec3 sunDirection = vec3(cos(sun.azimuth) * cosSunAlt, sin(sun.altitude), sin(sun.azimuth) * cosSunAlt);
+	
+	// calculate the cosine of angle between the sun direction and the ray direction
+	float mu = dot(view.direction, sunDirection);
+
 	// iterate over view-ray direction
 	for (int i = 0; i < VIEW_RAY_SAMPLES; ++i) {
 		// some early exit optimizations
@@ -278,11 +344,23 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud)
 		if (baseDensity > 0.0) {
 			// calculate high quality density
 			float density = calculateCloudDensity(samplePosition, true, cloud);
-			// calculate transmittance
-			transmittance *= exp(- density * segmentLength);
+
 			// calculate the color if the density is above zero
-			// TODO: cloudsColor * 0.5 should be updated with the light ray-march calculation
-			if (density > 0.0) color += cloudsColor * 0.5 * density * segmentLength * transmittance;
+			if (density > 0.0) {
+
+				// calculate transmittance
+				transmittance *= calculateBeerLambert(density * segmentLength);
+
+				// set default powder effect
+				float powder = 1.0;
+				if (isPowder) {
+					// calculate powder effect
+					powder = mix(calculatePowder(density * segmentLength), 1.0, mu);
+				}
+				
+				// accumulate final color
+				color += calculateCloudLight(view, samplePosition, sunDirection, mu, cloud, cloudLayer, sun) * density * segmentLength * transmittance * powder;
+			}
 		}
 
 		// increase current position
@@ -321,10 +399,19 @@ void main()
 	
 	// prepare cloud info
 	cloud cloud = cloud(earthRadius + cloudHeightLOW, earthRadius + cloudHeightHIGH);
+	
+	// calculate sun altitude and azimuth
+	float sunAlt = 4.0 * - sunAngularDiameter + 1.6 * PI_4 * (0.5 + cos((1.0 - sunAltitude) * 3.0) / 2.0);
+	float sunAzi = (1.0 - sunAzimuth * 0.7) * 4.6;
+
+	// prepare sun info
+    sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter, sunColor);
+
+	vec4 background = texture(environmentTex, TexCoords);
 
 	// calculate the clouds color
-	vec4 clouds = clouds(view, earth, cloud);
+	vec4 clouds = clouds(view, earth, cloud, sun);
 
 	// output the final result
-	gl_FragColor = clouds;
+	gl_FragColor = mix(clouds, background, clouds.a);
 }
