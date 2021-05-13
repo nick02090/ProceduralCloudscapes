@@ -14,8 +14,8 @@
 #include "GUI/GUIBuilder.h"
 
 // default window settings
-const size_t WINDOW_WIDTH = 1280;
-const size_t WINDOW_HEIGHT = 720;
+const size_t WINDOW_WIDTH = 1600;
+const size_t WINDOW_HEIGHT = 900;
 
 enum class Callback
 {

@@ -25,10 +25,6 @@ uniform float globalCloudsCoverage = 0.3f;
 uniform float globalCloudsDensity = 0.5f;
 uniform vec3 cloudsColor = vec3(1.f);
 
-// Background (environment)
-layout ( binding = 3 ) uniform sampler2D environmentTex;
-in vec2 TexCoords;
-
 // Rendering
 uniform float renderDistance = 1e5f;
 uniform float minTransmittance = 1e-3f;
@@ -300,14 +296,14 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 }
 
 // Calculates the color for the clouds
-vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun) 
+vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float distanceToCloudLayer) 
 {
 	// prepare data for ray-cloud_layer intersections
 	float distanceToCloudLow, distanceToCloudHigh, cloudLayer;
 	// calculate ray-cloud_layer intersections
 	rayCloudLayerIntersection(view, cloud, distanceToCloudLow, distanceToCloudHigh, cloudLayer);
 	// calculate distance to cloud layer (for above, below and inside look of the clouds)
-	float distanceToCloudLayer = min(distanceToCloudLow, distanceToCloudHigh);
+	distanceToCloudLayer = min(distanceToCloudLow, distanceToCloudHigh);
 
 	// initialize variables for ray-marching
 	float distancePassed = 0.0f;
@@ -407,11 +403,19 @@ void main()
 	// prepare sun info
     sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter, sunColor);
 
-	vec4 background = texture(environmentTex, TexCoords);
+	// prepare distance to clouds layer
+	float distanceToCloudLayer;
 
 	// calculate the clouds color
-	vec4 clouds = clouds(view, earth, cloud, sun);
+	vec4 clouds = clouds(view, earth, cloud, sun, distanceToCloudLayer);
+
+	// calculate fog amount for the clouds
+	vec3 fogColor = vec3(0.0, 0.0, 0.0); // fog color should be black due to blending clouds with background texture
+	float fogAmount = (1.0f / renderDistance) * distanceToCloudLayer;
+
+	// blend clouds with fog
+	vec4 result = mix(clouds, vec4(fogColor, 1.0), fogAmount);
 
 	// output the final result
-	gl_FragColor = mix(clouds, background, clouds.a);
+	gl_FragColor = result;
 }

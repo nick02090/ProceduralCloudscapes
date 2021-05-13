@@ -67,7 +67,7 @@ float GetLight(vec3 p) {
 
 void main()
 {
-    vec2 iResolution = vec2(1280, 720);
+    vec2 iResolution = vec2(1600, 900);
     vec2 uv = (gl_FragCoord.xy-0.5*iResolution.xy)/iResolution.y;
     vec3 col = vec3(0);
     ray ray = create_camera_ray(uv, cameraPos, lookAt, zoom);
