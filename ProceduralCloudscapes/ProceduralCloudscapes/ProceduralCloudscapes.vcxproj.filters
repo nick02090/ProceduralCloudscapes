@@ -159,6 +159,9 @@
     <ClCompile Include="SceneObjects\PlaneTexture.cpp">
       <Filter>Source Files\SceneObjects</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjects\Terrain.cpp">
+      <Filter>Source Files\SceneObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="Engine\GUI\ImGUIExpansions.h">
       <Filter>Header Files\Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjects\Terrain.h">
+      <Filter>Header Files\SceneObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

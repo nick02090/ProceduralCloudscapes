@@ -13,14 +13,19 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	// Initialize member variables
 	data = new CloudsData();
 
-	// Initialize clouds properties
+	// Initialize clouds shape properties
 	data->globalCoverage = 0.3f;
 	data->globalDensity = 0.5f;
+	data->isBaseShape = false;
+
+	// Initialize clouds lighting properties
 	data->beerCoeff = 1.0f;
 	data->enablePowder = true;
 	data->powderCoeff = 10.0f;
 	data->csi = 5.0f;
 	data->color = Color(1.f, 1.f, 1.f);
+	data->sunColorDay = Color(1.f, 0.96f, 0.9f);
+	data->sunColorSunset = Color(0.36f, 0.14f, 0.07f);
 
 	// framebuffer configuration
 	framebuffer = new FrameBufferObject();
@@ -115,14 +120,19 @@ void Clouds::update()
 	shader->setSampler("perlinWorleyTex", *perlinWorleyTex, 1);
 	shader->setSampler("worleyTex", *worleyTex, 2);
 
-	// set clouds info
+	// set clouds shape info
 	shader->setFloat("globalCloudsCoverage", data->globalCoverage);
 	shader->setFloat("globalCloudsDensity", data->globalDensity);
+	shader->setBool("isBaseShape", data->isBaseShape);
+
+	// set clouds lighting info
 	shader->setVec3("cloudsColor", data->color.getf());
 	shader->setFloat("beerCoeff", data->beerCoeff);
 	shader->setBool("isPowder", data->enablePowder);
 	shader->setFloat("powderCoeff", data->powderCoeff);
 	shader->setFloat("csi", data->csi);
+	shader->setVec3("sunColorDay", data->sunColorDay.getf());
+	shader->setVec3("sunColorSunset", data->sunColorSunset.getf());
 
 	FrameBufferObject::unbind();
 
@@ -144,9 +154,9 @@ void Clouds::update()
 
 	// TODO: Remove upon finished debugging
 	// Update the test plane texture
-	perlinWorleyPlaneTexture->update();
-	worleyPlaneTexture->update();
-	weatherMapPlaneTexture->update();
+	//perlinWorleyPlaneTexture->update();
+	//worleyPlaneTexture->update();
+	//weatherMapPlaneTexture->update();
 }
 
 void Clouds::buildGUI()
@@ -157,6 +167,11 @@ void Clouds::buildGUI()
 	// Create clouds shape header
 	if (ImGui::CollapsingHeader("Shape", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		// Base shape switch
+		bool isBaseShape = getBaseShape();
+		imgui_exp::ToggleButton("Base shape", &isBaseShape);
+		setBaseShape(isBaseShape);
+
 		// Global coverage
 		float globalCoverage = getGlobalCoverage();
 		ImGui::SliderFloat("Global coverage", &globalCoverage, 0.0f, 1.0f);
@@ -192,9 +207,19 @@ void Clouds::buildGUI()
 		setCSI(extraSunIntensity);
 
 		// Color
-		ImVec4 color = data->color.toIMGUI();
+		ImVec4 color = getColor().toIMGUI();
 		ImGui::ColorEdit3("Color", (float*)&color);
 		setColor(Color::fromIMGUI(color));
+
+		// Sun color at day
+		ImVec4 sunColorDay = getSunColorDay().toIMGUI();
+		ImGui::ColorEdit3("Sun color day", (float*)&sunColorDay);
+		setSunColorDay(Color::fromIMGUI(sunColorDay));
+
+		// Sun color at sunset
+		ImVec4 sunColorSunset = getSunColorSunset().toIMGUI();
+		ImGui::ColorEdit3("Sun color sunset", (float*)&sunColorSunset);
+		setSunColorSunset(Color::fromIMGUI(sunColorSunset));
 	}
 
 	// Finish the window

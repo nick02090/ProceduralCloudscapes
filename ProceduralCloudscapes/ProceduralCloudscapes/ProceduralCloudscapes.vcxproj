@@ -167,6 +167,7 @@
     <ClCompile Include="ProceduralCloudscapes.cpp" />
     <ClCompile Include="SceneObjects\Clouds.cpp" />
     <ClCompile Include="SceneObjects\PlaneTexture.cpp" />
+    <ClCompile Include="SceneObjects\Terrain.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Engine\Window.h" />
     <ClInclude Include="SceneObjects\Clouds.h" />
     <ClInclude Include="SceneObjects\PlaneTexture.h" />
+    <ClInclude Include="SceneObjects\Terrain.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />

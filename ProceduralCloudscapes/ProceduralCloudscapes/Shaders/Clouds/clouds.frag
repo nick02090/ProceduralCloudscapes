@@ -13,7 +13,6 @@ uniform vec2 resolution;
 uniform float sunAltitude; // from range [0.0, 1.0] where 0.0 is night and 1.0 is clear day
 uniform float sunAzimuth; // from range [-1.0, 1.0] where 0.0 is in front and (-)1.0 is behind
 uniform float sunIntensity;
-uniform vec3 sunColor = vec3(0.5, 0.3, 0.1);;
 
 // Noise textures
 layout ( binding = 1 ) uniform sampler3D perlinWorleyTex;
@@ -23,7 +22,7 @@ layout ( binding = 2 ) uniform sampler3D worleyTex;
 layout ( binding = 0 ) uniform sampler2D weatherMapTex;
 uniform float globalCloudsCoverage = 0.3f;
 uniform float globalCloudsDensity = 0.5f;
-uniform vec3 cloudsColor = vec3(1.f);
+uniform bool isBaseShape = false;
 
 // Rendering
 uniform float renderDistance = 1e5f;
@@ -35,6 +34,9 @@ uniform bool isPowder = true;
 uniform float powderCoeff = 5.0;
 uniform float csi = 5.0f; // amount of extra intensity
 uniform float cse = 20.0f; // exponent deciding how centralized around the sun extra intensity is
+uniform vec3 cloudsColor = vec3(1.f);
+uniform vec3 sunColorDay = vec3(1.0);
+uniform vec3 sunColorSunset = vec3(0.5, 0.3, 0.1);
 
 //===============================================================================================
 // CONSTANTS
@@ -93,7 +95,8 @@ struct sun {
 	float azimuth;
 	float intensity;
 	float angularDiameter;
-	vec3 color;
+	vec3 colorDay;
+	vec3 colorSunset;
 };
 
 struct cloud {
@@ -275,7 +278,7 @@ float calculateHenyeyGreensteinPhase(float mu, float g) {
 }
 
 // Calculates cloud density (ray-march from cloud position to sun)
-vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, cloud cloud, float cloudLayer, sun sun) {
+vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, cloud cloud, float cloudLayer, sun sun, vec3 lightColor) {
 	// initialize variables for ray-marching
 	vec3 color = vec3(0.0f);
 	float transmittance = 1.0f;
@@ -288,7 +291,7 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 		// calculate current sample position
 		vec3 samplePosition = position + segmentLength * sunDirection;
 		// calculate density
-		float density = calculateCloudDensity(samplePosition, true, cloud);
+		float density = calculateCloudDensity(samplePosition, !isBaseShape, cloud);
 
 		// calculate the color if the density is above zero
 		if (density > 0.0) {
@@ -311,7 +314,7 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 	float scattering = mix(max(inScattering, extraSunIntensity), outScattering, 0.5);
 
 	// return final color
-	return color * scattering + cloudsColor;
+	return color * scattering * lightColor + cloudsColor;
 }
 
 //===============================================================================================
@@ -344,6 +347,12 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 	// calculate the sun direction
 	float cosSunAlt = cos(sun.altitude);
 	vec3 sunDirection = vec3(cos(sun.azimuth) * cosSunAlt, sin(sun.altitude), sin(sun.azimuth) * cosSunAlt);
+
+	// calculate light color
+	float sigmoid = 1 / (1.0 + exp(8.0 - sunDirection.y * 40.0));
+	float a = min(max(sigmoid, 0.0f), 1.0f);
+	float b = 1.0 - a;
+	vec3 lightColor = sun.colorDay * a + sun.colorSunset * b;
 	
 	// calculate the cosine of angle between the sun direction and the ray direction
 	float mu = dot(view.direction, sunDirection);
@@ -362,7 +371,7 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 
 		if (baseDensity > 0.0) {
 			// calculate high quality density
-			float density = calculateCloudDensity(samplePosition, true, cloud);
+			float density = calculateCloudDensity(samplePosition, !isBaseShape, cloud);
 
 			// calculate the color if the density is above zero
 			if (density > 0.0) {
@@ -378,7 +387,7 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 				}
 				
 				// accumulate final color
-				color += calculateCloudLight(view, samplePosition, sunDirection, mu, cloud, cloudLayer, sun) * density * segmentLength * transmittance * powder;
+				color += calculateCloudLight(view, samplePosition, sunDirection, mu, cloud, cloudLayer, sun, lightColor) * density * segmentLength * transmittance * powder * lightColor;
 			}
 		}
 
@@ -424,7 +433,7 @@ void main()
 	float sunAzi = (1.0 - sunAzimuth * 0.7) * 4.6;
 
 	// prepare sun info
-    sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter, sunColor);
+    sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter, sunColorDay, sunColorSunset);
 
 	// prepare distance to clouds layer
 	float distanceToCloudLayer;

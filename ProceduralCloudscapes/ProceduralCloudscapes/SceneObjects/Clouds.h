@@ -21,6 +21,8 @@ struct CloudsData {
 	float globalCoverage;
 	// global density of clouds from range [0.0, inf] that determines the clouds global opacity
 	float globalDensity;
+	// flag to show clouds base shape
+	bool isBaseShape;
 
 	// =============================================
 	// CLOUDS LIGHTING
@@ -34,6 +36,10 @@ struct CloudsData {
 	float powderCoeff;
 	// extra sun intensity (increases HG effect)
 	float csi;
+	// color of the daily sun
+	Color sunColorDay;
+	// color of the sun at sunset
+	Color sunColorSunset;
 	// clouds base color
 	Color color;
 };
@@ -50,22 +56,36 @@ public:
 
 	inline void setGlobalCoverage(float _globalCoverage) { data->globalCoverage = _globalCoverage; }
 	inline void setGlobalDensity(float _globalDensity) { data->globalDensity = _globalDensity; }
+	inline void setBaseShape(bool _isBaseShape) { data->isBaseShape = _isBaseShape; }
 	inline void setBeerCoeff(float _beerCoeff) { data->beerCoeff = _beerCoeff; }
 	inline void setPowder(bool _isPowder) { data->enablePowder = _isPowder; }
 	inline void setPowderCoeff(float _powderCoeff) { data->powderCoeff = _powderCoeff; }
 	inline void setCSI(float _csi) { data->csi = _csi; }
+
 	inline void setColor(Color _color) { data->color = _color; }
 	inline void setColor(int r, int g, int b) { data->color.set(r, g, b); }
 	inline void setColor(float r, float g, float b) { data->color.setf(r, g, b); }
+
+	inline void setSunColorDay(Color _color) { data->sunColorDay = _color; }
+	inline void setSunColorDay(int r, int g, int b) { data->sunColorDay.set(r, g, b); }
+	inline void setSunColorDay(float r, float g, float b) { data->sunColorDay.setf(r, g, b); }
+
+	inline void setSunColorSunset(Color _color) { data->sunColorSunset = _color; }
+	inline void setSunColorSunset(int r, int g, int b) { data->sunColorSunset.set(r, g, b); }
+	inline void setSunColorSunset(float r, float g, float b) { data->sunColorSunset.setf(r, g, b); }
 
 	// GETTERS
 
 	inline float getGlobalCoverage() const { return data->globalCoverage; }
 	inline float getGlobalDensity() const { return data->globalDensity; }
+	inline bool getBaseShape() const { return data->isBaseShape; }
 	inline float getBeerCoeff() const { return data->beerCoeff; }
 	inline float getPowder() const { return data->enablePowder; }
 	inline float getPowderCoeff() const { return data->powderCoeff; }
 	inline float getCSI() const { return data->csi; }
+	inline Color getColor() const { return data->color; }
+	inline Color getSunColorDay() const { return data->sunColorDay; }
+	inline Color getSunColorSunset() const { return data->sunColorSunset; }
 
 private:
 	void generateNoiseTextures();
