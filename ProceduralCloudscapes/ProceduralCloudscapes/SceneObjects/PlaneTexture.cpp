@@ -26,6 +26,8 @@ PlaneTexture::PlaneTexture(Window* _window, Texture* _texture, glm::vec3 offset,
 PlaneTexture::~PlaneTexture()
 {
 	delete shader;
+	glDeleteVertexArrays(1, &planeVAO);
+	glDeleteBuffers(1, &planeVBO);
 }
 
 void PlaneTexture::update()
@@ -52,7 +54,7 @@ void PlaneTexture::configureData(glm::vec3 offset)
 {
 	// assemble plane vertices
 	float planeVertices[30] = {
-		// positions          // texture Coords 
+		// positions										// texture Coords 
 		-1.0f + offset.x,  0.0f + offset.y, -5.0f + offset.z,  0.0f, 0.0f,
 		 1.0f + offset.x,  0.0f + offset.y, -5.0f + offset.z,  1.0f, 0.0f,
 		 1.0f + offset.x,  2.0f + offset.y, -5.0f + offset.z,  1.0f, 1.0f,

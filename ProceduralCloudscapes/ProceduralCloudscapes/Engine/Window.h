@@ -16,6 +16,8 @@
 // default window settings
 const size_t WINDOW_WIDTH = 1600;
 const size_t WINDOW_HEIGHT = 900;
+const float NEAR = 0.1f;
+const float FAR = 1000000.0f;
 
 enum class Callback
 {

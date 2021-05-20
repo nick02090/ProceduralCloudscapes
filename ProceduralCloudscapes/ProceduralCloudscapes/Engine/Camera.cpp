@@ -53,7 +53,7 @@ void Camera::processKeyboard(CameraMovement direction, float deltaTime)
 	}
 
 	// camera can't go below 0!
-	if (position.y < 0.0) position.y = 0.0;
+	if (position.y < 10.0) position.y = 10.0;
 }
 
 void Camera::processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)

@@ -81,12 +81,16 @@ void Window::buildGUI()
 
     ImGui::TextWrapped("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
+    float movementSpeed = camera->getMovementSpeed();
+    ImGui::SliderFloat("Movement speed", &movementSpeed, 1.f, 10000.f);
+    camera->setMovementSpeed(movementSpeed);
+
     ImGui::End();
 }
 
 glm::mat4 Window::getProjectionMatrix() const
 {
-    return glm::perspective(glm::radians(camera->getZoom()), (float)width / (float)height, 0.1f, 100.0f);
+    return glm::perspective(glm::radians(camera->getZoom()), (float)width / (float)height, NEAR, FAR);
 }
 
 GLFWwindow* Window::initGLFW(const char* title)
@@ -160,6 +164,11 @@ void Window::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 
 void Window::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    // disable movement when cursor is disabled
+    if (mouseCursorDisabled) {
+        return;
+    }
+
     camera->processMouseScroll((float)yoffset);
 }
 

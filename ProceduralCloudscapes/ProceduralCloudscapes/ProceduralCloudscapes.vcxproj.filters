@@ -76,6 +76,9 @@
     <Filter Include="Resource Files\Shaders\Clouds">
       <UniqueIdentifier>{98f57bad-d1fe-451b-bce2-7dd8cdb2e6cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Terrain">
+      <UniqueIdentifier>{cace9952-1ac7-40e4-aa77-23a725e4ff8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -162,6 +165,9 @@
     <ClCompile Include="SceneObjects\Terrain.cpp">
       <Filter>Source Files\SceneObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\TerrainTestScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -236,6 +242,9 @@
     <ClInclude Include="SceneObjects\Terrain.h">
       <Filter>Header Files\SceneObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\TerrainTestScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">
@@ -282,6 +291,18 @@
     </None>
     <None Include="Shaders\Clouds\clouds.frag">
       <Filter>Resource Files\Shaders\Clouds</Filter>
+    </None>
+    <None Include="Shaders\Terrain\terrain.frag">
+      <Filter>Resource Files\Shaders\Terrain</Filter>
+    </None>
+    <None Include="Shaders\Terrain\terrain.tesc">
+      <Filter>Resource Files\Shaders\Terrain</Filter>
+    </None>
+    <None Include="Shaders\Terrain\terrain.tese">
+      <Filter>Resource Files\Shaders\Terrain</Filter>
+    </None>
+    <None Include="Shaders\Terrain\terrain.vert">
+      <Filter>Resource Files\Shaders\Terrain</Filter>
     </None>
   </ItemGroup>
 </Project>

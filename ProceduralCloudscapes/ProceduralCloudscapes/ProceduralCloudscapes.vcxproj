@@ -172,6 +172,7 @@
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
     <ClCompile Include="Scenes\SkyboxTestScene.cpp" />
+    <ClCompile Include="Scenes\TerrainTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />
     <ClInclude Include="Scenes\SkyboxTestScene.h" />
+    <ClInclude Include="Scenes\TerrainTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Clouds\clouds.frag" />
@@ -215,6 +217,10 @@
     <None Include="Shaders\ShaderTest\shader.frag" />
     <None Include="Shaders\ShaderTest\shader.vert" />
     <None Include="Shaders\Skybox\sky.frag" />
+    <None Include="Shaders\Terrain\terrain.frag" />
+    <None Include="Shaders\Terrain\terrain.tesc" />
+    <None Include="Shaders\Terrain\terrain.tese" />
+    <None Include="Shaders\Terrain\terrain.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
