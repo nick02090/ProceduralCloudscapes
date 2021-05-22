@@ -1,12 +1,15 @@
 #include "Terrain.h"
 
-#include "../Engine/Shader.h"
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
+
+#include "../Engine/Shader.h"
 #include "../Engine/GUI/ImGUIExpansions.h"
 #include "../Engine/Utilities.h"
 #include "../Engine/Environment/SkyboxEnvironment.h"
 #include "../Engine/Scene.h"
+#include "../Engine/Texture.h"
+#include "../Engine/PBRMaterial.h"
 
 Terrain::Terrain(Window* _window) : SceneObject(_window)
 {
@@ -28,9 +31,12 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	data->tileSize = 100;
 	data->grassCoverage = 0.5f;
 	data->snowCoverage = 0.7f;
-	data->grassColor = Color(0.16f, 0.46f, 0.1f);
-	data->rockColor = Color(0.42f, 0.42f, 0.42f);
+	data->grassColor = Color(0.06f, 0.25f, 0.03f);
+	data->rockColor = Color(0.4f, 0.38f, 0.29f);
 	data->snowColor = Color(0.9f, 0.9f, 0.9f);
+	data->grassScale = 1.f;
+	data->rockScale = 1.f;
+	data->snowScale = 1.f;
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
@@ -42,6 +48,11 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	shader->attachShader("Shaders/Terrain/terrain.tese", ShaderInfo(ShaderType::kTessEvaluation));
 	shader->attachShader("Shaders/Terrain/terrain.frag", ShaderInfo(ShaderType::kFragment));
 	shader->linkProgram();
+
+	// load and create PBR materials
+	grassMaterial = new PBRMaterial("Textures/grass/");
+	rockMaterial = new PBRMaterial("Textures/rock/");
+	snowMaterial = new PBRMaterial("Textures/snow/");
 
 	// Generate VAO, VBO and EBO
 	glGenVertexArrays(1, &terrainVAO);
@@ -69,6 +80,10 @@ Terrain::~Terrain()
 	glDeleteBuffers(1, &terrainVBO);
 	glDeleteBuffers(1, &terrainEBO);
 	glDeleteBuffers(1, &positionBuffer);
+	// Delete materials
+	delete grassMaterial;
+	delete rockMaterial;
+	delete snowMaterial;
 }
 
 void Terrain::update()
@@ -101,12 +116,36 @@ void Terrain::update()
 	shader->setVec2("terrainNoise.seed", data->terrainNoise.seed);
 	shader->setFloat("terrainNoise.power", data->terrainNoise.power);
 
+	// Set terrain grass material
+	shader->setSampler("grassAlbedo", *grassMaterial->getAlbedo(), 0);
+	shader->setSampler("grassNormal", *grassMaterial->getNormal(), 1);
+	shader->setSampler("grassMetallic", *grassMaterial->getMetallic(), 2);
+	shader->setSampler("grassRoughness", *grassMaterial->getRoughness(), 3);
+	shader->setSampler("grassAO", *grassMaterial->getAO(), 4);
+	shader->setVec3("grassBaseColor", data->grassColor.getf());
+	shader->setFloat("grassScale", data->grassScale);
+
+	// Set terrain rock material
+	shader->setSampler("rockAlbedo", *rockMaterial->getAlbedo(), 5);
+	shader->setSampler("rockNormal", *rockMaterial->getNormal(), 6);
+	shader->setSampler("rockMetallic", *rockMaterial->getMetallic(), 7);
+	shader->setSampler("rockRoughness", *rockMaterial->getRoughness(), 8);
+	shader->setSampler("rockAO", *rockMaterial->getAO(), 9);
+	shader->setVec3("rockBaseColor", data->rockColor.getf());
+	shader->setFloat("rockScale", data->rockScale);
+
+	// Set terrain snow material
+	shader->setSampler("snowAlbedo", *snowMaterial->getAlbedo(), 10);
+	shader->setSampler("snowNormal", *snowMaterial->getNormal(), 11);
+	shader->setSampler("snowMetallic", *snowMaterial->getMetallic(), 12);
+	shader->setSampler("snowRoughness", *snowMaterial->getRoughness(), 13);
+	shader->setSampler("snowAO", *snowMaterial->getAO(), 14);
+	shader->setVec3("snowBaseColor", data->snowColor.getf());
+	shader->setFloat("snowScale", data->snowScale);
+
 	// Set terrain color values
 	shader->setFloat("grassCoverage", data->grassCoverage);
 	shader->setFloat("snowCoverage", data->snowCoverage);
-	shader->setVec3("grassColor", data->grassColor.getf());
-	shader->setVec3("rockColor", data->rockColor.getf());
-	shader->setVec3("snowColor", data->snowColor.getf());
 
 	// Set sky info
 	SkyboxEnvironment* env = getScene()->getEnvironment<SkyboxEnvironment>();
@@ -176,6 +215,21 @@ void Terrain::buildGUI()
 		float snowCoverage = getSnowCoverage();
 		ImGui::SliderFloat("Snow coverage", &snowCoverage, 0.f, 1.f);
 		setSnowCoverage(snowCoverage);
+
+		// Grass scale
+		float grassScale = getGrassScale();
+		ImGui::SliderFloat("Grass scale", &grassScale, -100.f, 100.f);
+		setGrassScale(grassScale);
+
+		// Rock scale
+		float rockScale = getRockScale();
+		ImGui::SliderFloat("Rock scale", &rockScale, -100.f, 100.f);
+		setRockScale(rockScale);
+
+		// Snow scale
+		float snowScale = getSnowScale();
+		ImGui::SliderFloat("Snow scale", &snowScale, -100.f, 100.f);
+		setSnowScale(snowScale);
 
 		// Grass color
 		ImVec4 grassColor = getGrassColor().toIMGUI();

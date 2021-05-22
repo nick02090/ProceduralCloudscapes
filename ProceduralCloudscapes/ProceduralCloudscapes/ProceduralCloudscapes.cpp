@@ -30,7 +30,7 @@ int main()
     Window window;
 
     // load a scene that will show up in the window
-    Scene* scene = new PBRTestScene(&window);
+    Scene* scene = new TerrainTestScene(&window);
 
     // render loop
     while (window.isRunning())

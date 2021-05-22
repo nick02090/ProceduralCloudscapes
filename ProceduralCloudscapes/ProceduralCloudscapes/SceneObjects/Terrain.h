@@ -5,6 +5,8 @@
 #include "../Engine/Color.h"
 
 class Shader;
+class Texture;
+class PBRMaterial;
 
 struct TerrainNoise {
 	float amplitude;
@@ -43,6 +45,9 @@ struct TerrainData {
 	Color grassColor;
 	Color rockColor;
 	Color snowColor;
+	float grassScale;
+	float rockScale;
+	float snowScale;
 };
 
 class Terrain : public SceneObject, public GUIBuilder {
@@ -65,6 +70,9 @@ public:
 	inline Color getGrassColor() const { return data->grassColor; }
 	inline Color getRockColor() const { return data->rockColor; }
 	inline Color getSnowColor() const { return data->snowColor; }
+	inline float getGrassScale() const { return data->grassScale; }
+	inline float getRockScale() const { return data->rockScale; }
+	inline float getSnowScale() const { return data->snowScale; }
 
 	// SETTERS
 
@@ -76,6 +84,9 @@ public:
 	inline void setGrassColor(Color _grassColor) { data->grassColor = _grassColor; }
 	inline void setRockColor(Color _rockColor) { data->rockColor = _rockColor; }
 	inline void setSnowColor(Color _snowColor) { data->snowColor = _snowColor; }
+	inline void setGrassScale(float _grassScale) { data->grassScale = _grassScale; }
+	inline void setRockScale(float _rockScale) { data->rockScale = _rockScale; }
+	inline void setSnowScale(float _snowScale) { data->snowScale = _snowScale; }
 
 private:
 	void generateTerrainData();
@@ -89,6 +100,10 @@ private:
 	TerrainData* data = nullptr;
 
 	Shader* shader = nullptr;
+
+	PBRMaterial* grassMaterial = nullptr;
+	PBRMaterial* rockMaterial = nullptr;
+	PBRMaterial* snowMaterial = nullptr;
 };
 
 #endif // !TERRAIN_H
