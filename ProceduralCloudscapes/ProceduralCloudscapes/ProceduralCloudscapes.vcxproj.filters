@@ -79,6 +79,9 @@
     <Filter Include="Resource Files\Shaders\Terrain">
       <UniqueIdentifier>{cace9952-1ac7-40e4-aa77-23a725e4ff8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\PBR">
+      <UniqueIdentifier>{0586d5d3-58ba-438a-bfb8-2d9c2457064c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProceduralCloudscapes.cpp">
@@ -168,6 +171,12 @@
     <ClCompile Include="Scenes\TerrainTestScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\PBRTestScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjects\Sphere.cpp">
+      <Filter>Source Files\SceneObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scenes\ShaderTestScene.h">
@@ -245,6 +254,12 @@
     <ClInclude Include="Scenes\TerrainTestScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes\PBRTestScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjects\Sphere.h">
+      <Filter>Header Files\SceneObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FramebufferTest\screenShader.frag">
@@ -303,6 +318,12 @@
     </None>
     <None Include="Shaders\Terrain\terrain.vert">
       <Filter>Resource Files\Shaders\Terrain</Filter>
+    </None>
+    <None Include="Shaders\PBR\PBR.frag">
+      <Filter>Resource Files\Shaders\PBR</Filter>
+    </None>
+    <None Include="Shaders\PBR\PBR.vert">
+      <Filter>Resource Files\Shaders\PBR</Filter>
     </None>
   </ItemGroup>
 </Project>

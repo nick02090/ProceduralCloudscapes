@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include "../Engine/GUI/ImGUIExpansions.h"
 #include "../Engine/Utilities.h"
+#include "../Engine/Environment/SkyboxEnvironment.h"
+#include "../Engine/Scene.h"
 
 Terrain::Terrain(Window* _window) : SceneObject(_window)
 {
@@ -22,8 +24,13 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 		3.f,	// power
 		1.f		// frequency multiplier
 	};
-	data->wireframe = true;
+	data->wireframe = false;
 	data->tileSize = 100;
+	data->grassCoverage = 0.5f;
+	data->snowCoverage = 0.7f;
+	data->grassColor = Color(0.16f, 0.46f, 0.1f);
+	data->rockColor = Color(0.42f, 0.42f, 0.42f);
+	data->snowColor = Color(0.9f, 0.9f, 0.9f);
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
@@ -82,6 +89,8 @@ void Terrain::update()
 	// Set camera info
 	shader->setVec3("cameraPosition", camera->getPosition());
 	shader->setMat4("gVP", window->getProjectionMatrix() * camera->getViewMatrix());
+	shader->setMat4("inverseProjection", glm::inverse(window->getProjectionMatrix()));
+	shader->setMat4("inverseView", glm::inverse(camera->getViewMatrix()));
 
 	// Set terrain noise params
 	shader->setFloat("terrainNoise.amplitude", data->terrainNoise.amplitude);
@@ -91,6 +100,24 @@ void Terrain::update()
 	shader->setFloat("terrainNoise.gain", data->terrainNoise.gain);
 	shader->setVec2("terrainNoise.seed", data->terrainNoise.seed);
 	shader->setFloat("terrainNoise.power", data->terrainNoise.power);
+
+	// Set terrain color values
+	shader->setFloat("grassCoverage", data->grassCoverage);
+	shader->setFloat("snowCoverage", data->snowCoverage);
+	shader->setVec3("grassColor", data->grassColor.getf());
+	shader->setVec3("rockColor", data->rockColor.getf());
+	shader->setVec3("snowColor", data->snowColor.getf());
+
+	// Set sky info
+	SkyboxEnvironment* env = getScene()->getEnvironment<SkyboxEnvironment>();
+	if (env != nullptr) {
+		shader->setFloat("sunAltitude", env->getSunAltitude());
+		shader->setFloat("sunAzimuth", env->getSunAzimuth());
+		shader->setFloat("sunIntensity", env->getSunIntensity());
+	}
+	else {
+		std::cout << "ERROR::CLOUDS::update() Clouds should be rendered only using Skybox environment!" << std::endl;
+	}
 
 	// Draw the terrain
 	size_t resolution = getResolution();
@@ -139,6 +166,31 @@ void Terrain::buildGUI()
 	if (ImGui::CollapsingHeader("Colors", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		// TODO: After textures are applied on the terrain, enable color switching for them
+
+		// Grass coverage
+		float grassCoverage = getGrassCoverage();
+		ImGui::SliderFloat("Grass coverage", &grassCoverage, 0.f, 1.f);
+		setGrassCoverage(grassCoverage);
+
+		// Snow coverage
+		float snowCoverage = getSnowCoverage();
+		ImGui::SliderFloat("Snow coverage", &snowCoverage, 0.f, 1.f);
+		setSnowCoverage(snowCoverage);
+
+		// Grass color
+		ImVec4 grassColor = getGrassColor().toIMGUI();
+		ImGui::ColorEdit3("Grass color", (float*)&grassColor);
+		setGrassColor(Color::fromIMGUI(grassColor));
+
+		// Rock color
+		ImVec4 rockColor = getRockColor().toIMGUI();
+		ImGui::ColorEdit3("Rock color", (float*)&rockColor);
+		setRockColor(Color::fromIMGUI(rockColor));
+
+		// Snow color
+		ImVec4 snowColor = getSnowColor().toIMGUI();
+		ImGui::ColorEdit3("Snow color", (float*)&snowColor);
+		setSnowColor(Color::fromIMGUI(snowColor));
 	}
 
 	// Create terrain noise header
@@ -151,7 +203,7 @@ void Terrain::buildGUI()
 
 		// Frequency multiplier
 		float frequencyMultiplier = data->terrainNoise.frequencyMultiplier;
-		ImGui::SliderFloat("Frequency multiplier", &frequencyMultiplier, 1.0f, 10.0f);
+		ImGui::SliderFloat("Frequency multiplier", &frequencyMultiplier, .1f, 10.0f);
 		data->terrainNoise.frequencyMultiplier = frequencyMultiplier;
 
 		// Octaves

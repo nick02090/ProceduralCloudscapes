@@ -29,7 +29,7 @@ const float ZOOM = 60.0f;
 class Camera
 {
 public:
-	Camera(glm::vec3 _position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f), float _yaw = YAW, float _pitch = PITCH);
+	Camera(glm::vec3 _position = glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3 _up = glm::vec3(0.0f, 1.0f, 0.0f), float _yaw = YAW, float _pitch = PITCH);
 
 	void processKeyboard(CameraMovement direction, float deltaTime);
 

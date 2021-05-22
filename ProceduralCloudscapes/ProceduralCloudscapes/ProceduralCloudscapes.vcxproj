@@ -167,8 +167,10 @@
     <ClCompile Include="ProceduralCloudscapes.cpp" />
     <ClCompile Include="SceneObjects\Clouds.cpp" />
     <ClCompile Include="SceneObjects\PlaneTexture.cpp" />
+    <ClCompile Include="SceneObjects\Sphere.cpp" />
     <ClCompile Include="SceneObjects\Terrain.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
+    <ClCompile Include="Scenes\PBRTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
     <ClCompile Include="Scenes\SkyboxTestScene.cpp" />
@@ -194,8 +196,10 @@
     <ClInclude Include="Engine\Window.h" />
     <ClInclude Include="SceneObjects\Clouds.h" />
     <ClInclude Include="SceneObjects\PlaneTexture.h" />
+    <ClInclude Include="SceneObjects\Sphere.h" />
     <ClInclude Include="SceneObjects\Terrain.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
+    <ClInclude Include="Scenes\PBRTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />
     <ClInclude Include="Scenes\SkyboxTestScene.h" />
@@ -211,6 +215,8 @@
     <None Include="Shaders\Noise\curl.comp" />
     <None Include="Shaders\Noise\perlinWorley.comp" />
     <None Include="Shaders\Noise\worley.comp" />
+    <None Include="Shaders\PBR\PBR.frag" />
+    <None Include="Shaders\PBR\PBR.vert" />
     <None Include="Shaders\RaymarchTest\screenShader.frag" />
     <None Include="Shaders\Screen\shader.vert" />
     <None Include="Shaders\ShaderTest\lightShader.frag" />

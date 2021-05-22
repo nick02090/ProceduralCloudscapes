@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "Utilities.h"
 
-Camera* Window::camera = new Camera(glm::vec3(0.0f, 1.0f, 0.0f));
+Camera* Window::camera = new Camera(glm::vec3(0.0f, 10.0f, 0.0f));
 
 bool Window::firstMouse = true;
 bool Window::mouseCursorDisabled = false;

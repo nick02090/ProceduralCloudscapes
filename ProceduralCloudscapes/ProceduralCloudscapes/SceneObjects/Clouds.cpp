@@ -97,8 +97,8 @@ void Clouds::update()
 
 	// set shaders camera info
 	shader->setVec3("cameraPosition", camera->getPosition());
-	shader->setVec3("cameraDirection", camera->getDirection());
-	shader->setVec3("cameraUp", camera->getUp());
+	shader->setMat4("inverseProjection", glm::inverse(window->getProjectionMatrix()));
+	shader->setMat4("inverseView", glm::inverse(camera->getViewMatrix()));
 	shader->setVec2("resolution", window->getSize());
 
 	// set shaders sky info

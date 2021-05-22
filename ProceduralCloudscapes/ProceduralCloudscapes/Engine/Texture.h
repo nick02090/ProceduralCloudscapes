@@ -10,7 +10,8 @@
 enum class TextureType {
 	oneDimensional = 0,
 	twoDimensional = 1,
-	threeDimensional = 2
+	threeDimensional = 2,
+	faulty = 3
 };
 
 struct TextureInfo {
@@ -29,6 +30,8 @@ struct TextureInfo {
 			name = "Tex_3D";
 			glType = GL_TEXTURE_3D;
 			break;
+		case TextureType::faulty:
+			break;
 		default:
 			name = "";
 			glType = -1;
@@ -46,6 +49,7 @@ public:
 	unsigned int ID;
 
 	Texture(TextureType _type, glm::vec3 _size, uint8_t nrChannels, bool is8bit);
+	Texture(char const* path);
 	void bind(int binding);
 	~Texture();
 

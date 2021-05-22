@@ -5,9 +5,9 @@
 
 // Camera
 uniform vec3 cameraPosition;
-uniform vec3 cameraDirection;
-uniform vec3 cameraUp;
 uniform vec2 resolution;
+uniform mat4 inverseProjection;
+uniform mat4 inverseView;
 
 // Sun
 uniform float sunAltitude; // from range [0.0, 1.0] where 0.0 is night and 1.0 is clear day
@@ -107,6 +107,12 @@ struct cloud {
 //===============================================================================================
 // METHODS (MATH)
 //===============================================================================================
+
+// Calculates clip space coordinate (NDC space)
+vec3 computeClipSpaceCoord(ivec2 fragCoord){
+	vec2 rayNDC = 2.0*vec2(fragCoord.xy)/resolution.xy - 1.0;
+	return vec3(rayNDC, 1.0);
+}
 
 // Converts/Remaps a value from one range to another, where x is value to be remapped,
 // original range is [Lo, Ho] and a new one is [Ln, Hn].
@@ -406,15 +412,12 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 
 void main()
 {
-	// recalculate space
-	vec2 q = gl_FragCoord.xy / resolution.xy;
-	vec2 p = -1.0 + 2.0*q;
-	p.x *= resolution.x / resolution.y;
-	
-	// calculate ray direction
-    vec3 uu = normalize(cross(cameraDirection, cameraUp));
-    vec3 vv = normalize(cross(uu, cameraDirection));
-	vec3 rd = normalize(p.x * uu + p.y * vv + cameraDirection);
+	// Recalculate space
+	ivec2 fragCoord = ivec2(gl_FragCoord);
+	vec4 clipRay = vec4(computeClipSpaceCoord(fragCoord), 1.0);
+	vec4 viewRay = inverseProjection * clipRay;
+	viewRay = vec4(viewRay.xy, -1.0, 0.0);
+	vec3 rd = normalize((inverseView * viewRay).xyz);
 
 	// translate camera for earth radius
 	vec3 ro = cameraPosition + vec3(0.0, earthRadius, 0.0);

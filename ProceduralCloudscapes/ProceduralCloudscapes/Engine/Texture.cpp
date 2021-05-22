@@ -1,6 +1,7 @@
 #include "Texture.h"
 
 #include <iostream>
+#include <stb_image.h>
 
 Texture::Texture(TextureType _type, glm::vec3 _size, uint8_t nrChannels, bool is8bit)
 {
@@ -10,6 +11,53 @@ Texture::Texture(TextureType _type, glm::vec3 _size, uint8_t nrChannels, bool is
 	info = new TextureInfo(_type);
 	// create GL texture
 	ID = generateGlTexture(nrChannels, is8bit);
+}
+
+Texture::Texture(char const* path)
+{
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		// generate texture
+		glGenTextures(1, &ID);
+
+		// initialize member variables
+		size = glm::vec3(width, height, 0.f);
+		// create texture info
+		info = new TextureInfo(TextureType::twoDimensional);
+
+		// determine the texture format
+		GLenum format{};
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		// bind texture and set its data
+		glBindTexture(GL_TEXTURE_2D, ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		// set texture properties
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// free texture data
+		stbi_image_free(data);
+	}
+	else
+	{
+		ID = 0;
+		size = glm::vec3(0.f);
+		info = new TextureInfo(TextureType::faulty);
+
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+	}
 }
 
 void Texture::bind(int binding)
