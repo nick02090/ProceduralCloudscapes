@@ -72,6 +72,10 @@ uniform fbm terrainNoise;
 uniform float grassCoverage = 0.1;
 uniform float snowCoverage = 1.0;
 
+// Fog
+uniform float fogFalloff = 0.f;
+uniform vec3 fogColor  = vec3(0.5, 0.6, 0.7);
+
 // Heights
 uniform float grassHeight = 5000.f;
 uniform float rockHeight = 7000.f;
@@ -247,7 +251,7 @@ vec3 calculatePBR(material material, sun sun, ray sunRay, vec2 TexCoords, vec3 W
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 	
-	return color;
+    return color;
 }
 
 //===============================================================================================
@@ -361,6 +365,14 @@ vec3 specular(vec3 normal, vec3 lightDirection, vec3 viewDirection, vec3 lightCo
 	return specularStrength * lightColor;
 }
 
+// Calculates amount of fog that will cover the terrain
+float calculateFogAmount(vec3 cameraPosition, vec3 position, float fogFalloff) {
+    float cameraToPointDistance = distance(cameraPosition, position);
+    vec3 rayDirection = normalize(position - cameraPosition);
+    float fogAmount = (1.0 - exp(-cameraToPointDistance * rayDirection.y * fogFalloff)) / rayDirection.y;
+    return clamp(fogAmount, 0.0, 1.0);
+}
+
 //===============================================================================================
 // MAIN
 //===============================================================================================
@@ -401,6 +413,21 @@ void main()
 	vec3 diffuse = diffuse(Normal_FS_in, sunDirection, lightColor);
 	vec3 specular = specular(Normal_FS_in, sunDirection, rayDirection, lightColor);
 
+    // Calculate final color
+    color = color * (ambient + diffuse + specular);
+
+    // Calculate fog amount
+    float fogAmount = calculateFogAmount(cameraPosition, WorldPos_FS_in, fogFalloff * 1e-6);
+
+    // Calculate fog color
+    sigmoid = 1 / (1.0 + exp(8.0 - WorldPos_FS_in.y * 40.0));
+	a = min(max(sigmoid, 0.0f), 1.0f);
+	b = 1.0 - a;
+	vec3 fogColor = fogColor * 1.15f * a + fogColor * 0.85f * b;
+
+    // Apply fog
+    color = mix(color, fogColor, fogAmount);
+
 	// Output final result
-	gl_FragColor = vec4(color * (ambient + diffuse + specular), 1.0);
+	gl_FragColor = vec4(color, 1.0);
 }

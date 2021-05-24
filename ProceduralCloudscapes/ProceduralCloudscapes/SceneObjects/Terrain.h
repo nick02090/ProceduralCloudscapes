@@ -40,14 +40,26 @@ struct TerrainData {
 	// TERRAIN COLOR
 	// =============================================
 
+	// amount ([0.0, 1.0]) of grass that will cover the bottom terrain
 	float grassCoverage;
+	// amount ([0.0, 1.0]) of snow that will cover the top terrain
 	float snowCoverage;
+	// base color that will define the grass shading
 	Color grassColor;
+	// base color that will define the rock shading
 	Color rockColor;
+	// base color that will define the snow shading
 	Color snowColor;
+	// scale of the grass textures loading
 	float grassScale;
+	// scale of the rock textures loading
 	float rockScale;
+	// scale of the snow textures loading
 	float snowScale;
+	// amount of fog that will cover the terrain
+	float fogFalloff;
+	// color of the fog
+	Color fogColor;
 };
 
 class Terrain : public SceneObject, public GUIBuilder {
@@ -73,6 +85,8 @@ public:
 	inline float getGrassScale() const { return data->grassScale; }
 	inline float getRockScale() const { return data->rockScale; }
 	inline float getSnowScale() const { return data->snowScale; }
+	inline float getFogFalloff() const { return data->fogFalloff; }
+	inline Color getFogColor() const { return data->fogColor; }
 
 	// SETTERS
 
@@ -87,6 +101,8 @@ public:
 	inline void setGrassScale(float _grassScale) { data->grassScale = _grassScale; }
 	inline void setRockScale(float _rockScale) { data->rockScale = _rockScale; }
 	inline void setSnowScale(float _snowScale) { data->snowScale = _snowScale; }
+	inline void setFogFalloff(float _fogFalloff) { data->fogFalloff = _fogFalloff; }
+	inline void setFogColor(Color _fogColor) { data->fogColor = _fogColor; }
 
 private:
 	void generateTerrainData();

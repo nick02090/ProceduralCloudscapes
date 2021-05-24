@@ -37,6 +37,8 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	data->grassScale = 1.f;
 	data->rockScale = 1.f;
 	data->snowScale = 1.f;
+	data->fogFalloff = 15.f;
+	data->fogColor = Color(0.46f, 0.53f, 0.53f);
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
@@ -143,9 +145,13 @@ void Terrain::update()
 	shader->setVec3("snowBaseColor", data->snowColor.getf());
 	shader->setFloat("snowScale", data->snowScale);
 
-	// Set terrain color values
+	// Set terrain coverage values
 	shader->setFloat("grassCoverage", data->grassCoverage);
 	shader->setFloat("snowCoverage", data->snowCoverage);
+
+	// Set terrain fog values
+	shader->setFloat("fogFalloff", data->fogFalloff);
+	shader->setVec3("fogColor", data->fogColor.getf());
 
 	// Set sky info
 	SkyboxEnvironment* env = getScene()->getEnvironment<SkyboxEnvironment>();
@@ -201,11 +207,23 @@ void Terrain::buildGUI()
 		}
 	}
 
+	// Crete terrain post-processing header
+	if (ImGui::CollapsingHeader("Post-processing", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		// Fog falloff
+		float fogFalloff = getFogFalloff();
+		ImGui::SliderFloat("Fog falloff", &fogFalloff, 0.f, 100.f);
+		setFogFalloff(fogFalloff);
+
+		// Fog color
+		ImVec4 fogColor = getFogColor().toIMGUI();
+		ImGui::ColorEdit3("Fog color", (float*)&fogColor);
+		setFogColor(Color::fromIMGUI(fogColor));
+	}
+
 	// Create terrain color header
 	if (ImGui::CollapsingHeader("Colors", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		// TODO: After textures are applied on the terrain, enable color switching for them
-
 		// Grass coverage
 		float grassCoverage = getGrassCoverage();
 		ImGui::SliderFloat("Grass coverage", &grassCoverage, 0.f, 1.f);
@@ -218,17 +236,17 @@ void Terrain::buildGUI()
 
 		// Grass scale
 		float grassScale = getGrassScale();
-		ImGui::SliderFloat("Grass scale", &grassScale, -100.f, 100.f);
+		ImGui::SliderFloat("Grass scale", &grassScale, 0.f, 100.f);
 		setGrassScale(grassScale);
 
 		// Rock scale
 		float rockScale = getRockScale();
-		ImGui::SliderFloat("Rock scale", &rockScale, -100.f, 100.f);
+		ImGui::SliderFloat("Rock scale", &rockScale, 0.f, 100.f);
 		setRockScale(rockScale);
 
 		// Snow scale
 		float snowScale = getSnowScale();
-		ImGui::SliderFloat("Snow scale", &snowScale, -100.f, 100.f);
+		ImGui::SliderFloat("Snow scale", &snowScale, 0.f, 100.f);
 		setSnowScale(snowScale);
 
 		// Grass color
