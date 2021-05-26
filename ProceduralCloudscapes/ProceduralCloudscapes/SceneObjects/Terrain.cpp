@@ -38,7 +38,7 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	data->rockScale = 1.f;
 	data->snowScale = 1.f;
 	data->fogFalloff = 15.f;
-	data->fogColor = Color(0.46f, 0.53f, 0.53f);
+	data->fogColor = Color(0.43f, 0.53f, 0.68f);
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
@@ -421,7 +421,7 @@ void Terrain::generateTerrainData()
 	delete[] triangleBufferData;
 
 	// ================================================
-	// Position and LOD generation
+	// Initial grid and position generation
 	// ================================================
 
 	// Generate tile grid
@@ -439,6 +439,15 @@ void Terrain::generateTerrainData()
 
 void Terrain::updatePositionData()
 {
+	// Calculate current tile (based on the camera position)
+	glm::vec2 currentTile = calculateCurrentCameraTile();
+
+	// Recalculate grid position data based on current tile (results in infinite terrain)
+	glm::vec2 center = positionBufferData[static_cast<unsigned int>(data->tileSize / 2.f + (data->tileSize / 2.f) * data->tileSize)];
+	for (glm::vec2& position : positionBufferData) {
+		position += currentTile - center;
+	}
+
 	// Bind position buffer and forward its data
 	glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
 	glBufferData(GL_ARRAY_BUFFER, positionBufferData.size() * sizeof(glm::vec2), &positionBufferData[0], GL_STATIC_DRAW);
@@ -451,4 +460,44 @@ void Terrain::updatePositionData()
 
 	// Unbind to default buffer
 	glBindVertexArray(0);
+}
+
+glm::vec2 Terrain::calculateCurrentCameraTile()
+{
+	// Get camera
+	Camera* camera = window->getCamera();
+	glm::vec3 cameraPosition = camera->getPosition();
+
+	// Prepare final result
+	glm::vec2 cameraTile = glm::vec2(0.f);
+
+	// Iterate over every position
+	for (glm::vec2 position : positionBufferData) {
+
+		// Set initial values as false
+		bool inX = false;	// true if camera's x position corresponds to this tile's x position
+		bool inY = false;	// true if camera's y position corresponds to this tile's y position
+
+		// Check for camera's x position
+		if (cameraPosition.x <= position.x + data->scale &&
+			cameraPosition.x >= position.x - data->scale) {
+			inX = true;
+		}
+
+		// Check for camera's y position
+		// NOTE: When projecting 3D to 2D: x[3D] represents x[2D], whilst z[3D] represents y[2D]
+		if (cameraPosition.z <= position.y + data->scale &&
+			cameraPosition.z >= position.y - data->scale) {
+			inY = true;
+		}
+
+		// If camera's x and y coordinates correspond to this tile then quit the search, we have found our tile!
+		if (inX && inY) {
+			cameraTile = position;
+			break;
+		}
+	}
+
+	// Return final result
+	return cameraTile;
 }

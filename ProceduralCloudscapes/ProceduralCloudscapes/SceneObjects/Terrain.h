@@ -107,6 +107,7 @@ public:
 private:
 	void generateTerrainData();
 	void updatePositionData();
+	glm::vec2 calculateCurrentCameraTile();
 
 	unsigned int terrainVAO, terrainVBO, terrainEBO;
 	unsigned int positionBuffer;
