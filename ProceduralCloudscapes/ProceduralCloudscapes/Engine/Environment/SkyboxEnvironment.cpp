@@ -12,10 +12,12 @@ SkyboxEnvironment::SkyboxEnvironment(Window* _window) : Environment(_window)
 
 	// Initialize skybox properties
 	SkyboxEnvironmentData* skyboxData = static_cast<SkyboxEnvironmentData*>(data);
-	skyboxData->sunAltitude = 0.5f;
+	skyboxData->sunAltitude = 0.8f;
 	skyboxData->sunAzimuth = 0.0f;
 	skyboxData->sunIntensity = 20.0f;
-	skyboxData->sunScale = 2.5f;
+	skyboxData->sunColorDay = Color(1.f, 0.96f, 0.9f);
+	skyboxData->sunColorSunset = Color(0.36f, 0.14f, 0.07f);
+	skyboxData->sunScale = 1.f;
 	skyboxData->isGammaAndContrast = true;
 	skyboxData->isVignette = true;
 
@@ -46,6 +48,8 @@ void SkyboxEnvironment::update()
 	shader->setFloat("sunAltitude", getSunAltitude());
 	shader->setFloat("sunAzimuth", getSunAzimuth());
 	shader->setFloat("sunIntensity", getSunIntensity());
+	shader->setVec3("sunColorDay", getSunColorDay().getf());
+	shader->setVec3("sunColorSunset", getSunColorSunset().getf());
 	shader->setFloat("sunScale", getSunScale());
 
 	// set shaders post-processing info
@@ -72,6 +76,16 @@ void SkyboxEnvironment::extendGUI()
 		float sunIntensity = getSunIntensity();
 		ImGui::SliderFloat("Sun intensity", &sunIntensity, 10.0f, 30.0f);
 		setSunIntensity(sunIntensity);
+
+		// Sun color at day
+		ImVec4 sunColorDay = getSunColorDay().toIMGUI();
+		ImGui::ColorEdit3("Sun color day", (float*)&sunColorDay);
+		setSunColorDay(Color::fromIMGUI(sunColorDay));
+
+		// Sun color at sunset
+		ImVec4 sunColorSunset = getSunColorSunset().toIMGUI();
+		ImGui::ColorEdit3("Sun color sunset", (float*)&sunColorSunset);
+		setSunColorSunset(Color::fromIMGUI(sunColorSunset));
 
 		// Sun scale
 		float sunScale = getSunScale();

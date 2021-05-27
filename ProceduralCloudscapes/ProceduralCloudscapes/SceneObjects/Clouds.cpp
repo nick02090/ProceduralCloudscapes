@@ -24,8 +24,6 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	data->powderCoeff = 10.0f;
 	data->csi = 5.0f;
 	data->color = Color(1.f, 1.f, 1.f);
-	data->sunColorDay = Color(1.f, 0.96f, 0.9f);
-	data->sunColorSunset = Color(0.36f, 0.14f, 0.07f);
 
 	// framebuffer configuration
 	framebuffer = new FrameBufferObject();
@@ -107,6 +105,8 @@ void Clouds::update()
 		shader->setFloat("sunAltitude", env->getSunAltitude());
 		shader->setFloat("sunAzimuth", env->getSunAzimuth());
 		shader->setFloat("sunIntensity", env->getSunIntensity());
+		shader->setVec3("sunColorDay", env->getSunColorDay().getf());
+		shader->setVec3("sunColorSunset", env->getSunColorSunset().getf());
 	}
 	else {
 		std::cout << "ERROR::CLOUDS::update() Clouds should be rendered only using Skybox environment!" << std::endl;
@@ -131,8 +131,6 @@ void Clouds::update()
 	shader->setBool("isPowder", data->enablePowder);
 	shader->setFloat("powderCoeff", data->powderCoeff);
 	shader->setFloat("csi", data->csi);
-	shader->setVec3("sunColorDay", data->sunColorDay.getf());
-	shader->setVec3("sunColorSunset", data->sunColorSunset.getf());
 
 	FrameBufferObject::unbind();
 
@@ -210,16 +208,6 @@ void Clouds::buildGUI()
 		ImVec4 color = getColor().toIMGUI();
 		ImGui::ColorEdit3("Color", (float*)&color);
 		setColor(Color::fromIMGUI(color));
-
-		// Sun color at day
-		ImVec4 sunColorDay = getSunColorDay().toIMGUI();
-		ImGui::ColorEdit3("Sun color day", (float*)&sunColorDay);
-		setSunColorDay(Color::fromIMGUI(sunColorDay));
-
-		// Sun color at sunset
-		ImVec4 sunColorSunset = getSunColorSunset().toIMGUI();
-		ImGui::ColorEdit3("Sun color sunset", (float*)&sunColorSunset);
-		setSunColorSunset(Color::fromIMGUI(sunColorSunset));
 	}
 
 	// Finish the window

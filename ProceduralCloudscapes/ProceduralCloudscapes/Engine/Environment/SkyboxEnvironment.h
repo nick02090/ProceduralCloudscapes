@@ -2,6 +2,7 @@
 #define SKYBOX_ENVIRONMENT_H
 
 #include "Environment.h"
+#include "../../Engine/Color.h"
 #include <glm/glm.hpp>
 
 class ScreenShader;
@@ -26,6 +27,10 @@ struct SkyboxEnvironmentData : EnvironmentData {
     float sunIntensity;
     // center part sun scale
     float sunScale;
+    // light that sun emits at daytime
+    Color sunColorDay;
+    // light that sun emits at sunset
+    Color sunColorSunset;
 
     // =============================================
     // POST PROCESSING
@@ -51,15 +56,19 @@ public:
     void setSunScale(float _sunScale) { static_cast<SkyboxEnvironmentData*>(data)->sunScale = _sunScale; }
     void setGammaAndContrast(bool _isGammaAndContrast) { static_cast<SkyboxEnvironmentData*>(data)->isGammaAndContrast = _isGammaAndContrast; }
     void setVignette(bool _isVignette) { static_cast<SkyboxEnvironmentData*>(data)->isVignette = _isVignette; }
+    void setSunColorDay(Color _sunColorDay) { static_cast<SkyboxEnvironmentData*>(data)->sunColorDay = _sunColorDay; }
+    void setSunColorSunset(Color _sunColorSunset) { static_cast<SkyboxEnvironmentData*>(data)->sunColorSunset = _sunColorSunset; }
 
     // GETTERS
 
-    float getSunAltitude() const { return static_cast<SkyboxEnvironmentData*>(data)->sunAltitude; }
-    float getSunAzimuth() const { return static_cast<SkyboxEnvironmentData*>(data)->sunAzimuth; }
-    float getSunIntensity() const { return static_cast<SkyboxEnvironmentData*>(data)->sunIntensity; }
-    float getSunScale() const { return static_cast<SkyboxEnvironmentData*>(data)->sunScale; }
-    bool getIsGammaAndContrast() const { return static_cast<SkyboxEnvironmentData*>(data)->isGammaAndContrast; }
-    bool getIsVignette() const { return static_cast<SkyboxEnvironmentData*>(data)->isVignette; }
+    inline float getSunAltitude() const { return static_cast<SkyboxEnvironmentData*>(data)->sunAltitude; }
+    inline float getSunAzimuth() const { return static_cast<SkyboxEnvironmentData*>(data)->sunAzimuth; }
+    inline float getSunIntensity() const { return static_cast<SkyboxEnvironmentData*>(data)->sunIntensity; }
+    inline float getSunScale() const { return static_cast<SkyboxEnvironmentData*>(data)->sunScale; }
+    inline bool getIsGammaAndContrast() const { return static_cast<SkyboxEnvironmentData*>(data)->isGammaAndContrast; }
+    inline bool getIsVignette() const { return static_cast<SkyboxEnvironmentData*>(data)->isVignette; }
+    inline Color getSunColorDay() const { return static_cast<SkyboxEnvironmentData*>(data)->sunColorDay; }
+    inline Color getSunColorSunset() const { return static_cast<SkyboxEnvironmentData*>(data)->sunColorSunset; }
 
     // DRAWING
 

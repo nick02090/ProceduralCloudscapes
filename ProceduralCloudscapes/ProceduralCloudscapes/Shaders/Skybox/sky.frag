@@ -133,40 +133,6 @@ float miePhase(float mu, float g) {
     return 3.0 / (8.0 * PI) * ((1.0 - g2) * (1.0 + mu2) / ((2.0 + g2) * pow(1.0 + g2 - 2.0 * g * mu, 1.5)));
 }
 
-float compute_sun_visibility(in sun sun, float alt)
-{
-	float vap = 0.0;
-	float h, a;
-	float vvp = clamp((0.5 + alt / sun.angularDiameter), 0.0, 1.0); // vertically visible percentage
-	if (vvp == 0.0)
-		return 0.0;
-	else if (vvp == 1.0)
-		return 1.0;
-		
-	bool is_sup;
-	
-	if (vvp > 0.5)
-	{
-		is_sup = true;
-		h = (vvp - 0.5) * 2.0;
-	}
-	else
-	{
-		is_sup = false;
-		h = (0.5 - vvp) * 2.0;
-	}
-	
-	float alpha = acos(h) * 2.0;
-	a = (alpha - sin(alpha)) / (2.0 * PI);
-	
-	if (is_sup)
-		vap = 1.0 - a;
-	else
-		vap = a;
-
-	return vap;
-}
-
 // Calculates the color of the sky
 vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInfo mie, float g)
 {
@@ -193,6 +159,13 @@ vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInf
 	// calculate phase function values
 	float rayleighPHASE = rayleighPhase(mu);
 	float miePHASE = miePhase(mu, g);
+	
+	// Calculate light color
+	float sigmoid = 1 / (1.0 + exp(8.0 - sunDirection.y * 40.0));
+	float a = min(max(sigmoid, 0.0f), 1.0f);
+	float b = 1.0 - a;
+	vec3 lightColor = sunColorDay * a + sunColorSunset * b;
+	lightColor *= sunIntensity / 20.f;
     
 	// iterate over view ray direction
     for (int i = 0; i < VIEW_RAY_SAMPLES; ++i)
@@ -229,11 +202,9 @@ vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInf
 				// calculate optical depth for this height
 				float hrSun = exp(-heightSun / rayleigh.scaleHeight) * segmentLengthSun;
 				float hmSun = exp(-heightSun / mie.scaleHeight) * segmentLengthSun;
-				// calculate sun scale
-				float coefl = compute_sun_visibility(sun, heightSun);
 				// accumulate optical depth
-				rayleighOpticalDepthSun += hrSun * (1.0 - log(coefl + 0.000001));
-				mieOpticalDepthSun += hmSun * (1.0 - log(coefl + 0.000001));
+				rayleighOpticalDepthSun += hrSun;
+				mieOpticalDepthSun += hmSun;
 				// increase current point
 				tCurrentSun += segmentLengthSun;
 			}
@@ -257,13 +228,13 @@ vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInf
 	vec3 rayleighLIGHT = rayleighSUM * rayleigh.coefficient * rayleighPHASE;
 	vec3 mieLIGHT = mieSUM * mie.coefficient * miePHASE;
 	
-	// calculate sun center scale 
+	// calculate sun center scale
     float centerCoeff = 1.0;
 	if (acos(mu) < sun.angularDiameter * sunScale)
     	centerCoeff = 3.0 + sin(mu / (sun.angularDiameter * 0.5)) * 3.0;
 
 	// calculate final sky color
-    return sun.intensity * (rayleighLIGHT + mieLIGHT) * centerCoeff;
+    return sun.intensity * (rayleighLIGHT + mieLIGHT) * centerCoeff * lightColor;
 }
 
 //===============================================================================================

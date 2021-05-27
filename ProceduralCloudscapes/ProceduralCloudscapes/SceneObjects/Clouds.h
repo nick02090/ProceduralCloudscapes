@@ -36,10 +36,6 @@ struct CloudsData {
 	float powderCoeff;
 	// extra sun intensity (increases HG effect)
 	float csi;
-	// color of the daily sun
-	Color sunColorDay;
-	// color of the sun at sunset
-	Color sunColorSunset;
 	// clouds base color
 	Color color;
 };
@@ -66,14 +62,6 @@ public:
 	inline void setColor(int r, int g, int b) { data->color.set(r, g, b); }
 	inline void setColor(float r, float g, float b) { data->color.setf(r, g, b); }
 
-	inline void setSunColorDay(Color _color) { data->sunColorDay = _color; }
-	inline void setSunColorDay(int r, int g, int b) { data->sunColorDay.set(r, g, b); }
-	inline void setSunColorDay(float r, float g, float b) { data->sunColorDay.setf(r, g, b); }
-
-	inline void setSunColorSunset(Color _color) { data->sunColorSunset = _color; }
-	inline void setSunColorSunset(int r, int g, int b) { data->sunColorSunset.set(r, g, b); }
-	inline void setSunColorSunset(float r, float g, float b) { data->sunColorSunset.setf(r, g, b); }
-
 	// GETTERS
 
 	inline float getGlobalCoverage() const { return data->globalCoverage; }
@@ -84,8 +72,6 @@ public:
 	inline float getPowderCoeff() const { return data->powderCoeff; }
 	inline float getCSI() const { return data->csi; }
 	inline Color getColor() const { return data->color; }
-	inline Color getSunColorDay() const { return data->sunColorDay; }
-	inline Color getSunColorSunset() const { return data->sunColorSunset; }
 
 private:
 	void generateNoiseTextures();
