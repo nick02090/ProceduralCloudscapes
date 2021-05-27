@@ -15,9 +15,14 @@ public:
 	void update();
 	void draw();
 
+	void hide();
+	void show();
+
 	void subscribe(GUIBuilder* builder);
 private:
 	std::vector<GUIBuilder*> builders;
+
+	bool showGUI = true;
 };
 
 #endif // !GUI_H

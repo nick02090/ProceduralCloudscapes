@@ -71,8 +71,10 @@ public:
 	inline float getDeltaTime() const { return deltaTime; }
 	inline Camera* getCamera() const { return camera; }
 	inline GUI* getGUI() const { return gui; }
+	inline bool isGUIVisible() const { return showGUI; }
 	glm::mat4 getProjectionMatrix() const;
 
+	void resize(int cx, int cy);
 	void setSize(size_t _width, size_t _height) {
 		width = _width;
 		height = _height;
@@ -125,13 +127,19 @@ private:
 	/// <param name="yoffset">Y offset of the scoll</param>
 	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void resizeCallback(GLFWwindow* window, int cx, int cy);
 	/// <summary>
 	/// Calculates current delta time based on the elapsed time from the last frame.
 	/// </summary>
 	void calculateDeltaTime();
+	bool isFullScreen();
+	void setFullScreen(bool fullScreen);
 
 	size_t width, height;
 	GLFWwindow* glfwWindow;
+	GLFWmonitor* glfwMonitor;
+
+	bool updateViewport;
 
 	static Camera* camera;
 
@@ -145,6 +153,9 @@ private:
 	// Ensures that the first mouse movement isn't a "jump".
 	static float lastX, lastY;
 	static bool firstMouse;
+
+	int infoType = 0;
+	bool showGUI = true;
 };
 
 #endif // !WINDOW_H

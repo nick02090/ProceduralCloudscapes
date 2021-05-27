@@ -1,6 +1,7 @@
 #include "TerrainTestScene.h"
 
 #include "../SceneObjects/Terrain.h"
+#include "../SceneObjects/Clouds.h"
 
 TerrainTestScene::TerrainTestScene(Window* _window) : Scene(_window, "Terrain Test Scene", EnvironmentType::Skybox)
 {

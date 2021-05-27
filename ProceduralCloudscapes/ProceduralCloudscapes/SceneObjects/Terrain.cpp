@@ -305,14 +305,24 @@ void Terrain::buildGUI()
 		ImGui::SliderFloat("Power", &power, 1.0f, 10.0f);
 		data->terrainNoise.power = power;
 
-		// Seed
+		// New seed
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.3f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.3f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.3f, 0.8f, 0.8f));
 		if (ImGui::Button("New seed")) {
 			data->terrainNoise.seed = glm::vec2(util::random(), util::random());
 		}
+		ImGui::PopStyleColor(3);
+
+		// Default seed (0.0)
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.6f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.6f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.6f, 0.8f, 0.8f));
 		ImGui::SameLine();
 		if (ImGui::Button("Default seed")) {
 			data->terrainNoise.seed = glm::vec2(0.0);
 		}
+		ImGui::PopStyleColor(3);
 	}
 
 	// Finish the window
