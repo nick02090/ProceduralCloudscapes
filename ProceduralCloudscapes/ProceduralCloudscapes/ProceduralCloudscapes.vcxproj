@@ -165,7 +165,7 @@
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
-    <ClCompile Include="ProceduralCloudscapes.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="SceneObjects\Clouds.cpp" />
     <ClCompile Include="SceneObjects\PlaneTexture.cpp" />
     <ClCompile Include="SceneObjects\Sphere.cpp" />
