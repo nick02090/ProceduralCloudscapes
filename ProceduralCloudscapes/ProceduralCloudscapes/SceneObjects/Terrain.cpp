@@ -39,6 +39,7 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	data->snowScale = 1.f;
 	data->fogFalloff = 15.f;
 	data->fogColor = Color(0.43f, 0.53f, 0.68f);
+	data->isRealFog = true;
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
@@ -152,6 +153,7 @@ void Terrain::update()
 	// Set terrain fog values
 	shader->setFloat("fogFalloff", data->fogFalloff);
 	shader->setVec3("fogColor", data->fogColor.getf());
+	shader->setBool("isRealFog", data->isRealFog);
 
 	// Set sky info
 	SkyboxEnvironment* env = getScene()->getEnvironment<SkyboxEnvironment>();
@@ -219,6 +221,11 @@ void Terrain::buildGUI()
 		ImVec4 fogColor = getFogColor().toIMGUI();
 		ImGui::ColorEdit3("Fog color", (float*)&fogColor);
 		setFogColor(Color::fromIMGUI(fogColor));
+
+		// Realistic fog
+		bool isRealFog = getIsRealFog();
+		imgui_exp::ToggleButton("Realistic fog", &isRealFog);
+		setIsRealFog(isRealFog);
 	}
 
 	// Create terrain color header

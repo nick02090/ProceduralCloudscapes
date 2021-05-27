@@ -75,6 +75,7 @@ uniform float snowCoverage = 1.0;
 // Fog
 uniform float fogFalloff = 0.f;
 uniform vec3 fogColor  = vec3(0.5, 0.6, 0.7);
+uniform bool isRealFog = true;
 
 // Heights
 uniform float grassHeight = 5000.f;
@@ -416,6 +417,10 @@ void main()
     // Calculate final color
     color = color * (ambient + diffuse + specular);
 
+    // ################################################
+    //              POST - PROCESSING
+    // ################################################
+
     // Calculate fog amount
     float fogAmount = calculateFogAmount(cameraPosition, WorldPos_FS_in, fogFalloff * 1e-6);
 
@@ -424,6 +429,9 @@ void main()
 	a = min(max(sigmoid, 0.0f), 1.0f);
 	b = 1.0 - a;
 	vec3 fogColor = fogColor * 1.15f * a + fogColor * 0.85f * b;
+    
+    if (isRealFog)
+        fogColor *= lightColor * 0.8;
 
     // Apply fog
     color = mix(color, fogColor, fogAmount);

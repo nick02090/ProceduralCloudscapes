@@ -4,6 +4,7 @@
 //===============================================================================================
 
 // Camera
+uniform vec3 cameraPosition;
 uniform mat4 inverseProjection;
 uniform mat4 inverseView;
 uniform vec2 resolution;
@@ -12,7 +13,13 @@ uniform vec2 resolution;
 uniform float sunAltitude; // from range [0.0, 1.0] where 0.0 is night and 1.0 is clear day
 uniform float sunAzimuth; // from range [-1.0, 1.0] where 0.0 is in front and (-)1.0 is behind
 uniform float sunIntensity;
-uniform vec3 sunColor;
+uniform vec3 sunColorDay = vec3(1.f, 0.96f, 0.9f);
+uniform vec3 sunColorSunset = vec3(0.36f, 0.14f, 0.07f);
+uniform float sunScale = 2.5f;
+
+// Post-processing
+uniform bool isGammaAndContrast = true;
+uniform bool isVignette = true;
 
 //===============================================================================================
 // CONSTANTS
@@ -63,7 +70,6 @@ struct sun {
 	float azimuth;
 	float intensity;
 	float angularDiameter;
-	vec3 color;
 };
 
 //===============================================================================================
@@ -125,6 +131,40 @@ float miePhase(float mu, float g) {
 	float g2 = g * g;
 	float mu2 = mu * mu;
     return 3.0 / (8.0 * PI) * ((1.0 - g2) * (1.0 + mu2) / ((2.0 + g2) * pow(1.0 + g2 - 2.0 * g * mu, 1.5)));
+}
+
+float compute_sun_visibility(in sun sun, float alt)
+{
+	float vap = 0.0;
+	float h, a;
+	float vvp = clamp((0.5 + alt / sun.angularDiameter), 0.0, 1.0); // vertically visible percentage
+	if (vvp == 0.0)
+		return 0.0;
+	else if (vvp == 1.0)
+		return 1.0;
+		
+	bool is_sup;
+	
+	if (vvp > 0.5)
+	{
+		is_sup = true;
+		h = (vvp - 0.5) * 2.0;
+	}
+	else
+	{
+		is_sup = false;
+		h = (0.5 - vvp) * 2.0;
+	}
+	
+	float alpha = acos(h) * 2.0;
+	a = (alpha - sin(alpha)) / (2.0 * PI);
+	
+	if (is_sup)
+		vap = 1.0 - a;
+	else
+		vap = a;
+
+	return vap;
 }
 
 // Calculates the color of the sky
@@ -189,9 +229,11 @@ vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInf
 				// calculate optical depth for this height
 				float hrSun = exp(-heightSun / rayleigh.scaleHeight) * segmentLengthSun;
 				float hmSun = exp(-heightSun / mie.scaleHeight) * segmentLengthSun;
+				// calculate sun scale
+				float coefl = compute_sun_visibility(sun, heightSun);
 				// accumulate optical depth
-				rayleighOpticalDepthSun += hrSun;
-				mieOpticalDepthSun += hmSun;
+				rayleighOpticalDepthSun += hrSun * (1.0 - log(coefl + 0.000001));
+				mieOpticalDepthSun += hmSun * (1.0 - log(coefl + 0.000001));
 				// increase current point
 				tCurrentSun += segmentLengthSun;
 			}
@@ -214,8 +256,14 @@ vec3 sky(ray view, planet earth, sun sun, scatteringInfo rayleigh, scatteringInf
 	// calculate RAYLEIGH and MIE light
 	vec3 rayleighLIGHT = rayleighSUM * rayleigh.coefficient * rayleighPHASE;
 	vec3 mieLIGHT = mieSUM * mie.coefficient * miePHASE;
+	
+	// calculate sun center scale 
+    float centerCoeff = 1.0;
+	if (acos(mu) < sun.angularDiameter * sunScale)
+    	centerCoeff = 3.0 + sin(mu / (sun.angularDiameter * 0.5)) * 3.0;
+
 	// calculate final sky color
-    return sun.intensity * (rayleighLIGHT + mieLIGHT);
+    return sun.intensity * (rayleighLIGHT + mieLIGHT) * centerCoeff;
 }
 
 //===============================================================================================
@@ -239,7 +287,7 @@ void main()
 	float sunAzi = (1.0 - sunAzimuth * 0.7) * 4.6;
 
 	// prepare sun info
-    sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter, sunColor);
+    sun sun = sun(sunAlt, sunAzi, sunIntensity, sunAngularDiameter);
 
 	// create view ray
 	ray view = ray(ro, rd);
@@ -252,7 +300,26 @@ void main()
 	scatteringInfo mie = scatteringInfo(betaM, Hm);
 
 	// calculate the sky color
-	vec3 result = sky(view, earth, sun, rayleigh, mie, g);
+	vec3 result = sky(view, earth, sun, rayleigh, mie, g);	
+
+	// fix too big sun (especially at sunset)
+	result = result / (2.0 * result + 0.5 - result);
+
+    // ################################################
+    //              POST - PROCESSING
+    // ################################################
+
+    // gamma and contrast
+	if (isGammaAndContrast) {
+		result = mix(result, pow(result, vec3(1./2.2)), .85);
+        result = mix(result, result, 0.2); 
+	}
+
+    // vignette
+	if (isVignette) {
+		vec2 uv = fragCoord / resolution.xy;
+		result.rgb = mix(result * result, result, pow(16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.3));		
+	}
 	
 	// output the final result
 	gl_FragColor = vec4(result, 1.0);

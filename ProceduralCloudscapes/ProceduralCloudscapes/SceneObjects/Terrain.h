@@ -56,10 +56,17 @@ struct TerrainData {
 	float rockScale;
 	// scale of the snow textures loading
 	float snowScale;
+
+	// =============================================
+	// POST PROCESSING
+	// =============================================
+
 	// amount of fog that will cover the terrain
 	float fogFalloff;
 	// color of the fog
 	Color fogColor;
+	// flag that determines whether the part of day will inflict color of the fog
+	bool isRealFog;
 };
 
 class Terrain : public SceneObject, public GUIBuilder {
@@ -87,6 +94,7 @@ public:
 	inline float getSnowScale() const { return data->snowScale; }
 	inline float getFogFalloff() const { return data->fogFalloff; }
 	inline Color getFogColor() const { return data->fogColor; }
+	inline bool getIsRealFog() const { return data->isRealFog; }
 
 	// SETTERS
 
@@ -103,6 +111,7 @@ public:
 	inline void setSnowScale(float _snowScale) { data->snowScale = _snowScale; }
 	inline void setFogFalloff(float _fogFalloff) { data->fogFalloff = _fogFalloff; }
 	inline void setFogColor(Color _fogColor) { data->fogColor = _fogColor; }
+	inline void setIsRealFog(bool _isRealFog) { data->isRealFog = _isRealFog; }
 
 private:
 	void generateTerrainData();

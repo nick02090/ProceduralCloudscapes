@@ -80,8 +80,8 @@ void Camera::processMouseScroll(float yoffset)
 	zoom -= yoffset;
 	if (zoom < 1.0f)
 		zoom = 1.0f;
-	if (zoom > 45.0f)
-		zoom = 45.0f;
+	if (zoom > 60.f)
+		zoom = 60.f;
 }
 
 void Camera::reset()
