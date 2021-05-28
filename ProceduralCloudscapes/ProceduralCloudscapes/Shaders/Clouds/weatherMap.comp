@@ -9,6 +9,18 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 // Output 2D texture
 layout (rgba8, binding = 0) uniform image2D weatherMapTex;
 
+#define CUMULUS 0
+#define STRATOCUMULUS 1
+#define STRATUS 2
+#define CUMULONIMBUS 3
+
+// VALUE    CLOUDS_TYPE
+//   0        cumulus
+//   1     stratocumulus
+//   2        stratus
+//   3     cumulonimbus
+uniform int cloudsType;
+
 //===============================================================================================
 // CONSTANTS
 //===============================================================================================
@@ -186,8 +198,24 @@ void main()
 
     col.r = perlinFBM * 20.5;
     col.g = remap(perlinFBM, 0.0, 1.0, worleyFBM, 1.0);
-    col.b = 1.0;
-    col.a = 0.6;
+
+    // vary B and A channels based on clouds type
+    if (cloudsType == CUMULUS) {
+        col.b = 1.0;
+        col.a = 0.6;
+    } else if (cloudsType == STRATOCUMULUS) {
+        col.b = 0.5;
+        col.a = 0.8;
+    } else if (cloudsType == STRATUS) {
+        col.a = 0.35;
+        col.b = 0.7;
+    } else if (cloudsType == CUMULONIMBUS) {
+        col.a = 1.0;
+        col.b = 1.0;
+    } else { 
+        col.a = 0.0;
+        col.b = 0.0;
+    }
 
     // save final 2D texture
 	imageStore(weatherMapTex, pixel.xy, col);

@@ -8,6 +8,8 @@
 #include "../Engine/FrameBufferObject.h"
 #include "../Engine/GUI/ImGUIExpansions.h"
 
+static const char* cloudTypes[] = { "Cumulus", "Stratocumulus", "Stratus", "Cumulonimbus" };
+
 Clouds::Clouds(Window* _window) : SceneObject(_window)
 {
 	// Initialize member variables
@@ -16,6 +18,7 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	// Initialize clouds shape properties
 	data->globalCoverage = 0.3f;
 	data->globalDensity = 0.5f;
+	data->cloudsType = CloudsType::Cumulus;
 	data->isBaseShape = false;
 
 	// Initialize clouds lighting properties
@@ -79,6 +82,8 @@ Clouds::~Clouds()
 
 void Clouds::update()
 {
+	//generateWeatherMap();
+
 	Camera* camera = window->getCamera();
 
 	// wait for all the memory stores, loads, textures fetches, vertex fetches
@@ -179,6 +184,15 @@ void Clouds::buildGUI()
 		float globalDensity = getGlobalDensity();
 		ImGui::SliderFloat("Global density", &globalDensity, 0.0f, 1.0f);
 		setGlobalDensity(globalDensity);
+
+		// Cloud type
+		int cloudsType = static_cast<int>(getCloudsType());
+		ImGui::Combo("Cloud type", &cloudsType, cloudTypes, IM_ARRAYSIZE(cloudTypes));
+		// update the weather map if clouds type has changed
+		if (static_cast<CloudsType>(cloudsType) != getCloudsType()) {
+			setCloudsType(static_cast<CloudsType>(cloudsType));
+			generateWeatherMap();
+		}
 	}
 
 	// Create clouds lighting header
@@ -272,6 +286,7 @@ void Clouds::generateWeatherMap()
 	weatherMapShader->use();
 	glActiveTexture(GL_TEXTURE0);
 	weatherMapShader->setInt("weatherMapTex", 0);
+	weatherMapShader->setInt("cloudsType", static_cast<int>(getCloudsType()));
 	glBindTexture(GL_TEXTURE_2D, weatherMapTex->ID);
 	glBindImageTexture(0, weatherMapTex->ID, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 	glDispatchCompute(INT_CEIL(1024, 8), INT_CEIL(1024, 8), 1);

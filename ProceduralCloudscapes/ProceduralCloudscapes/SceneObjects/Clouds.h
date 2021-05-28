@@ -12,6 +12,13 @@ class PlaneTexture;
 class ScreenShader;
 class FrameBufferObject;
 
+enum class CloudsType {
+	Cumulus = 0,
+	Stratocumulus = 1,
+	Stratus = 2,
+	Cumulonimbus = 3
+};
+
 struct CloudsData {
 	// =============================================
 	// CLOUDS SHAPE
@@ -23,6 +30,8 @@ struct CloudsData {
 	float globalDensity;
 	// flag to show clouds base shape
 	bool isBaseShape;
+	// type of the clouds
+	CloudsType cloudsType;
 
 	// =============================================
 	// CLOUDS LIGHTING
@@ -52,6 +61,7 @@ public:
 
 	inline void setGlobalCoverage(float _globalCoverage) { data->globalCoverage = _globalCoverage; }
 	inline void setGlobalDensity(float _globalDensity) { data->globalDensity = _globalDensity; }
+	inline void setCloudsType(CloudsType _cloudsType) { data->cloudsType = _cloudsType; }
 	inline void setBaseShape(bool _isBaseShape) { data->isBaseShape = _isBaseShape; }
 	inline void setBeerCoeff(float _beerCoeff) { data->beerCoeff = _beerCoeff; }
 	inline void setPowder(bool _isPowder) { data->enablePowder = _isPowder; }
@@ -66,6 +76,7 @@ public:
 
 	inline float getGlobalCoverage() const { return data->globalCoverage; }
 	inline float getGlobalDensity() const { return data->globalDensity; }
+	inline CloudsType getCloudsType() const { return data->cloudsType; }
 	inline bool getBaseShape() const { return data->isBaseShape; }
 	inline float getBeerCoeff() const { return data->beerCoeff; }
 	inline float getPowder() const { return data->enablePowder; }

@@ -17,6 +17,7 @@
 #include "Scenes/SkyboxTestScene.h"
 #include "Scenes/TerrainTestScene.h"
 #include "Scenes/PBRTestScene.h"
+#include "Scenes/CloudsTestScene.h"
 
 int main()
 {
@@ -30,7 +31,7 @@ int main()
     Window window;
 
     // load a scene that will show up in the window
-    Scene* scene = new TerrainTestScene(&window);
+    Scene* scene = new CloudsTestScene(&window);
 
     // render loop
     while (window.isRunning())

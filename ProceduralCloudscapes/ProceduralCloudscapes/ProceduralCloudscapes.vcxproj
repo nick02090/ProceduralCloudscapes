@@ -170,6 +170,7 @@
     <ClCompile Include="SceneObjects\PlaneTexture.cpp" />
     <ClCompile Include="SceneObjects\Sphere.cpp" />
     <ClCompile Include="SceneObjects\Terrain.cpp" />
+    <ClCompile Include="Scenes\CloudsTestScene.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
     <ClCompile Include="Scenes\PBRTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="SceneObjects\PlaneTexture.h" />
     <ClInclude Include="SceneObjects\Sphere.h" />
     <ClInclude Include="SceneObjects\Terrain.h" />
+    <ClInclude Include="Scenes\CloudsTestScene.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
     <ClInclude Include="Scenes\PBRTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
