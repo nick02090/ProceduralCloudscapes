@@ -297,7 +297,12 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 		// calculate current sample position
 		vec3 samplePosition = position + segmentLength * sunDirection;
 		// calculate density
-		float density = calculateCloudDensity(samplePosition, !isBaseShape, cloud);
+		float density = 0.f;
+		if (i < int(float(SUN_RAY_SAMPLES) / 0.5)) {
+			density = calculateCloudDensity(samplePosition, !isBaseShape, cloud);
+		} else {
+			density = calculateCloudDensity(samplePosition, false, cloud);
+		}
 
 		// calculate the color if the density is above zero
 		if (density > 0.0) {
