@@ -337,34 +337,37 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 	// calculate distance to cloud layer (for above, below and inside look of the clouds)
 	distanceToCloudLayer = min(distanceToCloudLow, distanceToCloudHigh);
 
+	// calculate the sun direction
+	float cosSunAlt = cos(sun.altitude);
+	vec3 sunDirection = vec3(cos(sun.azimuth) * cosSunAlt, sin(sun.altitude), sin(sun.azimuth) * cosSunAlt);
+	
+	// calculate the cosine of angle between the sun direction and the ray direction
+	float mu = dot(view.direction, sunDirection);
+
 	// initialize variables for ray-marching
 	float distancePassed = 0.0f;
 	vec3 color = vec3(0.0);
 	float transmittance = 1.0f;
 
+	// calculate number of steps in a way that its smaller number when looking directly in the sun
+	float numberOfSteps = (1. - 0.5 * mu) * VIEW_RAY_SAMPLES;
+
 	// calculate the view ray segment length
-	float segmentLength = cloudLayer / float(VIEW_RAY_SAMPLES);
+	float segmentLength = cloudLayer / numberOfSteps;
 
 	// move ray origin to the intersection with cloud lower layer
 	view.origin += view.direction * distanceToCloudLayer;
 	// update the distance passed
 	distancePassed += distanceToCloudLayer;
 
-	// calculate the sun direction
-	float cosSunAlt = cos(sun.altitude);
-	vec3 sunDirection = vec3(cos(sun.azimuth) * cosSunAlt, sin(sun.altitude), sin(sun.azimuth) * cosSunAlt);
-
 	// calculate light color
 	float sigmoid = 1 / (1.0 + exp(8.0 - sunDirection.y * 40.0));
 	float a = min(max(sigmoid, 0.0f), 1.0f);
 	float b = 1.0 - a;
 	vec3 lightColor = sun.colorDay * a + sun.colorSunset * b;
-	
-	// calculate the cosine of angle between the sun direction and the ray direction
-	float mu = dot(view.direction, sunDirection);
 
 	// iterate over view-ray direction
-	for (int i = 0; i < VIEW_RAY_SAMPLES; ++i) {
+	for (int i = 0; i < numberOfSteps; ++i) {
 		// some early exit optimizations
 		if (distancePassed > renderDistance) break;
 		if (distanceToCloudLow == distanceToCloudHigh) break;

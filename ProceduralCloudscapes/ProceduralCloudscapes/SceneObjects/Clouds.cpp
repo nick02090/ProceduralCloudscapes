@@ -25,7 +25,7 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	data->beerCoeff = 1.0f;
 	data->enablePowder = true;
 	data->powderCoeff = 10.0f;
-	data->csi = 5.0f;
+	data->csi = 2.5f;
 	data->color = Color(1.f, 1.f, 1.f);
 
 	// framebuffer configuration
