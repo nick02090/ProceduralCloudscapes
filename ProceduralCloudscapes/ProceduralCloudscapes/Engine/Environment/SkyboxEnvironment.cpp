@@ -72,6 +72,11 @@ void SkyboxEnvironment::extendGUI()
 		ImGui::SliderFloat("Sun azimuth", &sunAzimuth, -1.0f, 1.0f);
 		setSunAzimuth(sunAzimuth);
 
+		// Sun scale
+		float sunScale = getSunScale();
+		ImGui::SliderFloat("Sun scale", &sunScale, 0.f, 10.f);
+		setSunScale(sunScale);
+
 		// Sun intensity
 		float sunIntensity = getSunIntensity();
 		ImGui::SliderFloat("Sun intensity", &sunIntensity, 10.0f, 30.0f);
@@ -86,11 +91,6 @@ void SkyboxEnvironment::extendGUI()
 		ImVec4 sunColorSunset = getSunColorSunset().toIMGUI();
 		ImGui::ColorEdit3("Sun color sunset", (float*)&sunColorSunset);
 		setSunColorSunset(Color::fromIMGUI(sunColorSunset));
-
-		// Sun scale
-		float sunScale = getSunScale();
-		ImGui::SliderFloat("Sun scale", &sunScale, 0.f, 10.f);
-		setSunScale(sunScale);
 	}
 
 	// Create skybox post processing header
