@@ -30,6 +30,8 @@ struct CloudsData {
 	float globalDensity;
 	// flag to show clouds base shape
 	bool isBaseShape;
+	// amount of the anvil that will clouds have
+	float anvilAmount;
 	// type of the clouds
 	CloudsType cloudsType;
 
@@ -61,6 +63,7 @@ public:
 
 	inline void setGlobalCoverage(float _globalCoverage) { data->globalCoverage = _globalCoverage; }
 	inline void setGlobalDensity(float _globalDensity) { data->globalDensity = _globalDensity; }
+	inline void setAnvilAmount(float _anvilAmount) { data->anvilAmount = _anvilAmount; }
 	inline void setCloudsType(CloudsType _cloudsType) { data->cloudsType = _cloudsType; }
 	inline void setBaseShape(bool _isBaseShape) { data->isBaseShape = _isBaseShape; }
 	inline void setBeerCoeff(float _beerCoeff) { data->beerCoeff = _beerCoeff; }
@@ -76,6 +79,7 @@ public:
 
 	inline float getGlobalCoverage() const { return data->globalCoverage; }
 	inline float getGlobalDensity() const { return data->globalDensity; }
+	inline float getAnvilAmount() const { return data->anvilAmount; }
 	inline CloudsType getCloudsType() const { return data->cloudsType; }
 	inline bool getBaseShape() const { return data->isBaseShape; }
 	inline float getBeerCoeff() const { return data->beerCoeff; }

@@ -7,6 +7,7 @@
 #include "../Engine/Environment/ColorEnvironment.h"
 #include "../Engine/FrameBufferObject.h"
 #include "../Engine/GUI/ImGUIExpansions.h"
+#include "../Engine/Utilities.h"
 
 static const char* cloudTypes[] = { "Cumulus", "Stratocumulus", "Stratus", "Cumulonimbus" };
 
@@ -18,6 +19,7 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	// Initialize clouds shape properties
 	data->globalCoverage = 0.3f;
 	data->globalDensity = 0.5f;
+	data->anvilAmount = 0.f;
 	data->cloudsType = CloudsType::Cumulus;
 	data->isBaseShape = false;
 
@@ -122,6 +124,7 @@ void Clouds::update()
 	// set clouds shape info
 	shader->setFloat("globalCloudsCoverage", data->globalCoverage);
 	shader->setFloat("globalCloudsDensity", data->globalDensity);
+	shader->setFloat("anvilAmount", data->anvilAmount);
 	shader->setBool("isBaseShape", data->isBaseShape);
 
 	// set clouds lighting info
@@ -168,6 +171,11 @@ void Clouds::buildGUI()
 		ImGui::SliderFloat("Global coverage", &globalCoverage, 0.0f, 1.0f);
 		setGlobalCoverage(globalCoverage);
 
+		// Anvil amount
+		float anvilAmount = getAnvilAmount();
+		ImGui::SliderFloat("Anvil amount", &anvilAmount, 0.0f, 1.0f);
+		setAnvilAmount(anvilAmount);
+
 		// Global density
 		float globalDensity = getGlobalDensity();
 		ImGui::SliderFloat("Global density", &globalDensity, 0.0f, 1.0f);
@@ -179,6 +187,8 @@ void Clouds::buildGUI()
 		// update the weather map if clouds type has changed
 		if (static_cast<CloudsType>(cloudsType) != getCloudsType()) {
 			setCloudsType(static_cast<CloudsType>(cloudsType));
+			if (getCloudsType() == CloudsType::Cumulonimbus)
+				setAnvilAmount(util::random());
 			generateWeatherMap();
 		}
 	}

@@ -22,11 +22,12 @@ layout ( binding = 2 ) uniform sampler3D worleyTex;
 layout ( binding = 0 ) uniform sampler2D weatherMapTex;
 uniform float globalCloudsCoverage = 0.3f;
 uniform float globalCloudsDensity = 0.5f;
+uniform float anvilAmount = 0.0f;
 uniform bool isBaseShape = false;
 
 // Rendering
 uniform float renderDistance = 1e5f;
-uniform float minTransmittance = 1e-3f;
+uniform float minTransmittance = 1e-1f;
 
 // Lighting
 uniform float beerCoeff = 1.0;
@@ -208,14 +209,18 @@ float calculateCloudHeightFraction(vec3 position, cloud cloud) {
 float calculateCloudHeightAlteration(vec3 position, float cloudHeightFraction, cloud cloud, float weatherMapB) {
 	float alterBottom = clamp(remap(cloudHeightFraction, 0, 0.07, 0.0, 1.0), 0.0, 1.0);
 	float alterTop = clamp(remap(cloudHeightFraction, weatherMapB * 0.2, weatherMapB, 1.0, 0.0), 0.0, 1.0);
-	return alterBottom * alterTop;
+	float baseHeightAlteration = alterBottom * alterTop;
+	// Calculate anvil height alteration based on the anvil amount
+	return pow(baseHeightAlteration, clamp(remap(cloudHeightFraction, 0.65, 0.5, 1.0, 1.0 - anvilAmount), 0.0, 1.0));
 }
 
 // Calculates cloud density alterations (fluffy at the bottom, defined shapes towards the top)
 float calculateCloudDensityAlteration(vec3 position, float cloudHeightFraction, cloud cloud, float weatherMapA) {
 	float alterBottom = cloudHeightFraction * clamp(remap(cloudHeightFraction, 0.0, 0.15, 0.0, 1.0), 0.0, 1.0);
 	float alterTop = clamp(remap(cloudHeightFraction, 0.9, 1.0, 1.0, 0.0), 0.0, 1.0);
-	return globalCloudsDensity * alterBottom * alterTop * 2.0 * weatherMapA;
+	float baseDensityAlteration = globalCloudsDensity * alterBottom * alterTop * 2.0 * weatherMapA;
+	// Calculate anvil density alteration based on the anvil amount
+	return baseDensityAlteration * (mix(1.0, clamp(remap(sqrt(cloudHeightFraction), 0.4, 0.5, 1.0, 0.0), 0.0, 1.0), 1.0 - anvilAmount) * 0.5);
 }
 
 // Projects position (3D) onto plane (2D) for texture loading
