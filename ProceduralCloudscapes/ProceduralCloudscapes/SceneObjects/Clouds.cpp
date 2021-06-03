@@ -57,12 +57,6 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
-
-	// TODO: Remove upon finished debugging
-	// Test plane textures for checking cloud textures calculation
-	perlinWorleyPlaneTexture = new PlaneTexture(window, perlinWorleyTex, glm::vec3(-2.5, 0.0, 0.0), TextureChannel::R);
-	worleyPlaneTexture = new PlaneTexture(window, worleyTex, glm::vec3(0.0, 0.0, 0.0), TextureChannel::R);
-	weatherMapPlaneTexture = new PlaneTexture(window, weatherMapTex, glm::vec3(2.5, 0.0, 0.0), TextureChannel::R);
 }
 
 Clouds::~Clouds()
@@ -154,12 +148,6 @@ void Clouds::update()
 	glEnable(GL_DEPTH_TEST);
 	// disable back blending
 	glDisable(GL_BLEND);
-
-	// TODO: Remove upon finished debugging
-	// Update the test plane texture
-	//perlinWorleyPlaneTexture->update();
-	//worleyPlaneTexture->update();
-	//weatherMapPlaneTexture->update();
 }
 
 void Clouds::buildGUI()

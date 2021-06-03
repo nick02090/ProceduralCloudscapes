@@ -172,6 +172,7 @@
     <ClCompile Include="SceneObjects\Terrain.cpp" />
     <ClCompile Include="Scenes\CloudsTestScene.cpp" />
     <ClCompile Include="Scenes\FramebufferTestScene.cpp" />
+    <ClCompile Include="Scenes\MainScene.cpp" />
     <ClCompile Include="Scenes\PBRTestScene.cpp" />
     <ClCompile Include="Scenes\RaymarchTestScene.cpp" />
     <ClCompile Include="Scenes\ShaderTestScene.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="SceneObjects\Terrain.h" />
     <ClInclude Include="Scenes\CloudsTestScene.h" />
     <ClInclude Include="Scenes\FramebufferTestScene.h" />
+    <ClInclude Include="Scenes\MainScene.h" />
     <ClInclude Include="Scenes\PBRTestScene.h" />
     <ClInclude Include="Scenes\RaymarchTestScene.h" />
     <ClInclude Include="Scenes\ShaderTestScene.h" />

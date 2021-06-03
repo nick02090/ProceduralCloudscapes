@@ -16,7 +16,7 @@ Terrain::Terrain(Window* _window) : SceneObject(_window)
 	// Initialize member variables
 	data = new TerrainData();
 	data->subdivision = 2;
-	data->scale = 1000.f;
+	data->scale = 2000.f;
 	data->terrainNoise = {
 		14.f,	// amplitude
 		5e-5f,	// frequency
@@ -126,7 +126,7 @@ void Terrain::update()
 	shader->setSampler("grassRoughness", *grassMaterial->getRoughness(), 3);
 	shader->setSampler("grassAO", *grassMaterial->getAO(), 4);
 	shader->setVec3("grassBaseColor", data->grassColor.getf());
-	shader->setFloat("grassScale", data->grassScale);
+	shader->setFloat("grassScale", data->grassScale * (data->scale / 1000.f));
 
 	// Set terrain rock material
 	shader->setSampler("rockAlbedo", *rockMaterial->getAlbedo(), 5);
@@ -135,7 +135,7 @@ void Terrain::update()
 	shader->setSampler("rockRoughness", *rockMaterial->getRoughness(), 8);
 	shader->setSampler("rockAO", *rockMaterial->getAO(), 9);
 	shader->setVec3("rockBaseColor", data->rockColor.getf());
-	shader->setFloat("rockScale", data->rockScale);
+	shader->setFloat("rockScale", data->rockScale * (data->scale / 1000.f));
 
 	// Set terrain snow material
 	shader->setSampler("snowAlbedo", *snowMaterial->getAlbedo(), 10);
@@ -144,7 +144,7 @@ void Terrain::update()
 	shader->setSampler("snowRoughness", *snowMaterial->getRoughness(), 13);
 	shader->setSampler("snowAO", *snowMaterial->getAO(), 14);
 	shader->setVec3("snowBaseColor", data->snowColor.getf());
-	shader->setFloat("snowScale", data->snowScale);
+	shader->setFloat("snowScale", data->snowScale * (data->scale / 1000.f));
 
 	// Set terrain coverage values
 	shader->setFloat("grassCoverage", data->grassCoverage);
@@ -193,7 +193,7 @@ void Terrain::buildGUI()
 
 		// Scale
 		float scale = getScale();
-		ImGui::SliderFloat("Scale", &scale, 100.f, 2000.f);
+		ImGui::SliderFloat("Scale", &scale, 100.f, 5000.f);
 		if (scale != getScale()) generateNewTerrainData = true;
 		setScale(scale);
 

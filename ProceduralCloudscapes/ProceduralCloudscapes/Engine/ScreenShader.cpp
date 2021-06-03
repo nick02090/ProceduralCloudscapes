@@ -26,6 +26,13 @@ void ScreenShader::draw(const Texture& texture)
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+void ScreenShader::draw(const unsigned int textureID)
+{
+    glBindVertexArray(quadVAO);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
 void ScreenShader::configureData()
 {
     // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.

@@ -95,11 +95,6 @@ private:
 	Texture* weatherMapTex = nullptr;
 	Shader* weatherMapShader = nullptr;
 
-	// TODO: Remove upon finished debugging
-	PlaneTexture* perlinWorleyPlaneTexture = nullptr;
-	PlaneTexture* worleyPlaneTexture = nullptr;
-	PlaneTexture* weatherMapPlaneTexture = nullptr;
-
 	ScreenShader* cloudsShader = nullptr;
 
 	CloudsData* data = nullptr;

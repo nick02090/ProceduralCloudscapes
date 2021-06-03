@@ -11,6 +11,7 @@ public:
 	~ScreenShader();
 
 	void draw(const Texture& texture);
+	void draw(const unsigned int textureID);
 
 	// GETTERS
 	Shader* getShader() { return shader; }

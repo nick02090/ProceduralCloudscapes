@@ -29,6 +29,7 @@ public:
 	void attachDepthTexture(unsigned int width, unsigned int height);
 
 	Texture* getColorTexture(size_t texIndex) const { return colorTextures.at(texIndex); }
+	inline unsigned int getDepthTextureID() const { return depthTexture; }
 private:
 	unsigned int depthTexture{ 0 };
 	std::vector<Texture*> colorTextures;

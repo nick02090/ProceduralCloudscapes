@@ -61,8 +61,8 @@ const float cloudsScatteringIN = 0.5f;
 const float cloudsScatteringOUT = 0.5f;
 
 // Clouds
-const float cloudHeightLOW = 8e3f;
-const float cloudHeightHIGH = 15e3f;
+const float cloudHeightLOW = 15e3f;
+const float cloudHeightHIGH = 22e3f;
 
 const vec4 cloudGradientLOW = vec4(0.0, 0.07, 0.08, 0.15);
 const vec4 cloudGradientMEDIUM = vec4(0.0, 0.2, 0.42, 0.6);
