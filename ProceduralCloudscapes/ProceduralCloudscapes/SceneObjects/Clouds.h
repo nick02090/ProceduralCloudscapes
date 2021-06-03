@@ -36,6 +36,17 @@ struct CloudsData {
 	CloudsType cloudsType;
 
 	// =============================================
+	// CLOUDS ANIMATION
+	// =============================================
+
+	// direction in which the clouds will be animated
+	glm::vec3 windDirection;
+	// animation speed (clouds movement speed)
+	float cloudSpeed;
+	// animation speed multiplier for the edge parts of the clouds
+	float edgesSpeedMultiplier;
+
+	// =============================================
 	// CLOUDS LIGHTING
 	// =============================================
 
@@ -66,6 +77,11 @@ public:
 	inline void setAnvilAmount(float _anvilAmount) { data->anvilAmount = _anvilAmount; }
 	inline void setCloudsType(CloudsType _cloudsType) { data->cloudsType = _cloudsType; }
 	inline void setBaseShape(bool _isBaseShape) { data->isBaseShape = _isBaseShape; }
+
+	inline void setWindDirection(glm::vec3 _windDirection) { data->windDirection = _windDirection; }
+	inline void setCloudSpeed(float _cloudSpeed) { data->cloudSpeed = _cloudSpeed; }
+	inline void setEdgesSpeedMultiplier(float _edgesSpeedMultiplier) { data->edgesSpeedMultiplier = _edgesSpeedMultiplier; }
+
 	inline void setBeerCoeff(float _beerCoeff) { data->beerCoeff = _beerCoeff; }
 	inline void setPowder(bool _isPowder) { data->enablePowder = _isPowder; }
 	inline void setPowderCoeff(float _powderCoeff) { data->powderCoeff = _powderCoeff; }
@@ -82,6 +98,11 @@ public:
 	inline float getAnvilAmount() const { return data->anvilAmount; }
 	inline CloudsType getCloudsType() const { return data->cloudsType; }
 	inline bool getBaseShape() const { return data->isBaseShape; }
+
+	inline glm::vec3 getWindDirection() const { return data->windDirection; }
+	inline float getCloudSpeed() const { return data->cloudSpeed; }
+	inline float getEdgesSpeedMultiplier() const { return data->edgesSpeedMultiplier; }
+
 	inline float getBeerCoeff() const { return data->beerCoeff; }
 	inline float getPowder() const { return data->enablePowder; }
 	inline float getPowderCoeff() const { return data->powderCoeff; }

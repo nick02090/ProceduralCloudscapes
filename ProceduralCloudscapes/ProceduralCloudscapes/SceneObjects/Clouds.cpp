@@ -23,6 +23,11 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 	data->cloudsType = CloudsType::Cumulus;
 	data->isBaseShape = false;
 
+	// Initialize clouds animation properties
+	data->windDirection = glm::vec3(0.5f, 1.0f, 0.1f);
+	data->cloudSpeed = 750.f;
+	data->edgesSpeedMultiplier = 1.5f;
+
 	// Initialize clouds lighting properties
 	data->beerCoeff = 1.0f;
 	data->enablePowder = true;
@@ -127,6 +132,12 @@ void Clouds::update()
 	shader->setFloat("anvilAmount", data->anvilAmount);
 	shader->setBool("isBaseShape", data->isBaseShape);
 
+	// set clouds animation info
+	shader->setFloat("time", static_cast<float>(glfwGetTime()));
+	shader->setVec3("windDirection", data->windDirection);
+	shader->setFloat("cloudSpeed", data->cloudSpeed);
+	shader->setFloat("edgesSpeedMultiplier", data->edgesSpeedMultiplier);
+
 	// set clouds lighting info
 	shader->setVec3("cloudsColor", data->color.getf());
 	shader->setFloat("beerCoeff", data->beerCoeff);
@@ -191,6 +202,29 @@ void Clouds::buildGUI()
 				setAnvilAmount(util::random());
 			generateWeatherMap();
 		}
+	}
+
+	// Create clouds animation header
+	if (ImGui::CollapsingHeader("Animation"), ImGuiTreeNodeFlags_DefaultOpen) 
+	{
+		// Wind direction
+		glm::vec3 windDirection = getWindDirection();
+		float input[3] = { windDirection.x, windDirection.y, windDirection.z };
+		ImGui::InputFloat3("Wind direction", input);
+		windDirection.x = input[0];
+		windDirection.y = input[1];
+		windDirection.z = input[2];
+		setWindDirection(windDirection);
+
+		// Cloud speed
+		float cloudSpeed = getCloudSpeed();
+		ImGui::SliderFloat("Cloud speed", &cloudSpeed, 0.f, 1000.f);
+		setCloudSpeed(cloudSpeed);
+
+		// Edges speed multiplier
+		float edgesSpeedMultiplier = getEdgesSpeedMultiplier();
+		ImGui::SliderFloat("Edges speed multiplier", &edgesSpeedMultiplier, 0.f, 100.f);
+		setEdgesSpeedMultiplier(edgesSpeedMultiplier);
 	}
 
 	// Create clouds lighting header

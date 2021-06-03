@@ -25,6 +25,12 @@ uniform float globalCloudsDensity = 0.5f;
 uniform float anvilAmount = 0.0f;
 uniform bool isBaseShape = false;
 
+// Animation
+uniform float time;
+uniform vec3 windDirection = vec3(0.5, 0.0, 0.1);
+uniform float cloudSpeed = 50.f;
+uniform float edgesSpeedMultiplier = 2.f;
+
 // Rendering
 uniform float renderDistance = 1e5f;
 uniform float minTransmittance = 1e-1f;
@@ -233,13 +239,13 @@ vec2 getProjection(vec3 position){
 
 // Calculates cloud density (models cloud shape)
 float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
-	// load base shape texture (perlin-worley noise)
-	vec4 base = texture(perlinWorleyTex, cloudBaseScale * position);
-	float baseFBM = dot(base.gba, cloudBaseWeights);	
-
 	// calculate cloud height fraction
 	float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
 	if (cloudHeightFraction < 0.f || cloudHeightFraction > 1.f) return 0.f;
+
+	// load base shape texture (perlin-worley noise)
+	vec4 base = texture(perlinWorleyTex, cloudBaseScale * (position + normalize(windDirection) * time * cloudSpeed));
+	float baseFBM = dot(base.gba, cloudBaseWeights);
 
 	// load the weather map
 	vec4 weatherMap = texture(weatherMapTex, getProjection(position) * cloudWeatherScale);
@@ -255,7 +261,7 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	// sample extra detail noise on the edges if isHighQuality
 	if (isHighQuality) {
 		// load detail shape texture (worley32 noise)
-		vec3 detail = texture(worleyTex, cloudDetailScale * position).rgb;
+		vec3 detail = texture(worleyTex, cloudDetailScale * (position + normalize(windDirection) * time * cloudSpeed * edgesSpeedMultiplier)).rgb;
 		float detailFBM = dot(detail, cloudDetailWeights);
 
 		float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
