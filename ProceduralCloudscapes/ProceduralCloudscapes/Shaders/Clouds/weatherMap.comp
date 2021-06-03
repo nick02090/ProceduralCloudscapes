@@ -207,14 +207,14 @@ void main()
         col.b = 0.5;
         col.a = 0.8;
     } else if (cloudsType == STRATUS) {
-        col.a = 0.35;
         col.b = 0.7;
+        col.a = 0.35;
     } else if (cloudsType == CUMULONIMBUS) {
-        col.a = 1.0;
         col.b = 1.0;
+        col.a = 1.0;
     } else { 
-        col.a = 0.0;
         col.b = 0.0;
+        col.a = 0.0;
     }
 
     // save final 2D texture

@@ -235,7 +235,11 @@ vec2 getProjection(vec3 position){
 float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	// load base shape texture (perlin-worley noise)
 	vec4 base = texture(perlinWorleyTex, cloudBaseScale * position);
-	float baseFBM = dot(base.gba, cloudBaseWeights);
+	float baseFBM = dot(base.gba, cloudBaseWeights);	
+
+	// calculate cloud height fraction
+	float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
+	if (cloudHeightFraction < 0.f || cloudHeightFraction > 1.f) return 0.f;
 
 	// load the weather map
 	vec4 weatherMap = texture(weatherMapTex, getProjection(position) * cloudWeatherScale);
@@ -244,9 +248,6 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 
 	// calculate density with base noise
 	float baseDensity = remap(base.r, baseFBM - 1.0, 1.0, 0.0, 1.0);
-
-	// calculate cloud height fraction
-	float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
 
 	// calculate the density
 	float density = remap(baseDensity * calculateCloudHeightAlteration(position, cloudHeightFraction, cloud, weatherMap.b), 1.0 - globalCloudsCoverage * weatherMapControl, 1.0, 0.0, 1.0);
