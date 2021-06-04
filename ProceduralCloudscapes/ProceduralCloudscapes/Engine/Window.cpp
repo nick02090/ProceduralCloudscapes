@@ -11,6 +11,7 @@ bool Window::firstMouse = true;
 bool Window::mouseCursorDisabled = false;
 float Window::lastX = WINDOW_WIDTH / 2.0;
 float Window::lastY = WINDOW_HEIGHT / 2.0;
+std::vector<KeyReactor*> Window::keyReactors = std::vector<KeyReactor*>();
 
 Window::Window(const char* title, size_t _width, size_t _height) : width(_width), height(_height)
 {
@@ -297,6 +298,11 @@ void Window::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
         if (Window* wndPtr = static_cast<Window*>(ptr)) {
             wndPtr->showGUI = !wndPtr->showGUI;
         }
+    }
+
+    // Do every other key reaction
+    for (KeyReactor* reactor : keyReactors) {
+        reactor->react(window, key, scancode, action, mods);
     }
 }
 

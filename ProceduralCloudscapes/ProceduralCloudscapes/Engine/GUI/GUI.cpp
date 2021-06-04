@@ -65,6 +65,11 @@ void GUI::update()
             ImGui::EndPopup();
         }
         ImGui::End();
+
+        // Update all the children hidden elements
+        for (GUIBuilder* builder : builders) {
+            builder->buildHiddenGUI();
+        }
     }
 
     // Render at the end of all the children updates

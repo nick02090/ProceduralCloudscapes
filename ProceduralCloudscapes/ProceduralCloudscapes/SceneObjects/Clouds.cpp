@@ -7,9 +7,8 @@
 #include "../Engine/Environment/ColorEnvironment.h"
 #include "../Engine/FrameBufferObject.h"
 #include "../Engine/GUI/ImGUIExpansions.h"
-#include "../Engine/Utilities.h"
 
-static const char* cloudTypes[] = { "Cumulus", "Stratocumulus", "Stratus", "Cumulonimbus", "Mix" };
+static const char* cloudTypes[] = { "Cumulus", "Stratus", "Stratocumulus", "Cumulonimbus", "Mix" };
 
 Clouds::Clouds(Window* _window) : SceneObject(_window)
 {
@@ -64,6 +63,9 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 
 	// Subscribe to GUI
 	window->getGUI()->subscribe(this);
+
+	// Subscribe to key reaction
+	window->subscribeToKeyReaction(this);
 }
 
 Clouds::~Clouds()
@@ -182,30 +184,20 @@ void Clouds::buildGUI()
 		ImGui::SliderFloat("Global coverage", &globalCoverage, 0.0f, 1.0f);
 		setGlobalCoverage(globalCoverage);
 
-		// Anvil amount
-		float anvilAmount = getAnvilAmount();
-		ImGui::SliderFloat("Anvil amount", &anvilAmount, 0.0f, 1.0f);
-		setAnvilAmount(anvilAmount);
-
 		// Global density
 		float globalDensity = getGlobalDensity();
 		ImGui::SliderFloat("Global density", &globalDensity, 0.0f, 1.0f);
 		setGlobalDensity(globalDensity);
 
+		// Anvil amount
+		float anvilAmount = getAnvilAmount();
+		ImGui::SliderFloat("Anvil amount", &anvilAmount, 0.0f, 1.0f);
+		setAnvilAmount(anvilAmount);
+
 		// Cloud type
 		int cloudsType = static_cast<int>(getCloudsType());
 		ImGui::Combo("Cloud type", &cloudsType, cloudTypes, IM_ARRAYSIZE(cloudTypes));
-		// update the weather map if clouds type has changed
-		if (static_cast<CloudsType>(cloudsType) != getCloudsType()) {
-			setCloudsType(static_cast<CloudsType>(cloudsType));
-			if (getCloudsType() == CloudsType::Cumulonimbus)
-				setAnvilAmount(util::random());
-			else if (getCloudsType() == CloudsType::Mix)
-				setAnvilAmount(util::random(0.f, 0.5f));
-			else
-				setAnvilAmount(0.f);
-			generateWeatherMap();
-		}
+		setCloudsType(static_cast<CloudsType>(cloudsType));
 	}
 
 	// Create clouds animation header
@@ -260,8 +252,56 @@ void Clouds::buildGUI()
 		setColor(Color::fromIMGUI(color));
 	}
 
+	// Show cloud type changes
+	cloudTypePopup();
+
 	// Finish the window
 	ImGui::End();
+}
+
+
+void Clouds::react(GLFWwindow* window, int key, int scancode, int action, int mods) 
+{
+	// Set current clouds to CUMULUS [1]
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+		if (getCloudsType() != CloudsType::Cumulus)
+			timeSinceLastKeyboardUpdate = static_cast<float>(glfwGetTime());
+		setCloudsType(CloudsType::Cumulus);
+	}
+
+	// Set current clouds to STRATUS [2]
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+		if (getCloudsType() != CloudsType::Stratus)
+			timeSinceLastKeyboardUpdate = static_cast<float>(glfwGetTime());
+		setCloudsType(CloudsType::Stratus);
+	}
+
+	// Set current clouds to STRATOCUMULUS [3]
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+		if (getCloudsType() != CloudsType::Stratocumulus)
+			timeSinceLastKeyboardUpdate = static_cast<float>(glfwGetTime());
+		setCloudsType(CloudsType::Stratocumulus);
+	}
+
+	// Set current clouds to CUMULONIMBUS [4]
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
+		if (getCloudsType() != CloudsType::Cumulonimbus)
+			timeSinceLastKeyboardUpdate = static_cast<float>(glfwGetTime());
+		setCloudsType(CloudsType::Cumulonimbus);
+	}
+
+	// Set current clouds to MIX [5]
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
+		if (getCloudsType() != CloudsType::Mix)
+			timeSinceLastKeyboardUpdate = static_cast<float>(glfwGetTime());
+		setCloudsType(CloudsType::Mix);
+	}
+}
+
+void Clouds::buildHiddenGUI()
+{
+	// When GUI is hidden, show only cloud type changes
+	cloudTypePopup();
 }
 
 void Clouds::generateNoiseTextures()
@@ -322,4 +362,23 @@ void Clouds::generateWeatherMap()
 	glBindTexture(GL_TEXTURE_2D, weatherMapTex->ID);
 	glBindImageTexture(0, weatherMapTex->ID, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8);
 	glDispatchCompute(INT_CEIL(1024, 8), INT_CEIL(1024, 8), 1);
+}
+
+void Clouds::cloudTypePopup()
+{
+	// Show notification upon cloud type change from the keyboard
+	bool showPopup = static_cast<float>(glfwGetTime()) - timeSinceLastKeyboardUpdate < 0.5f;
+	if (showPopup)
+		ImGui::OpenPopup("Cloud");
+	// Always center this window when appearing
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+	if (ImGui::BeginPopupModal("Cloud", &showPopup, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text(cloudTypes[static_cast<int>(getCloudsType())]);
+		ImGui::Separator();
+
+		if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}
 }

@@ -7,6 +7,8 @@
 #include "../Engine/Texture.h"
 #include "../Engine/Shader.h"
 #include "../Engine/Color.h"
+#include "../Engine/Utilities.h"
+#include "../Engine/Window.h"
 
 class PlaneTexture;
 class ScreenShader;
@@ -14,8 +16,8 @@ class FrameBufferObject;
 
 enum class CloudsType {
 	Cumulus = 0,
-	Stratocumulus = 1,
-	Stratus = 2,
+	Stratus = 1,
+	Stratocumulus = 2,
 	Cumulonimbus = 3,
 	Mix = 4
 };
@@ -63,20 +65,67 @@ struct CloudsData {
 	Color color;
 };
 
-class Clouds : public SceneObject, public GUIBuilder {
+class Clouds : public SceneObject, public GUIBuilder, public KeyReactor {
 public:
 	Clouds(Window* _window);
 	~Clouds();
 
 	void update() override;
 	void buildGUI() override;
+	void buildHiddenGUI() override;
+	void react(GLFWwindow* window, int key, int scancode, int action, int mods) override;
 
 	// SETTERS
 
 	inline void setGlobalCoverage(float _globalCoverage) { data->globalCoverage = _globalCoverage; }
 	inline void setGlobalDensity(float _globalDensity) { data->globalDensity = _globalDensity; }
 	inline void setAnvilAmount(float _anvilAmount) { data->anvilAmount = _anvilAmount; }
-	inline void setCloudsType(CloudsType _cloudsType) { data->cloudsType = _cloudsType; }
+	void setCloudsType(CloudsType _cloudsType) 
+	{
+		bool hasChanged = false;
+
+		// check if clouds type has changed
+		if (data->cloudsType != _cloudsType) {
+
+			hasChanged = true;
+
+			// change global coverage based on cloud type
+			if (_cloudsType == CloudsType::Cumulus)
+				setGlobalCoverage(util::random(0.1f, 0.3f));
+			else if (_cloudsType == CloudsType::Stratus)
+				setGlobalCoverage(util::random(0.7f, 1.0f));
+			else if (_cloudsType == CloudsType::Stratocumulus)
+				setGlobalCoverage(util::random(0.6f, 0.8f));
+			else if (_cloudsType == CloudsType::Cumulonimbus)
+				setGlobalCoverage(0.5f);
+			else
+				setGlobalCoverage(0.3f);
+
+			// change global density based on cloud type
+			if (_cloudsType == CloudsType::Stratus)
+				setGlobalDensity(util::random(0.1f, 0.3f));
+			else if (_cloudsType == CloudsType::Stratocumulus)
+				setGlobalDensity(util::random(0.2f, 0.5f));
+			else
+				setGlobalDensity(0.5f);
+
+			// change anvil amount based on cloud type
+			if (_cloudsType == CloudsType::Cumulonimbus)
+				setAnvilAmount(util::random());
+			else if (_cloudsType == CloudsType::Mix)
+				setAnvilAmount(util::random(0.f, 0.5f));
+			else
+				setAnvilAmount(0.f);
+		}
+
+		// update the clouds type
+		data->cloudsType = _cloudsType;
+
+		// NOTE: Weather map has to be generated once the data->cloudsType has been updated!!!
+		if (hasChanged)
+			// generate weather map when cloud type changes
+			generateWeatherMap();
+	}
 	inline void setBaseShape(bool _isBaseShape) { data->isBaseShape = _isBaseShape; }
 
 	inline void setWindDirection(glm::vec3 _windDirection) { data->windDirection = _windDirection; }
@@ -113,6 +162,9 @@ public:
 private:
 	void generateNoiseTextures();
 	void generateWeatherMap();
+	void cloudTypePopup();
+
+	float timeSinceLastKeyboardUpdate = 0.f;
 
 	Texture* perlinWorleyTex = nullptr;
 	Texture* worleyTex = nullptr;

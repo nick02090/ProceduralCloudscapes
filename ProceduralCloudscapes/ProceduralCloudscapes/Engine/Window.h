@@ -26,6 +26,11 @@ enum class Callback
 	Scroll
 };
 
+class KeyReactor {
+public:
+	virtual void react(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
+};
+
 class Window : public GUIBuilder {
 public:
 	/// <summary>
@@ -54,6 +59,10 @@ public:
 	/// </summary>
 	/// <param name="title"></param>
 	void setTitle(const char* title) { glfwSetWindowTitle(glfwWindow, title); }
+
+	void subscribeToKeyReaction(KeyReactor* reactor) {
+		keyReactors.push_back(reactor);
+	}
 
 	/// <summary>
 	/// Returns GLFW Window object.
@@ -156,6 +165,8 @@ private:
 
 	int infoType = 0;
 	bool showGUI = true;
+
+	static std::vector<KeyReactor*> keyReactors;
 };
 
 #endif // !WINDOW_H

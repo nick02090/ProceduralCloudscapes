@@ -10,8 +10,8 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 layout (rgba8, binding = 0) uniform image2D weatherMapTex;
 
 #define CUMULUS 0
-#define STRATOCUMULUS 1
-#define STRATUS 2
+#define STRATUS 1
+#define STRATOCUMULUS 2
 #define CUMULONIMBUS 3
 #define MIX 4
 
