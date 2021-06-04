@@ -9,7 +9,7 @@
 #include "../Engine/GUI/ImGUIExpansions.h"
 #include "../Engine/Utilities.h"
 
-static const char* cloudTypes[] = { "Cumulus", "Stratocumulus", "Stratus", "Cumulonimbus" };
+static const char* cloudTypes[] = { "Cumulus", "Stratocumulus", "Stratus", "Cumulonimbus", "Mix" };
 
 Clouds::Clouds(Window* _window) : SceneObject(_window)
 {
@@ -25,8 +25,8 @@ Clouds::Clouds(Window* _window) : SceneObject(_window)
 
 	// Initialize clouds animation properties
 	data->windDirection = glm::vec3(0.5f, 1.0f, 0.1f);
-	data->cloudSpeed = 750.f;
-	data->edgesSpeedMultiplier = 1.5f;
+	data->cloudSpeed = 350.f;
+	data->edgesSpeedMultiplier = 1.f;
 
 	// Initialize clouds lighting properties
 	data->beerCoeff = 1.0f;
@@ -200,6 +200,10 @@ void Clouds::buildGUI()
 			setCloudsType(static_cast<CloudsType>(cloudsType));
 			if (getCloudsType() == CloudsType::Cumulonimbus)
 				setAnvilAmount(util::random());
+			else if (getCloudsType() == CloudsType::Mix)
+				setAnvilAmount(util::random(0.f, 0.5f));
+			else
+				setAnvilAmount(0.f);
 			generateWeatherMap();
 		}
 	}

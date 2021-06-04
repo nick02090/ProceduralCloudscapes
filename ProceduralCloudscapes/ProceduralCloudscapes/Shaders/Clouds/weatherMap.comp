@@ -13,12 +13,14 @@ layout (rgba8, binding = 0) uniform image2D weatherMapTex;
 #define STRATOCUMULUS 1
 #define STRATUS 2
 #define CUMULONIMBUS 3
+#define MIX 4
 
 // VALUE    CLOUDS_TYPE
 //   0        cumulus
 //   1     stratocumulus
 //   2        stratus
 //   3     cumulonimbus
+//   4         mix
 uniform int cloudsType;
 
 //===============================================================================================
@@ -212,9 +214,9 @@ void main()
     } else if (cloudsType == CUMULONIMBUS) {
         col.b = 1.0;
         col.a = 1.0;
-    } else { 
-        col.b = 0.0;
-        col.a = 0.0;
+    } else if (cloudsType == MIX) { 
+        col.b = col.r;
+        col.a = col.g;
     }
 
     // save final 2D texture

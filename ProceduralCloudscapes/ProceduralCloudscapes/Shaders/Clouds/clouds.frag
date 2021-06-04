@@ -271,7 +271,7 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 	}
 
 	// return clamped value
-	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a);
+	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a) * calculateDensityHeightGradient(cloudHeightFraction, weatherMap.a);
 }
 
 //===============================================================================================

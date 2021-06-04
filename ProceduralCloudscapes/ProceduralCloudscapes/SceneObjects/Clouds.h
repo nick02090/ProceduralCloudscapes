@@ -16,7 +16,8 @@ enum class CloudsType {
 	Cumulus = 0,
 	Stratocumulus = 1,
 	Stratus = 2,
-	Cumulonimbus = 3
+	Cumulonimbus = 3,
+	Mix = 4
 };
 
 struct CloudsData {
