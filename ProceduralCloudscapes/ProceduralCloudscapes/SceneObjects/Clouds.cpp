@@ -311,10 +311,6 @@ void Clouds::generateNoiseTextures()
 
 	// delete shader
 	delete worleyShader;
-
-	// =============================================
-	// 1st 2D texture (Curl) (128^2) RGB
-	// =============================================
 }
 
 void Clouds::generateWeatherMap()
