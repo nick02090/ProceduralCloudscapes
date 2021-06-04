@@ -307,9 +307,6 @@
     <None Include="Shaders\Skybox\sky.frag">
       <Filter>Resource Files\Shaders\Skybox</Filter>
     </None>
-    <None Include="Shaders\Noise\curl.comp">
-      <Filter>Resource Files\Shaders\Noise</Filter>
-    </None>
     <None Include="Shaders\Noise\perlinWorley.comp">
       <Filter>Resource Files\Shaders\Noise</Filter>
     </None>

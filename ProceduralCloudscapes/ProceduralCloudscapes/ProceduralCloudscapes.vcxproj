@@ -218,7 +218,6 @@
     <None Include="Shaders\Default\textureShader2D.frag" />
     <None Include="Shaders\Default\textureShader3D.frag" />
     <None Include="Shaders\FramebufferTest\screenShader.frag" />
-    <None Include="Shaders\Noise\curl.comp" />
     <None Include="Shaders\Noise\perlinWorley.comp" />
     <None Include="Shaders\Noise\worley.comp" />
     <None Include="Shaders\PBR\PBR.frag" />
