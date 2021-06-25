@@ -192,20 +192,6 @@ void rayCloudLayerIntersection(in ray ray, in cloud cloud, out float distToLayer
 	layer = min(abs(distToLayerHigh - distToLayerLow), renderDistance);
 }
 
-// Gradient function that clamps the height value based on the cloud type
-// When cloud type is 0.0 it will result into a low height clouds (stratus)
-// When cloud type is 0.5 it will result into a medium height clouds (cumulus)
-// When cloud type is 1.0 it will result into a high height clouds (cumulonimbus)
-float calculateDensityHeightGradient(float height, float cloudType) {
-	float a = 1.0 - clamp(cloudType * 2.0, 0.0, 1.0);
-	float b = 1.0 - abs(cloudType - 0.5) * 2.0;
-	float c = clamp(cloudType - 0.5, 0.0, 1.0) * 2.0;
-
-	vec4 gradient = cloudGradientLOW * a + cloudGradientMEDIUM * b + cloudGradientHIGH * c;
-	
-	return smoothstep(gradient.x, gradient.y, height) - smoothstep(gradient.z, gradient.w, height);
-}
-
 // Position to relative height in cloud layer
 float calculateCloudHeightFraction(vec3 position, cloud cloud) {
 	return (position.y - cloud.heightMin) / (cloud.heightMax - cloud.heightMin);
@@ -224,9 +210,9 @@ float calculateCloudHeightAlteration(vec3 position, float cloudHeightFraction, c
 float calculateCloudDensityAlteration(vec3 position, float cloudHeightFraction, cloud cloud, float weatherMapA) {
 	float alterBottom = cloudHeightFraction * clamp(remap(cloudHeightFraction, 0.0, 0.15, 0.0, 1.0), 0.0, 1.0);
 	float alterTop = clamp(remap(cloudHeightFraction, 0.9, 1.0, 1.0, 0.0), 0.0, 1.0);
-	float baseDensityAlteration = globalCloudsDensity * alterBottom * alterTop * 2.0 * weatherMapA;
+	float baseDensityAlteration = globalCloudsDensity * alterBottom * alterTop * weatherMapA;
 	// Calculate anvil density alteration based on the anvil amount
-	return baseDensityAlteration * (mix(1.0, clamp(remap(sqrt(cloudHeightFraction), 0.4, 0.5, 1.0, 0.0), 0.0, 1.0), 1.0 - anvilAmount) * 0.5);
+	return baseDensityAlteration * mix(1.0, clamp(remap(sqrt(cloudHeightFraction), 0.4, 0.5, 1.0, 0.0), 0.0, 1.0), 1.0 - anvilAmount) * 0.5;
 }
 
 // Projects position (3D) onto plane (2D) for texture loading
@@ -264,14 +250,13 @@ float calculateCloudDensity(vec3 position, bool isHighQuality, cloud cloud) {
 		vec3 detail = texture(worleyTex, cloudDetailScale * (position + normalize(windDirection) * time * cloudSpeed * edgesSpeedMultiplier)).rgb;
 		float detailFBM = dot(detail, cloudDetailWeights);
 
-		float cloudHeightFraction = calculateCloudHeightFraction(position, cloud);
-		float densityModification = 0.35 * exp(- globalCloudsCoverage * 0.75) * mix(detailFBM, 1 - detailFBM, clamp(cloudHeightFraction * 0.5, 0.0, 1.0));
+		float densityModification = 0.35 * exp(- globalCloudsCoverage * 0.75) * mix(detailFBM, 1 - detailFBM, clamp(cloudHeightFraction * 5.0, 0.0, 1.0));
 
 		density = remap(density, densityModification, 1.0, 0.0, 1.0);
 	}
 
 	// return clamped value
-	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a) * calculateDensityHeightGradient(cloudHeightFraction, weatherMap.a);
+	return clamp(density, 0.0, 1.0) * calculateCloudDensityAlteration(position, cloudHeightFraction, cloud, weatherMap.a);
 }
 
 //===============================================================================================
@@ -296,7 +281,7 @@ float calculateHenyeyGreensteinPhase(float mu, float g) {
 }
 
 // Calculates cloud density (ray-march from cloud position to sun)
-vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, cloud cloud, float cloudLayer, sun sun, vec3 lightColor) {
+vec3 calculateCloudLight(vec3 position, vec3 sunDirection, float mu, cloud cloud, float cloudLayer, sun sun, vec3 lightColor) {
 	// initialize variables for ray-marching
 	vec3 color = vec3(0.0f);
 	float transmittance = 1.0f;
@@ -325,7 +310,7 @@ vec3 calculateCloudLight(ray view, vec3 position, vec3 sunDirection, float mu, c
 		}
 
 		// increase current position
-		view.origin += segmentLength * sunDirection;
+		position += segmentLength * sunDirection;
 	}
 
 	// calculate extra sun intensity (this is used to increase the HG effect)
@@ -413,7 +398,7 @@ vec4 clouds(in ray view, in planet earth, in cloud cloud, in sun sun, out float 
 				}
 				
 				// accumulate final color
-				color += calculateCloudLight(view, samplePosition, sunDirection, mu, cloud, cloudLayer, sun, lightColor) * density * segmentLength * transmittance * powder * lightColor;
+				color += calculateCloudLight(samplePosition, sunDirection, mu, cloud, cloudLayer, sun, lightColor) * density * segmentLength * transmittance * powder * lightColor;
 			}
 		}
 

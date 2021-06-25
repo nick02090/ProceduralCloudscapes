@@ -204,12 +204,12 @@ void main()
     // vary B and A channels based on clouds type
     if (cloudsType == CUMULUS) {
         col.b = 1.0;
-        col.a = 0.6;
+        col.a = 0.7;
     } else if (cloudsType == STRATOCUMULUS) {
-        col.b = 0.5;
-        col.a = 0.8;
-    } else if (cloudsType == STRATUS) {
         col.b = 0.7;
+        col.a = 0.5;
+    } else if (cloudsType == STRATUS) {
+        col.b = 0.5;
         col.a = 0.35;
     } else if (cloudsType == CUMULONIMBUS) {
         col.b = 1.0;

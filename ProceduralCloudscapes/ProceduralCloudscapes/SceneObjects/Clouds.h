@@ -10,7 +10,6 @@
 #include "../Engine/Utilities.h"
 #include "../Engine/Window.h"
 
-class PlaneTexture;
 class ScreenShader;
 class FrameBufferObject;
 

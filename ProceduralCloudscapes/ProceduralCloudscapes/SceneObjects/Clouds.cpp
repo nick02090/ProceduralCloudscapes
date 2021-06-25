@@ -2,7 +2,6 @@
 
 #include "../Engine/ScreenShader.h"
 #include "../Engine/Scene.h"
-#include "PlaneTexture.h"
 #include "../Engine/Environment/SkyboxEnvironment.h"
 #include "../Engine/Environment/ColorEnvironment.h"
 #include "../Engine/FrameBufferObject.h"
@@ -85,8 +84,6 @@ Clouds::~Clouds()
 
 void Clouds::update()
 {
-	//generateWeatherMap();
-
 	Camera* camera = window->getCamera();
 
 	// wait for all the memory stores, loads, textures fetches, vertex fetches
@@ -149,17 +146,13 @@ void Clouds::update()
 
 	FrameBufferObject::unbind();
 
-	// create a screen shader for rendering the buffer on the screen
-	ScreenShader* screenShader = new ScreenShader("Shaders/Default/textureShader2D.frag");
 	// disable depth test so screen-space quad isn't discarded due to depth test
 	glDisable(GL_DEPTH_TEST);
 	// enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
 	// draw the screen shader with the buffer texture
-	screenShader->draw(*framebuffer->getColorTexture(0));
-	// delete the created screen shader
-	delete screenShader;
+	cloudsShader->draw(*framebuffer->getColorTexture(0));
 	// enable back depth test
 	glEnable(GL_DEPTH_TEST);
 	// disable back blending

@@ -52,6 +52,9 @@ int main()
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved, etc.)
         glfwSwapBuffers(window.getGLFWWindow());
         glfwPollEvents();
+
+        // uncomment line below to disable v-sync
+        //glfwSwapInterval(0);
     }
 
     delete scene;

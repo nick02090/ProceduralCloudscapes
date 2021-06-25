@@ -205,8 +205,10 @@ void main()
     worley.frequency *= 2.0f;
     col.a += noiseFBM(coord, worley, worleyID);
 
-    // dilate Perlin fBm with first Worley (Perlin-Worley)
-    col.r += remap(perlinFBM, 0.0, 1.0, col.g, 1.0);
+    // dilate Perlin fBm with Worley (Perlin-Worley)
+    worley.frequency = 6.0f;
+    float lowFreqWorley = noiseFBM(coord, worley, worleyID);
+    col.r += remap(perlinFBM, 0.0, 1.0, lowFreqWorley, 1.0);
 
     // save final 3D texture
 	imageStore(perlinWorleyTex, pixel, col);
